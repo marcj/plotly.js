@@ -50,6 +50,8 @@ function overlappingDomain(xDomain, yDomain, domains) {
     return false;
 }
 
+// TODO
+// - split general pieces from Cartesian-only
 function lsInner(gd) {
     var fullLayout = gd._fullLayout;
     var gs = fullLayout._size;
@@ -72,6 +74,7 @@ function lsInner(gd) {
     // can still get here because it makes some of the SVG structure
     // for shared features like selections.
     if(!fullLayout._has('cartesian')) {
+        // TODO why not Plots.previousPromises ??
         return gd._promises.length && Promise.all(gd._promises);
     }
 
@@ -347,6 +350,7 @@ function lsInner(gd) {
 
     Axes.makeClipPaths(gd);
 
+    // TODO why not Plots.previousPromises ??
     return gd._promises.length && Promise.all(gd._promises);
 }
 

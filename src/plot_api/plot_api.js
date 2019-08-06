@@ -319,6 +319,9 @@ function plot(gd, data, layout, config) {
         ], gd);
     }
 
+    // potential TODO
+    // - merge with positionAndAutorange ?
+    // - rename positionAndAutorange (as we no longer call _module.setPositions here)
     function doAutoRangeAndConstraints() {
         if(gd._transitioning) return;
 

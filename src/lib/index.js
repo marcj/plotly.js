@@ -405,6 +405,7 @@ lib.syncOrAsync = function(sequence, arg, finalStep) {
         fni = sequence.splice(0, 1)[0];
         ret = fni(arg);
 
+        // TODO https://github.com/plotly/plotly.js/issues/1705
         if(ret && ret.then) {
             return ret.then(continueAsync)
                 .then(undefined, lib.promiseError);
