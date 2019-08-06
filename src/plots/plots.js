@@ -1935,7 +1935,12 @@ plots.doAutoMargin = function(gd) {
         } else {
             fullLayout._redrawFromAutoMarginCount = 1;
         }
-        return Registry.call('plot', gd);
+
+        if(fullLayout._redrawFromAutoMarginCount < 10) {
+            return Registry.call('plot', gd);
+        } else {
+            console.log('off limit', fullLayout._redrawFromAutoMarginCount)
+        }
     }
 };
 
@@ -1949,6 +1954,7 @@ plots.didMarginChange = function(margin0, margin1) {
         // use 1px tolerance in case we old/new differ only
         // by rounding errors, which can lead to infinite loops
         if(!isNumeric(m0) || Math.abs(m1 - m0) > 1) {
+            console.log('margin changed by', Math.abs(m1 - m0))
             return true;
         }
     }
