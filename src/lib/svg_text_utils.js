@@ -30,9 +30,10 @@ exports.convertToTspans = function(_context, gd, _callback) {
 
     // Until we get tex integrated more fully (so it can be used along with non-tex)
     // allow some elements to prohibit it by attaching 'data-notex' to the original
-    var tex = (!_context.attr('data-notex')) &&
-        (typeof MathJax !== 'undefined') &&
-        str.match(FIND_TEX);
+    var tex;
+    if(!_context.attr('data-notex') && typeof MathJax !== 'undefined') {
+        tex = str.match(FIND_TEX);
+    }
 
     var parent = d3.select(_context.node().parentNode);
     if(parent.empty()) return;
@@ -68,6 +69,7 @@ exports.convertToTspans = function(_context, gd, _callback) {
             _context.style('pointer-events', 'all');
         }
 
+        // TODO remove from convertToTspans ?!?
         exports.positionText(_context);
 
         if(_callback) _callback.call(_context);
@@ -102,8 +104,10 @@ exports.convertToTspans = function(_context, gd, _callback) {
 
                 // stitch the glyph defs
                 if(_glyphDefs && _glyphDefs.node()) {
-                    newSvg.node().insertBefore(_glyphDefs.node().cloneNode(true),
-                                               newSvg.node().firstChild);
+                    newSvg.node().insertBefore(
+                        _glyphDefs.node().cloneNode(true),
+                        newSvg.node().firstChild
+                    );
                 }
 
                 newSvg.attr({
@@ -143,7 +147,9 @@ exports.convertToTspans = function(_context, gd, _callback) {
                 resolve(mathjaxGroup);
             });
         }));
-    } else showText();
+    } else {
+        showText();
+    }
 
     return _context;
 };
