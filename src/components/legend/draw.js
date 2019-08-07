@@ -48,17 +48,6 @@ module.exports = function draw(gd) {
         return Plots.autoMargin(gd, 'legend');
     }
 
-    var maxLength = 0;
-    for(var i = 0; i < legendData.length; i++) {
-        for(var j = 0; j < legendData[i].length; j++) {
-            var item = legendData[i][j][0];
-            var trace = item.trace;
-            var isPieLike = Registry.traceIs(trace, 'pie-like');
-            var name = isPieLike ? item.label : trace.name;
-            maxLength = Math.max(maxLength, name && name.length || 0);
-        }
-    }
-
     var legend = Lib.ensureSingle(fullLayout._infolayer, 'g', 'legend', function(s) {
         s.attr('pointer-events', 'all');
     });
@@ -102,7 +91,7 @@ module.exports = function draw(gd) {
             return trace.visible === 'legendonly' ? 0.5 : 1;
         }
     })
-    .each(function() { d3.select(this).call(drawTexts, gd, maxLength); })
+    .each(function() { d3.select(this).call(drawTexts, gd); })
     .call(style, gd)
     .each(function() { d3.select(this).call(setupTraceToggle, gd); });
 
@@ -367,13 +356,15 @@ function clickOrDoubleClick(gd, legend, legendItem, numClicks, evt) {
     }
 }
 
-function drawTexts(g, gd, maxLength) {
+function drawTexts(g, gd) {
     var legendItem = g.data()[0][0];
     var fullLayout = gd._fullLayout;
+    var opts = fullLayout.legend;
     var trace = legendItem.trace;
     var isPieLike = Registry.traceIs(trace, 'pie-like');
     var traceIndex = trace.index;
     var isEditable = gd._context.edits.legendText && !isPieLike;
+    var maxNameLength = opts._maxNameLength;
 
     var name = isPieLike ? legendItem.label : trace.name;
     if(trace._meta) {
@@ -385,7 +376,7 @@ function drawTexts(g, gd, maxLength) {
     textEl.attr('text-anchor', 'start')
         .classed('user-select-none', true)
         .call(Drawing.font, fullLayout.legend.font)
-        .text(isEditable ? ensureLength(name, maxLength) : name);
+        .text(isEditable ? ensureLength(name, maxNameLength) : name);
 
     svgTextUtils.positionText(textEl, constants.textOffsetX, 0);
 
@@ -399,7 +390,7 @@ function drawTexts(g, gd, maxLength) {
         textEl.call(svgTextUtils.makeEditable, {gd: gd, text: name})
             .call(textLayout)
             .on('edit', function(newName) {
-                this.text(ensureLength(newName, maxLength))
+                this.text(ensureLength(newName, maxNameLength))
                     .call(textLayout);
 
                 var fullInput = legendItem.trace._fullInput || {};
