@@ -90,15 +90,15 @@ module.exports = function draw(gd) {
     .call(style, gd)
     .each(function() { d3.select(this).call(setupTraceToggle, gd); });
 
-    Lib.syncOrAsync([Plots.previousPromises,
+    Lib.syncOrAsync([
+        Plots.previousPromises,
+        function() { return computeLegendDimensions(gd, groups, traces); },
         function() {
             // Position and size the legend
             var lxMin = 0;
             var lxMax = fullLayout.width;
             var lyMin = 0;
             var lyMax = fullLayout.height;
-
-            computeLegendDimensions(gd, groups, traces);
 
             if(opts._height > lyMax) {
                 // If the legend doesn't fit in the plot area,
