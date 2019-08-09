@@ -13,5 +13,7 @@ module.exports = {
     scrollBarMinHeight: 20,
     scrollBarColor: '#808BA4',
     scrollBarMargin: 4,
+    scrollBarEnterAttrs: {rx: 20, ry: 3, width: 0, height: 0},
+
     textOffsetX: 40
 };

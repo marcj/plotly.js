@@ -66,13 +66,8 @@ module.exports = function draw(gd) {
     var scrollBox = Lib.ensureSingle(legend, 'g', 'scrollbox');
 
     var scrollBar = Lib.ensureSingle(legend, 'rect', 'scrollbar', function(s) {
-        s.attr({
-            rx: 20,
-            ry: 3,
-            width: 0,
-            height: 0
-        })
-        .call(Color.fill, '#808BA4');
+        s.attr(constants.scrollBarEnterAttrs)
+         .call(Color.fill, constants.scrollBarColor);
     });
 
     var groups = scrollBox.selectAll('g.groups').data(legendData);
