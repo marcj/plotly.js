@@ -15,5 +15,8 @@ module.exports = {
     scrollBarMargin: 4,
     scrollBarEnterAttrs: {rx: 20, ry: 3, width: 0, height: 0},
 
-    textOffsetX: 40
+    // number of px between legend symbol and legend text (always in x direction)
+    textGap: 40,
+    // number of px between each legend item (x and/or y direction)
+    itemGap: 5
 };
