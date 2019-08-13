@@ -487,6 +487,7 @@ function computeTextDimensions(g, gd) {
 function computeLegendDimensions(gd, groups, traces) {
     var fullLayout = gd._fullLayout;
     var opts = fullLayout.legend;
+    var isVertical = helpers.isVertical(opts);
     var isGrouped = helpers.isGrouped(opts);
 
     var bw = opts.borderwidth;
@@ -497,17 +498,11 @@ function computeLegendDimensions(gd, groups, traces) {
 
     opts._maxWidth = fullLayout._size.w;
 
-    var extraWidth = 0;
+    var toggleRectWidth = 0;
     opts._width = 0;
     opts._height = 0;
 
-    if(helpers.isVertical(opts)) {
-        if(isGrouped) {
-            groups.each(function(d, i) {
-                Drawing.setTranslate(this, 0, i * opts.tracegroupgap);
-            });
-        }
-
+    if(isVertical) {
         traces.each(function(d) {
             var h = d[0].height;
             Drawing.setTranslate(this, bw, itemGap + bw + opts._height + h / 2);
@@ -515,14 +510,16 @@ function computeLegendDimensions(gd, groups, traces) {
             opts._width = Math.max(opts._width, d[0].width);
         });
 
+        toggleRectWidth = textGap + opts._width;
         opts._width += itemGap + textGap + bw2;
         opts._height += endPad;
 
         if(isGrouped) {
+            groups.each(function(d, i) {
+                Drawing.setTranslate(this, 0, i * opts.tracegroupgap);
+            });
             opts._height += (opts._lgroupsLength - 1) * opts.tracegroupgap;
         }
-
-        extraWidth = textGap;
     } else {
         var maxItemWidth = 0;
         var combinedItemWidth = 0;
@@ -576,6 +573,7 @@ function computeLegendDimensions(gd, groups, traces) {
 
             opts._height = groupYOffsets[groupYOffsets.length - 1] + maxGroupHeight + endPad;
             opts._width = Math.max.apply(null, groupXOffsets) + maxItemWidth + textGap + bw2;
+            toggleRectWidth = maxItemWidth;
         } else {
             var oneRowLegend = (combinedItemWidth + bw2 + (traces.size() - 1) * itemGap) < opts._maxWidth;
 
@@ -604,9 +602,11 @@ function computeLegendDimensions(gd, groups, traces) {
             if(oneRowLegend) {
                 opts._width = offsetX + bw2;
                 opts._height = maxItemHeightInRow + endPad;
+                toggleRectWidth = null;
             } else {
                 opts._width = Math.max(maxRowWidth, offsetX) + bw;
                 opts._height += maxItemHeightInRow + endPad;
+                toggleRectWidth = maxItemWidth;
             }
         }
     }
@@ -614,19 +614,14 @@ function computeLegendDimensions(gd, groups, traces) {
     opts._width = Math.ceil(opts._width);
     opts._height = Math.ceil(opts._height);
 
-    var isEditable = (
-        gd._context.edits.legendText ||
-        gd._context.edits.legendPosition
-    );
-
+    var edits = gd._context.edits;
+    var isEditable = edits.legendText || edits.legendPosition;
     traces.each(function(d) {
+        var traceToggle = d3.select(this).select('.legendtoggle');
         var h = d[0].height;
-        Drawing.setRect(d3.select(this).select('.legendtoggle'),
-            0,
-            -h / 2,
-            (isEditable ? 0 : opts._width) + extraWidth,
-            h
-        );
+        var w = isEditable ? textGap : (toggleRectWidth || (textGap + d[0].width));
+        if(!isVertical) w += itemGap / 2;
+        Drawing.setRect(traceToggle, 0, -h / 2, w, h);
     });
 }
 
