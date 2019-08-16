@@ -1822,10 +1822,12 @@ plots.autoMargin = function(gd, id, o) {
             // make sure you can still grab it and bring it back
             if(o.l + o.r > fullLayout.width * 0.5) {
                 Lib.log('Margin push', id, 'is too big in x, dropping');
+                // console.log('Too big in X', [o.l, o.r], o.l + o.r, fullLayout.width / 2)
                 o.l = o.r = 0;
             }
             if(o.b + o.t > fullLayout.height * 0.5) {
                 Lib.log('Margin push', id, 'is too big in y, dropping');
+                // console.log('Too big in Y', [o.b, o.t], o.b, o.t, fullLayout.height / 2)
                 o.b = o.t = 0;
             }
 
@@ -1955,6 +1957,7 @@ plots.didMarginChange = function(margin0, margin1) {
         // use 1px tolerance in case we old/new differ only
         // by rounding errors, which can lead to infinite loops
         if(!isNumeric(m0) || Math.abs(m1 - m0) > 1) {
+            // console.log('Margin changed', margin0, '-->', margin1)
             return true;
         }
     }
