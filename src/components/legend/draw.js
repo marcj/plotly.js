@@ -101,6 +101,8 @@ module.exports = function draw(gd) {
             var lx = gs.l + gs.w * opts.x - FROM_TL[getXanchor(opts)] * opts._width;
             var ly = gs.t + gs.h * (1 - opts.y) - FROM_TL[getYanchor(opts)] * opts._effHeight;
 
+            // console.log('**', ly, [gs.t, gs.b, gs.h], opts._effHeight)
+
             // TODO maybe _just_ use margin.autoexpand:false instead of adding
             // new attribute here!
             if(opts.fitinside) {
@@ -497,6 +499,8 @@ function computeLegendDimensions(gd, groups, traces) {
         gs.h,
     30);
 
+    // console.log('h', opts._maxHeight, isBelowPlotArea, isAbovePlotArea, [gs.t, gs.b], fullLayout.height / 4)
+
     var toggleRectWidth = 0;
     opts._width = 0;
     opts._height = 0;
@@ -532,6 +536,10 @@ function computeLegendDimensions(gd, groups, traces) {
             isRightOfPlotArea ? ((isAbovePlotArea || isBelowPlotArea) ? gs.r + gs.w : fullLayout.width / 2) :
             gs.w,
         2 * textGap);
+
+        // console.log('w', opts._maxWidth, isLeftOfPlotArea, isRightOfPlotArea,
+        //     [gs.l, gs.r, gs.w], fullLayout.width / 2)
+
         var maxItemWidth = 0;
         var combinedItemWidth = 0;
         traces.each(function(d) {
@@ -644,6 +652,9 @@ function expandMargin(gd) {
     var xanchor = getXanchor(opts);
     var yanchor = getYanchor(opts);
 
+    // console.log(opts._effHeight, opts._height, opts._maxHeight,
+    //     [yanchor, FROM_BR[yanchor], FROM_TL[yanchor]],
+    //     [opts.x, opts.y], opts._width)
 
     Plots.autoMargin(gd, 'legend', {
         x: opts.x,
