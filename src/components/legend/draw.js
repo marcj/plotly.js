@@ -159,6 +159,8 @@ module.exports = function draw(gd) {
 
                 var scrollBoxY = Math.min(opts._scrollY || 0, scrollBoxYMax);
 
+                // TODO can't see scrollbar when margin.autoexpand:false !!!
+
                 // increase the background and clip-path width
                 // by the scrollbar width and margin
                 bg.attr({
