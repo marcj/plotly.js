@@ -171,6 +171,15 @@ module.exports = {
             'anchors legends with respect to their middle otherwise.'
         ].join(' ')
     },
+    fitinside: {
+        valType: 'boolean',
+        role: 'info',
+        dflt: true,
+        editType: 'legend',
+        description: [
+            '.........'
+        ].join(' ')
+    },
     uirevision: {
         valType: 'any',
         role: 'info',

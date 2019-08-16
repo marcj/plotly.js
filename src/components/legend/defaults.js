@@ -116,4 +116,6 @@ module.exports = function legendDefaults(layoutIn, layoutOut, fullData) {
     coerce('yanchor', defaultYAnchor);
     coerce('valign');
     Lib.noneOrAll(containerIn, containerOut, ['x', 'y']);
+
+    coerce('fitinside');
 };

@@ -101,8 +101,12 @@ module.exports = function draw(gd) {
             var lx = gs.l + gs.w * opts.x - FROM_TL[getXanchor(opts)] * opts._width;
             var ly = gs.t + gs.h * (1 - opts.y) - FROM_TL[getYanchor(opts)] * opts._effHeight;
 
-            lx = Lib.constrain(lx, 0, fullLayout.width - opts._width);
-            ly = Lib.constrain(ly, 0, fullLayout.height - opts._effHeight);
+            // TODO maybe _just_ use margin.autoexpand:false instead of adding
+            // new attribute here!
+            if(opts.fitinside) {
+                lx = Lib.constrain(lx, 0, fullLayout.width - opts._width);
+                ly = Lib.constrain(ly, 0, fullLayout.height - opts._effHeight);
+            }
 
             // Set size and position of all the elements that make up a legend:
             // legend, background and border, scroll box and scroll bar
