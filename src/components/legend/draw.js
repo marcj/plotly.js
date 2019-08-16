@@ -527,13 +527,15 @@ function computeLegendDimensions(gd, groups, traces) {
         var xanchor = getXanchor(opts);
         var isLeftOfPlotArea = opts.x < 0 || (opts.x === 0 && xanchor === 'right');
         var isRightOfPlotArea = opts.x > 1 || (opts.x === 1 && xanchor === 'left');
+        var isBeyondPlotAreaX = isAbovePlotArea || isBelowPlotArea;
+        var hw = fullLayout.width / 2;
 
         // - if placed within x-margins, extend the width of the plot area
-        // - else if below/above plot area, extend to opposite margin,
+        // - else if below/above plot area and anchored in the margin, extend to opposite margin,
         // - otherwise give it the maximum potential margin-push value
         opts._maxWidth = opts.maxwidth || Math.max(
-            isLeftOfPlotArea ? ((isAbovePlotArea || isBelowPlotArea) ? gs.l + gs.w : fullLayout.width / 2) :
-            isRightOfPlotArea ? ((isAbovePlotArea || isBelowPlotArea) ? gs.r + gs.w : fullLayout.width / 2) :
+            isLeftOfPlotArea ? ((isBeyondPlotAreaX && xanchor === 'left') ? gs.l + gs.w : hw) :
+            isRightOfPlotArea ? ((isBeyondPlotAreaX && yanchor === 'right') ? gs.r + gs.w : hw) :
             gs.w,
         2 * textGap);
 
