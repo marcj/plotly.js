@@ -98,12 +98,8 @@ module.exports = function draw(gd) {
             var gs = fullLayout._size;
             var bw = opts.borderwidth;
 
-            var lx = gs.l + gs.w * opts.x;
-            if(Lib.isRightAnchor(opts)) {
-                lx -= opts._width;
-            } else if(Lib.isCenterAnchor(opts)) {
-                lx -= opts._width / 2;
-            }
+            var lx = gs.l + gs.w * opts.x - FROM_TL[getXanchor(opts)] * opts._width;
+            var ly = gs.t + gs.h * (1 - opts.y) - FROM_TL[getYanchor(opts)] * opts._effHeight;
 
 
             // Make sure the legend left and right sides are visible
@@ -119,12 +115,6 @@ module.exports = function draw(gd) {
                 legendWidth = Math.min(fullLayout.width - lx, opts._width);
             }
 
-            var ly = gs.t + gs.h * (1 - opts.y);
-            if(Lib.isBottomAnchor(opts)) {
-                ly -= opts._height;
-            } else if(Lib.isMiddleAnchor(opts)) {
-                ly -= opts._height / 2;
-            }
 
             // Make sure the legend top and bottom are visible
             // (legends with a scroll bar are not allowed to stretch beyond the extended
@@ -628,20 +618,9 @@ function computeLegendDimensions(gd, groups, traces) {
 function expandMargin(gd) {
     var fullLayout = gd._fullLayout;
     var opts = fullLayout.legend;
+    var xanchor = getXanchor(opts);
+    var yanchor = getYanchor(opts);
 
-    var xanchor = 'left';
-    if(Lib.isRightAnchor(opts)) {
-        xanchor = 'right';
-    } else if(Lib.isCenterAnchor(opts)) {
-        xanchor = 'center';
-    }
-
-    var yanchor = 'top';
-    if(Lib.isBottomAnchor(opts)) {
-        yanchor = 'bottom';
-    } else if(Lib.isMiddleAnchor(opts)) {
-        yanchor = 'middle';
-    }
 
     Plots.autoMargin(gd, 'legend', {
         x: opts.x,
@@ -651,4 +630,16 @@ function expandMargin(gd) {
         b: opts._height * (FROM_BR[yanchor]),
         t: opts._height * (FROM_TL[yanchor])
     });
+}
+
+function getXanchor(opts) {
+    return Lib.isRightAnchor(opts) ? 'right' :
+        Lib.isCenterAnchor(opts) ? 'center' :
+        'left';
+}
+
+function getYanchor(opts) {
+    return Lib.isBottomAnchor(opts) ? 'bottom' :
+        Lib.isMiddleAnchor(opts) ? 'middle' :
+        'top';
 }
