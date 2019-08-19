@@ -1917,7 +1917,7 @@ describe('Plotly.react and uirevision attributes', function() {
             assertLevel('no set level at start', undefined);
         })
         .then(function() {
-            var nodeSeth = d3.select('.slice:nth-child(2)').node();
+            var nodeSeth = d3.select('.slice:nth-child(3)').node();
             mouseEvent('click', 0, 0, {element: nodeSeth});
         })
         .then(function() {

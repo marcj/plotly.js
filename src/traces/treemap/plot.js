@@ -534,30 +534,12 @@ function plotOne(gd, cd, element, transitionOpts) {
                 y0: d3.interpolate(q0.y0, q1.y0)(t),
                 y1: d3.interpolate(q0.y1, q1.y1)(t),
                 transform: {
-                    scale: d3.interpolate(
-                        q0.transform.scale,
-                        q1.transform.scale
-                    )(t),
-                    rotate: d3.interpolate(
-                        q0.transform.rotate,
-                        q1.transform.rotate
-                    )(t),
-                    textX: d3.interpolate(
-                        q0.transform.textX,
-                        q1.transform.textX
-                    )(t),
-                    textY: d3.interpolate(
-                        q0.transform.textY,
-                        q1.transform.textY
-                    )(t),
-                    targetX: d3.interpolate(
-                        q0.transform.targetX,
-                        q1.transform.targetX
-                    )(t),
-                    targetY: d3.interpolate(
-                        q0.transform.targetY,
-                        q1.transform.targetY
-                    )(t)
+                    scale: d3.interpolate(q0.transform.scale, q1.transform.scale)(t),
+                    rotate: d3.interpolate(q0.transform.rotate, q1.transform.rotate)(t),
+                    textX: d3.interpolate(q0.transform.textX, q1.transform.textX)(t),
+                    textY: d3.interpolate(q0.transform.textY, q1.transform.textY)(t),
+                    targetX: d3.interpolate(q0.transform.targetX, q1.transform.targetX)(t),
+                    targetY: d3.interpolate(q0.transform.targetY, q1.transform.targetY)(t)
                 }
             };
         }

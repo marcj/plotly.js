@@ -310,8 +310,8 @@ module.exports = {
             'name'
         ]
     }),
-    hovertemplate: extendFlat({}, hovertemplateAttrs(), {
-        flags: [
+    hovertemplate: hovertemplateAttrs({
+        keys: [
             // 'percent parent',
             // 'percent total',
             'label',

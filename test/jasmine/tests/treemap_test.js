@@ -342,7 +342,7 @@ describe('Test treemap hover:', function() {
 
     [{
         desc: 'base',
-        pos: 2,
+        pos: 3,
         exp: {
             label: {
                 nums: 'Seth',
@@ -357,7 +357,7 @@ describe('Test treemap hover:', function() {
     }, {
         desc: 'with scalar hovertext',
         traces: [{ hovertext: 'A' }],
-        pos: 3,
+        pos: 4,
         exp: {
             label: {
                 nums: 'Cain\nA',
@@ -375,7 +375,7 @@ describe('Test treemap hover:', function() {
             hovertext: values0,
             hoverinfo: 'all'
         }],
-        pos: 4,
+        pos: 5,
         exp: {
             label: {
                 nums: 'Abel\n6',
@@ -394,7 +394,7 @@ describe('Test treemap hover:', function() {
             hoverlabel: {namelength: 4},
             hoverinfo: 'all'
         }],
-        pos: 4,
+        pos: 5,
         exp: {
             label: {
                 nums: 'Abel',
@@ -413,7 +413,7 @@ describe('Test treemap hover:', function() {
             values: values0,
             hoverinfo: 'value'
         }],
-        pos: 5,
+        pos: 6,
         exp: {
             label: {
                 nums: '6'
@@ -432,7 +432,7 @@ describe('Test treemap hover:', function() {
             values: values0,
             hovertemplate: '%{label} :: %{value:.2f}<extra><b>N.B.</b></extra>'
         }],
-        pos: 5,
+        pos: 6,
         exp: {
             label: {
                 nums: 'Abel :: 6.00',
@@ -464,7 +464,7 @@ describe('Test treemap hover:', function() {
                 }
             }
         }],
-        pos: 1,
+        pos: 2,
         exp: {
             label: {
                 nums: 'Eve',
@@ -526,7 +526,7 @@ describe('Test treemap hover lifecycle:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(hover(gd, 1))
+        .then(hover(gd, 2))
         .then(function() {
             if(hoverCnt === 1) {
                 expect(hoverData.event).toBeDefined();
@@ -539,8 +539,8 @@ describe('Test treemap hover lifecycle:', function() {
                 fail('should not have triggered plotly_unhover');
             }
         })
-        .then(unhover(gd, 1))
-        .then(hover(gd, 2))
+        .then(unhover(gd, 2))
+        .then(hover(gd, 3))
         .then(function() {
             if(hoverCnt === 2) {
                 expect(hoverData.event).toBeDefined();
@@ -602,7 +602,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 2))
+        .then(click(gd, 3))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -628,7 +628,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 1))
+        .then(click(gd, 2))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -657,7 +657,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 8))
+        .then(click(gd, 9))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -669,12 +669,6 @@ describe('Test treemap clicks:', function() {
             if(trackers.click.length === 1) {
                 expect(trackers.click[0].event).toBeDefined();
                 expect(trackers.click[0].points[0].label).toBe('Noam');
-            } else {
-                fail('incorrect plotly_click triggering');
-            }
-
-            if(trackers.animating.length !== 0) {
-                fail('incorrect plotly_animating triggering');
             }
         })
         .catch(failTest)
@@ -696,7 +690,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 2))
+        .then(click(gd, 3))
         .then(function() {
             var msg = 'after 1st click';
 
@@ -709,7 +703,7 @@ describe('Test treemap clicks:', function() {
 
             _assertCommon(msg);
         })
-        .then(click(gd, 4))
+        .then(click(gd, 5))
         .then(function() {
             var msg = 'after 2nd click';
 
@@ -734,7 +728,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners({turnOffAnimation: true}))
-        .then(click(gd, 2))
+        .then(click(gd, 3))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -812,7 +806,7 @@ describe('Test treemap restyle:', function() {
             spyOn(Plots, 'doCalcdata').and.callThrough();
         })
         .then(_restyle({maxdepth: 3}))
-        .then(_assert('with maxdepth:3', 26))
+        .then(_assert('with maxdepth:3', 9))
         .then(_restyle({level: 'Aromas'}))
         .then(_assert('with non-root level', 13))
         .then(_restyle({maxdepth: null, level: null}))
@@ -821,7 +815,7 @@ describe('Test treemap restyle:', function() {
         .then(done);
     });
 
-    it('should be able to restyle *leaf.opacity*', function(done) {
+    it('should be able to restyle *marker.opacity*', function(done) {
         var mock = {
             data: [{
                 type: 'treemap',
@@ -850,17 +844,17 @@ describe('Test treemap restyle:', function() {
         }
 
         Plotly.plot(gd, mock)
-        .then(_assert('base', ['', '0.7', '', '0.7']))
+        .then(_assert('base', ['0.5', '0.5', '0.5', '0.5']))
         .then(function() {
             spyOn(Plots, 'doCalcdata').and.callThrough();
             spyOn(gd._fullData[0]._module, 'plot').and.callThrough();
         })
-        .then(_restyle({'leaf.opacity': 0.3}))
-        .then(_assert('lower leaf.opacity', ['', '0.3', '', '0.3']))
-        .then(_restyle({'leaf.opacity': 1}))
-        .then(_assert('raise leaf.opacity', ['', '1', '', '1']))
-        .then(_restyle({'leaf.opacity': null}))
-        .then(_assert('back to dflt', ['', '0.7', '', '0.7']))
+        .then(_restyle({'marker.opacity': 0.3}))
+        .then(_assert('lower marker.opacity', ['0.3', '0.3', '0.3', '0.3']))
+        .then(_restyle({'marker.opacity': 1}))
+        .then(_assert('raise marker.opacity', ['1', '1', '1', '1']))
+        .then(_restyle({'marker.opacity': null}))
+        .then(_assert('back to dflt', ['0.5', '0.5', '0.5', '0.5']))
         .catch(failTest)
         .then(done);
     });
@@ -905,7 +899,7 @@ describe('Test treemap restyle:', function() {
         }
 
         Plotly.plot(gd, mock)
-        .then(_assert('base', ['Root\nnode0', 'B\nnode2', 'A\nnode1', 'b\nnode3']))
+        .then(_assert('base', ['Root | node0', 'B | node2', 'A\nnode1', 'b\nnode3']))
         .then(function() {
             spyOn(Plots, 'doCalcdata').and.callThrough();
         })
@@ -916,181 +910,9 @@ describe('Test treemap restyle:', function() {
         .then(_restyle({textinfo: 'none'}))
         .then(_assert('no textinfo', ['', '', '', '']))
         .then(_restyle({textinfo: 'label+text+value'}))
-        .then(_assert('show everything', ['Root\n0\nnode0', 'B\n2\nnode2', 'A\n1\nnode1', 'b\n3\nnode3']))
+        .then(_assert('show everything', ['Root | 0 | node0', 'B | 2 | node2', 'A\n1\nnode1', 'b\n3\nnode3']))
         .then(_restyle({textinfo: null}))
-        .then(_assert('back to dflt', ['Root\nnode0', 'B\nnode2', 'A\nnode1', 'b\nnode3']))
-        .catch(failTest)
-        .then(done);
-    });
-});
-
-describe('Test treemap tweening:', function() {
-    var gd;
-    var pathTweenFnLookup;
-    var textTweenFnLookup;
-
-    beforeEach(function() {
-        gd = createGraphDiv();
-
-        // hacky way to track tween functions
-        spyOn(d3.transition.prototype, 'attrTween').and.callFake(function(attrName, fn) {
-            var lookup = {d: pathTweenFnLookup, transform: textTweenFnLookup}[attrName];
-            var pt = this[0][0].__data__;
-            var id = pt.data.data.id;
-
-            // we should never tween the same node twice on a given sector click
-            lookup[id] = lookup[id] ? null : fn(pt);
-        });
-    });
-
-    afterEach(destroyGraphDiv);
-
-    function _run(gd, v) {
-        pathTweenFnLookup = {};
-        textTweenFnLookup = {};
-
-        click(gd, v)();
-
-        // 1 second more than the click transition duration
-        return delay(constants.CLICK_TRANSITION_TIME + 1);
-    }
-
-    function trim(s) {
-        return s.replace(/\s/g, '');
-    }
-
-    function _assert(msg, attrName, id, exp) {
-        var lookup = {d: pathTweenFnLookup, transform: textTweenFnLookup}[attrName];
-        var fn = lookup[id];
-        // normalize time in [0, 1] where we'll assert the tweening fn output,
-        // asserting at the mid point *should be* representative enough
-        var t = 0.5;
-        var actual = trim(fn(t));
-
-        // do not assert textBB translate piece,
-        // which isn't tweened and has OS-dependent results
-        if(attrName === 'transform') {
-            actual = actual.split('translate').slice(0, 2).join('translate');
-        }
-
-        // we could maybe to bring in:
-        // https://github.com/hughsk/svg-path-parser
-        // to make these assertions more readable
-
-        expect(actual).toBe(trim(exp), msg + ' | node ' + id + ' @t=' + t);
-    }
-
-    it('should tween sector exit/update (case: branch, no maxdepth)', function(done) {
-        var mock = {
-            data: [{
-                type: 'treemap',
-                labels: ['Root', 'A', 'B', 'b'],
-                parents: ['', 'Root', 'Root', 'B']
-            }]
-        };
-
-        Plotly.plot(gd, mock)
-        .then(_run(gd, 3))
-        .then(function() {
-            _assert('exit entry radially inward', 'd', 'Root',
-                'M350,235 A0,00,1,0350,235 A0,00,1,0350,235Z' +
-                'M372.5,235 A22.5,22.50,1,1327.5,235 A22.5,22.50,1,1372.5,235Z'
-            );
-            _assert('exit A clockwise', 'd', 'A',
-                'M395,235 L440,235 A90,900,0,0350,145 L350,190 A45,450,0,1395,235Z'
-            );
-            _assert('update B to new position', 'd', 'B',
-                'M350,212.5 L350,156.25 A78.75,78.750,1,0428.75,235.00000000000003' +
-                'L372.5,235 A22.5,22.50,1,1350,212.5Z'
-            );
-            _assert('update b to new position', 'd', 'b',
-                'M350,156.25 L350,100 A135,1350,1,0485,235.00000000000003 L428.75,235.00000000000003' +
-                'A78.75,78.750,1,1350,156.25Z'
-            );
-            _assert('move B text to new position', 'transform', 'B',
-                'translate(313.45694251914836,271.54305748085164)'
-            );
-            _assert('move b text to new position', 'transform', 'b',
-                'translate(274.4279627606877,310.57203723931224)'
-            );
-        })
-        .catch(failTest)
-        .then(done);
-    });
-
-    it('should tween sector enter/update (case: entry, no maxdepth)', function(done) {
-        var mock = {
-            data: [{
-                type: 'treemap',
-                labels: ['Root', 'A', 'B', 'b'],
-                parents: ['', 'Root', 'Root', 'B'],
-                level: 'B'
-            }]
-        };
-
-        Plotly.plot(gd, mock)
-        .then(_run(gd, 1))
-        .then(function() {
-            _assert('enter new entry radially outward', 'd', 'Root',
-                'M350,235 A0,00,1,0350,235 A0,00,1,0350,235Z' +
-                'M372.5,235 A22.5,22.50,1,1327.5,235 A22.5,22.50,1,1372.5,235Z'
-            );
-            _assert('enter A counterclockwise', 'd', 'A',
-                'M395,235 L440,235 A90,900,0,0350,145 L350,190 A45,450,0,1395,235Z'
-            );
-            _assert('update B to new position', 'd', 'B',
-                'M350,212.5 L350,156.25 A78.75,78.750,1,0428.75,235.00000000000003' +
-                'L372.5,235 A22.5,22.50,1,1350,212.5Z'
-            );
-            _assert('update b to new position', 'd', 'b',
-                'M350,156.25 L350,100 A135,1350,1,0485,235.00000000000003 L428.75,235.00000000000003' +
-                'A78.75,78.750,1,1350,156.25Z'
-            );
-            _assert('move B text to new position', 'transform', 'B',
-                'translate(316.8522926358638,268.1477073641362)'
-            );
-            _assert('move b text to new position', 'transform', 'b',
-                'translate(274.4279627606877,310.57203723931224)'
-            );
-        })
-        .catch(failTest)
-        .then(done);
-    });
-
-    it('should tween sector enter/update/exit (case: entry, maxdepth=2)', function(done) {
-        var mock = {
-            data: [{
-                type: 'treemap',
-                labels: ['Root', 'A', 'B', 'b'],
-                parents: ['', 'Root', 'Root', 'B'],
-                maxdepth: 2
-            }]
-        };
-
-        Plotly.plot(gd, mock)
-        .then(_run(gd, 3))
-        .then(function() {
-            _assert('exit entry radially inward', 'd', 'Root',
-                'M350,235 A0,00,1,0350,235 A0,00,1,0350,235Z' +
-                'M383.75,235 A33.75,33.750,1,1316.25,235A33.75,33.750,1,1383.75,235Z'
-            );
-            _assert('exit A clockwise', 'd', 'A',
-                'M417.5,235 L485,235 A135,1350,0,0350,100 L350,167.5 A67.5,67.50,0,1417.5,235Z'
-            );
-            _assert('update B to new position', 'd', 'B',
-                'M350,201.25 L350,133.75 A101.25,101.250,1,0451.25,235.00000000000003' +
-                'L383.75,235 A33.75,33.750,1,1350,201.25Z'
-            );
-            _assert('enter b for parent position', 'd', 'b',
-                'M350,133.75 L350,100 A135,1350,0,0350,370 L350,336.25 A101.25,101.250,0,1350,133.75Z'
-            );
-            _assert('move B text to new position', 'transform', 'B',
-                'translate(303.0160689531907,281.9839310468093)'
-            );
-            _assert('enter b text to new position', 'transform', 'b',
-                'translate(248.75,235)'
-            );
-        })
+        .then(_assert('back to dflt', ['Root | node0', 'B | node2', 'A\nnode1', 'b\nnode3']))
         .catch(failTest)
         .then(done);
     });
@@ -1134,7 +956,7 @@ describe('Test treemap interactions edge cases', function() {
                 Plotly.restyle(gd, 'textinfo', null);
             });
         })
-        .then(hover(gd, 1))
+        .then(hover(gd, 2))
         .then(function() {
             _assert('after hovering on first sector', {
                 hoverCnt: 1,
@@ -1142,7 +964,7 @@ describe('Test treemap interactions edge cases', function() {
                 hoverLabel: 1
             });
         })
-        .then(unhover(gd, 1))
+        .then(unhover(gd, 2))
         .then(function() {
             _assert('after un-hovering from first sector', {
                 hoverCnt: 0,
@@ -1150,7 +972,7 @@ describe('Test treemap interactions edge cases', function() {
                 hoverLabel: 0
             });
         })
-        .then(hover(gd, 2))
+        .then(hover(gd, 3))
         .then(function() {
             _assert('after hovering onto second sector', {
                 hoverCnt: 1,
@@ -1177,7 +999,7 @@ describe('Test treemap interactions edge cases', function() {
                 height: 400
             }
         })
-        .then(hover(gd, 4))
+        .then(hover(gd, 5))
         .then(function() {
             assertHoverLabelContent({ nums: 'D\n4\n0' });
         })
