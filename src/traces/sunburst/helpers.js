@@ -22,6 +22,10 @@ exports.getDirectory = function(d) {
     return d.parent ? exports.getDirectory(d.parent) + ' | ' + labelStr : labelStr;
 };
 
+exports.getMaxDepth = function(trace) {
+    return trace.maxdepth >= 0 ? trace.maxdepth : Infinity;
+};
+
 exports.findEntryWithLevel = function(hierarchy, level) {
     var out;
     if(level) {
@@ -92,15 +96,15 @@ exports.getOutsideTextFontKey = function(keyStr, trace, pt, layoutFont) {
     );
 };
 
-exports.determineOutsideTextFont = function(trace, pt, layoutFont) {
+function determineOutsideTextFont(trace, pt, layoutFont) {
     return {
         color: exports.getOutsideTextFontKey('color', trace, pt, layoutFont),
         family: exports.getOutsideTextFontKey('family', trace, pt, layoutFont),
         size: exports.getOutsideTextFontKey('size', trace, pt, layoutFont)
     };
-};
+}
 
-exports.determineInsideTextFont = function(trace, pt, layoutFont) {
+function determineInsideTextFont(trace, pt, layoutFont) {
     var cdi = pt.data.data;
     var ptNumber = cdi.i;
 
@@ -118,4 +122,14 @@ exports.determineInsideTextFont = function(trace, pt, layoutFont) {
         family: exports.getInsideTextFontKey('family', trace, pt, layoutFont),
         size: exports.getInsideTextFontKey('size', trace, pt, layoutFont)
     };
+}
+
+exports.isOutsideText = function(trace, pt) {
+    return !trace._hasColorscale && exports.isHierachyRoot(pt);
+};
+
+exports.determineTextFont = function(trace, pt, layoutFont) {
+    return exports.isOutsideText(trace, pt) ?
+        determineOutsideTextFont(trace, pt, trace, pt, layoutFont) :
+        determineInsideTextFont(trace, pt, trace, pt, layoutFont);
 };

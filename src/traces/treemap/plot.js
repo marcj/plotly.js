@@ -89,7 +89,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     var trace = cd0.trace;
     var hierarchy = cd0.hierarchy;
     var entry = helpers.findEntryWithLevel(hierarchy, trace.level);
-    var maxDepth = trace.maxdepth >= 0 ? trace.maxdepth : Infinity;
+    var maxDepth = helpers.getMaxDepth(trace);
 
     var gs = fullLayout._size;
     var domain = trace.domain;
@@ -415,20 +415,16 @@ function plotOne(gd, cd, element, transitionOpts) {
             s.attr('data-notex', 1);
         });
 
-        var isOutsideText = (helpers.isHierachyRoot(pt) && !trace._hasColorscale);
-
         sliceText.text(formatSliceLabel(pt, trace, fullLayout))
             .classed('slicetext', true)
             .attr('text-anchor', 'middle')
-            .call(Drawing.font, isOutsideText ?
-                helpers.determineOutsideTextFont(trace, pt, fullLayout.font) :
-                helpers.determineInsideTextFont(trace, pt, fullLayout.font))
+            .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
 
         pt.textBB = Drawing.bBox(sliceText.node());
         pt.transform = toMoveInsideSlice(pt.x0, pt.x1, pt.y0, pt.y1, pt.textBB);
 
-        if(isOutsideText) {
+        if(helpers.isOutsideText(trace, pt)) {
             // consider in/out diff font sizes
             pt.transform.targetY -= (
                 helpers.getOutsideTextFontKey('size', trace, pt, fullLayout.font) -
@@ -614,7 +610,12 @@ function formatSliceLabel(pt, trace, fullLayout) {
             if(Lib.isValidTextValue(tx)) thisText.push(tx);
         }
 
-        return thisText.join(' | '); // instead of using <br>
+        var isOnTop = helpers.isLeaf(pt) ||
+            pt.depth === helpers.getMaxDepth(trace) - 1;
+
+        var divider = isOnTop ? '<br>' : ' | ';
+
+        return thisText.join(divider);
     }
 
     var txt = Lib.castOption(trace, cdi.i, 'texttemplate');

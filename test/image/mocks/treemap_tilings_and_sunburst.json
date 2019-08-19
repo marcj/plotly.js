@@ -2,6 +2,7 @@
     "data": [
         {
             "type": "treemap",
+            "textinfo": "label+value",
             "name": "Binary treemap",
             "tiling": "Binary",
             "labels": [
@@ -50,6 +51,7 @@
         },
         {
             "type": "sunburst",
+            "textinfo": "label+value",
             "name": "sunburst",
             "labels": [
                 "Eve",
@@ -97,6 +99,7 @@
         },
         {
             "type": "treemap",
+            "textinfo": "label+value",
             "name": "Squarify treemap",
             "tiling": "Squarify",
             "labels": [
@@ -145,6 +148,7 @@
         },
         {
             "type": "treemap",
+            "textinfo": "label+value",
             "name": "Slice treemap",
             "tiling": "Slice",
             "labels": [
@@ -193,6 +197,7 @@
         },
         {
             "type": "treemap",
+            "textinfo": "label+value",
             "name": "SliceDice treemap",
             "tiling": "SliceDice",
             "labels": [
@@ -241,6 +246,7 @@
         },
         {
             "type": "treemap",
+            "textinfo": "label+value",
             "name": "Dice treemap",
             "tiling": "Dice",
             "labels": [

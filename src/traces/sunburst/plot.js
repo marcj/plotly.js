@@ -87,7 +87,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     var trace = cd0.trace;
     var hierarchy = cd0.hierarchy;
     var entry = helpers.findEntryWithLevel(hierarchy, trace.level);
-    var maxDepth = trace.maxdepth >= 0 ? trace.maxdepth : Infinity;
+    var maxDepth = helpers.getMaxDepth(trace);
 
     var gs = fullLayout._size;
     var domain = trace.domain;
@@ -240,9 +240,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         sliceText.text(formatSliceLabel(pt, trace, fullLayout))
             .classed('slicetext', true)
             .attr('text-anchor', 'middle')
-            .call(Drawing.font, (helpers.isHierachyRoot(pt) && !trace._hasColorscale) ?
-              helpers.determineOutsideTextFont(trace, pt, fullLayout.font) :
-              helpers.determineInsideTextFont(trace, pt, fullLayout.font))
+            .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
 
         // position the text relative to the slice
