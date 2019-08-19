@@ -21,8 +21,9 @@ var generateExtendedColors = require('../pie/calc').generateExtendedColors;
 var isArrayOrTypedArray = Lib.isArrayOrTypedArray;
 
 var sunburstExtendedColorWays = {};
+var treemapExtendedColorWays = {};
 
-exports.calc = function(gd, trace) {
+exports._runCalc = function(gd, trace, desiredType) {
     var fullLayout = gd._fullLayout;
     var ids = trace.ids;
     var hasIds = isArrayOrTypedArray(ids);
@@ -110,7 +111,7 @@ exports.calc = function(gd, trace) {
                 label: k
             });
         } else {
-            return Lib.warn('Multiple implied roots, cannot build sunburst hierarchy.');
+            return Lib.warn('Multiple implied roots, cannot build ' + desiredType + ' hierarchy.');
         }
     } else if(parent2children[''].length > 1) {
         var dummyId = Lib.randstr();
@@ -138,7 +139,7 @@ exports.calc = function(gd, trace) {
             .id(function(d) { return d.id; })
             .parentId(function(d) { return d.pid; })(cd);
     } catch(e) {
-        return Lib.warn('Failed to build sunburst hierarchy. Error: ' + e.message);
+        return Lib.warn('Failed to build ' + desiredType + ' hierarchy. Error: ' + e.message);
     }
 
     var hierarchy = d3Hierarchy.hierarchy(root);
@@ -196,7 +197,7 @@ exports.calc = function(gd, trace) {
 
         scaleColor = makeColorScaleFn(trace.marker);
     } else {
-        pullColor = makePullColorFn(fullLayout._sunburstcolormap);
+        pullColor = makePullColorFn(fullLayout['_' + desiredType + 'colormap']);
     }
 
     // TODO keep track of 'root-children' (i.e. branch) for hover info etc.
@@ -214,6 +215,10 @@ exports.calc = function(gd, trace) {
     return cd;
 };
 
+exports.calc = function(gd, trace) {
+    return exports._runCalc(gd, trace, 'sunburst');
+};
+
 /*
  * `calc` filled in (and collated) explicit colors.
  * Now we need to propagate these explicit colors to other traces,
@@ -221,14 +226,16 @@ exports.calc = function(gd, trace) {
  * This is done after sorting, so we pick defaults
  * in the order slices will be displayed
  */
-exports.crossTraceCalc = function(gd) {
+exports._runCrossTraceCalc = function(gd, desiredType) {
     var fullLayout = gd._fullLayout;
     var calcdata = gd.calcdata;
-    var colorWay = fullLayout.sunburstcolorway;
-    var colorMap = fullLayout._sunburstcolormap;
+    var colorWay = fullLayout[desiredType + 'colorway'];
+    var colorMap = fullLayout['_' + desiredType + 'colormap'];
 
-    if(fullLayout.extendsunburstcolors) {
-        colorWay = generateExtendedColors(colorWay, sunburstExtendedColorWays);
+    if(fullLayout['extend' + desiredType + 'colors']) {
+        colorWay = generateExtendedColors(colorWay,
+            desiredType === 'treemap' ? treemapExtendedColorWays : sunburstExtendedColorWays
+        );
     }
     var dfltColorCount = 0;
 
@@ -259,8 +266,12 @@ exports.crossTraceCalc = function(gd) {
     for(var i = 0; i < calcdata.length; i++) {
         var cd = calcdata[i];
         var cd0 = cd[0];
-        if(cd0.trace.type === 'sunburst' && cd0.hierarchy) {
+        if(cd0.trace.type === desiredType && cd0.hierarchy) {
             cd0.hierarchy.each(pickColor);
         }
     }
+};
+
+exports.crossTraceCalc = function(gd) {
+    return exports._runCrossTraceCalc(gd, 'sunburst');
 };
