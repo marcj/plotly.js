@@ -11,7 +11,6 @@
 var Lib = require('../../lib');
 var Color = require('../../components/color');
 var setCursor = require('../../lib/setcursor');
-var appendArrayPointValue = require('../../components/fx/helpers').appendArrayPointValue;
 
 function getLabelStr(label) {
     if(!label && label !== 0) return '~';
@@ -21,23 +20,6 @@ function getLabelStr(label) {
 exports.getDirectory = function(d) {
     var labelStr = getLabelStr(d.data.label);
     return d.parent ? exports.getDirectory(d.parent) + ' | ' + labelStr : labelStr;
-};
-
-exports.makeEventData = function(pt, trace) {
-    var cdi = pt.data.data;
-
-    var out = {
-        curveNumber: trace.index,
-        pointNumber: cdi.i,
-        data: trace._input,
-        fullData: trace,
-
-        // TODO more things like 'children', 'siblings', 'hierarchy?
-    };
-
-    appendArrayPointValue(out, trace, cdi.i);
-
-    return out;
 };
 
 exports.findEntryWithLevel = function(hierarchy, level) {

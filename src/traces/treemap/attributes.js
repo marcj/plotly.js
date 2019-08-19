@@ -254,7 +254,7 @@ module.exports = {
         },
 
         color: {
-            dflt: "#ddd",
+            dflt: '#ddd',
             valType: 'color',
             role: 'style',
             editType: 'style',
