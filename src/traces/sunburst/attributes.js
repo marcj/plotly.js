@@ -107,9 +107,9 @@ module.exports = {
                 ].join(' ')
             }),
             width: extendFlat({}, pieAttrs.marker.line.width, {dflt: 1}),
-            editType: 'calc'
+            editType: 'plot'
         },
-        editType: 'calc'
+        editType: 'plot'
     },
         colorScaleAttrs('marker', {
             colorAttr: 'colors',
@@ -148,5 +148,5 @@ module.exports = {
     insidetextfont: pieAttrs.insidetextfont,
     outsidetextfont: pieAttrs.outsidetextfont,
 
-    domain: domainAttrs({name: 'sunburst', trace: true, editType: 'calc'})
+    domain: domainAttrs({name: 'sunburst', trace: true, editType: 'plot'})
 };

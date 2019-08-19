@@ -111,7 +111,7 @@ module.exports = {
 
         opacity: {
             valType: 'number',
-            editType: 'plot',
+            editType: 'style',
             role: 'style',
             min: 0,
             max: 1,
@@ -184,10 +184,10 @@ module.exports = {
                 ].join(' ')
             }),
             width: extendFlat({}, pieAttrs.marker.line.width, {dflt: 1}),
-            editType: 'calc'
+            editType: 'plot'
         },
 
-        editType: 'calc'
+        editType: 'plot'
     },
         colorScaleAttrs('marker', {
             colorAttr: 'colors',
@@ -340,5 +340,5 @@ module.exports = {
         ].join(' ')
     },
 
-    domain: domainAttrs({name: 'treemap', trace: true, editType: 'calc'})
+    domain: domainAttrs({name: 'treemap', trace: true, editType: 'plot'})
 };
