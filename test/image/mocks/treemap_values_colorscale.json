@@ -81,7 +81,8 @@
                     "size": 28,
                     "family": "Times New Roman"
                 }
-            }
+            },
+            "textinfo": "label+value"
         },
         {
             "type": "treemap",
@@ -126,6 +127,17 @@
                 1,
                 4
             ],
+            "text": [
+                "sixty five",
+                "fourteen",
+                "twelve",
+                "ten",
+                "two",
+                "six",
+                "six",
+                "one",
+                "four"
+            ],
             "marker": {
                 "opacity": 0.5,
                 "cmin": 0,
@@ -136,7 +148,8 @@
                 "colorbar": {
                     "title": "trace B"
                 }
-            }
+            },
+            "textinfo": "label+text"
         }
     ],
     "layout": {

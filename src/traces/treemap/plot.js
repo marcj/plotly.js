@@ -614,7 +614,7 @@ function formatSliceLabel(pt, trace, fullLayout) {
             if(Lib.isValidTextValue(tx)) thisText.push(tx);
         }
 
-        return thisText.join('<br>');
+        return thisText.join(' | '); // instead of using <br>
     }
 
     var txt = Lib.castOption(trace, cdi.i, 'texttemplate');
