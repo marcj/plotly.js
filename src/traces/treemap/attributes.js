@@ -22,8 +22,7 @@ module.exports = {
         dflt: 'Squarify',
         values: [
             'Binary',
-            'Squarify', // this algorithm accepts an extra 'ratio' parameter. What should we do about that?
-            // 'Resquarify',
+            'Squarify',
             'SliceDice',
             'Slice',
             'Dice'
@@ -31,6 +30,17 @@ module.exports = {
         valType: 'enumerated',
         role: 'info',
         editType: 'plot'
+    },
+
+    aspectratio: {
+        valType: 'number',
+        role: 'info',
+        min: 0,
+        dflt: 1,
+        editType: 'plot',
+        description: [
+            'Sets the preferred ratio between height and width of individual tiles.'
+        ].join(' ')
     },
 
     labels: {

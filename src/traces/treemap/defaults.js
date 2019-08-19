@@ -36,6 +36,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     coerce('maxdepth');
 
     coerce('tiling');
+    coerce('aspectratio');
 
     var text = coerce('text');
     /* coerce('texttemplate');

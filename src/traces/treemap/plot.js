@@ -279,6 +279,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     // grab corresponding calcdata item in sliceData[i].data.data
     var sliceData = partition(entry, [vpw, vph], {
         tiling: trace.tiling,
+        aspectratio: trace.aspectratio * (vpw / vph),
         padding: trace.marker.padding
     }).descendants();
 
@@ -551,17 +552,34 @@ function plotOne(gd, cd, element, transitionOpts) {
 // x[0-1] keys are hierarchy heights [integers]
 // y[0-1] keys are hierarchy heights [integers]
 function partition(entry, size, opts) {
-    return d3Hierarchy
+    var result = d3Hierarchy
         .treemap()
         .tile(d3Hierarchy['treemap' + opts.tiling])
         .paddingInner(opts.padding.inside)
-        .paddingTop(opts.padding.top)
         .paddingLeft(opts.padding.left)
         .paddingRight(opts.padding.right)
-        .paddingBottom(opts.padding.bottom)
-        .size(size)(
+        .paddingTop(opts.padding.top / opts.aspectratio)
+        .paddingBottom(opts.padding.bottom / opts.aspectratio)
+        .size([size[0], size[1] / opts.aspectratio])(
             entry
         );
+
+    scaleTree(result, 1, opts.aspectratio);
+
+    return result;
+}
+
+function scaleTree(node, scaleX, scaleY) {
+    node.x0 *= scaleX;
+    node.x1 *= scaleX;
+    node.y0 *= scaleY;
+    node.y1 *= scaleY;
+
+    if(node.children) {
+        for(var i = 0; i < node.children.length; i++) {
+            scaleTree(node.children[i], scaleX, scaleY);
+        }
+    }
 }
 
 function formatSliceLabel(pt, trace, fullLayout) {
