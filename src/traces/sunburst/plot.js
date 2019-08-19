@@ -126,10 +126,10 @@ function plotOne(gd, cd, element, transitionOpts) {
     // N.B. slice data isn't the calcdata,
     // grab corresponding calcdata item in sliceData[i].data.data
     var sliceData = partition(entry).descendants();
+
     var maxHeight = entry.height + 1;
     var yOffset = 0;
     var cutoff = maxDepth;
-
     // N.B. handle multiple-root special case
     if(cd0.hasMultipleRoots && helpers.isHierachyRoot(entry)) {
         sliceData = sliceData.slice(1);

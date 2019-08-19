@@ -283,13 +283,8 @@ function plotOne(gd, cd, element, transitionOpts) {
         padding: trace.marker.padding
     }).descendants();
 
-    // N.B. handle multiple-root special case
-    if(cd0.hasMultipleRoots && helpers.isHierachyRoot(entry)) {
-        sliceData = sliceData.slice(1);
-    }
-
     // filter out slices that won't show up on graph
-    sliceData = sliceData.filter(function(pt) { return pt.depth < maxDepth; });
+    sliceData = sliceData.filter(function(pt) { return pt.depth <= maxDepth; });
 
     function toMoveInsideSlice(x0, x1, y0, y1, textBB) {
         var hasFlag = function(f) { return trace.textposition.indexOf(f) !== -1; };
