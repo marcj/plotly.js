@@ -8,22 +8,14 @@
 
 'use strict';
 
-var Registry = require('../../registry');
-var getModuleCalcData = require('../../plots/get_data').getModuleCalcData;
+var base = require('../../plots/area/base');
 
-var name = exports.name = 'treemap';
+exports.name = 'treemap';
 
 exports.plot = function(gd, traces, transitionOpts, makeOnCompleteCallback) {
-    var _module = Registry.getModule(name);
-    var cdmodule = getModuleCalcData(gd.calcdata, _module)[0];
-    _module.plot(gd, cdmodule, transitionOpts, makeOnCompleteCallback);
+    base._runPlot(exports.name, gd, traces, transitionOpts, makeOnCompleteCallback);
 };
 
 exports.clean = function(newFullData, newFullLayout, oldFullData, oldFullLayout) {
-    var had = (oldFullLayout._has && oldFullLayout._has(name));
-    var has = (newFullLayout._has && newFullLayout._has(name));
-
-    if(had && !has) {
-        oldFullLayout._treemaplayer.selectAll('g.trace').remove();
-    }
+    base._runClean(exports.name, newFullData, newFullLayout, oldFullData, oldFullLayout);
 };

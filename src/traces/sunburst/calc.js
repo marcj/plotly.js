@@ -23,7 +23,7 @@ var isArrayOrTypedArray = Lib.isArrayOrTypedArray;
 var sunburstExtendedColorWays = {};
 var treemapExtendedColorWays = {};
 
-exports._runCalc = function(gd, trace, desiredType) {
+exports._runCalc = function(desiredType, gd, trace) {
     var fullLayout = gd._fullLayout;
     var ids = trace.ids;
     var hasIds = isArrayOrTypedArray(ids);
@@ -215,10 +215,6 @@ exports._runCalc = function(gd, trace, desiredType) {
     return cd;
 };
 
-exports.calc = function(gd, trace) {
-    return exports._runCalc(gd, trace, 'sunburst');
-};
-
 /*
  * `calc` filled in (and collated) explicit colors.
  * Now we need to propagate these explicit colors to other traces,
@@ -226,7 +222,7 @@ exports.calc = function(gd, trace) {
  * This is done after sorting, so we pick defaults
  * in the order slices will be displayed
  */
-exports._runCrossTraceCalc = function(gd, desiredType) {
+exports._runCrossTraceCalc = function(desiredType, gd) {
     var fullLayout = gd._fullLayout;
     var calcdata = gd.calcdata;
     var colorWay = fullLayout[desiredType + 'colorway'];
@@ -272,6 +268,10 @@ exports._runCrossTraceCalc = function(gd, desiredType) {
     }
 };
 
+exports.calc = function(gd, trace) {
+    return exports._runCalc('sunburst', gd, trace);
+};
+
 exports.crossTraceCalc = function(gd) {
-    return exports._runCrossTraceCalc(gd, 'sunburst');
+    return exports._runCrossTraceCalc('sunburst', gd);
 };
