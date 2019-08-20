@@ -3,7 +3,7 @@
     {
       "type": "treemap",
       "maxdepth": 3,
-      "textinfo": "label+value",
+      "textinfo": "label+value+percent parent",
       "ids": [
         "Aromas",
         "Tastes",

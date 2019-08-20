@@ -412,7 +412,7 @@ function plotOne(gd, cd, element, transitionOpts) {
             s.attr('data-notex', 1);
         });
 
-        sliceText.text(formatSliceLabel(pt, trace, fullLayout))
+        sliceText.text(formatSliceLabel(pt, trace, cd, fullLayout))
             .classed('slicetext', true)
             .attr('text-anchor', 'middle')
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
@@ -576,7 +576,7 @@ function partition(entry, size, opts) {
     return result;
 }
 
-function formatSliceLabel(pt, trace, fullLayout) {
+function formatSliceLabel(pt, trace, cd, fullLayout) {
     var texttemplate = trace.texttemplate;
     var textinfo = trace.textinfo;
 
@@ -584,31 +584,66 @@ function formatSliceLabel(pt, trace, fullLayout) {
         return '';
     }
 
+    var cd0 = cd[0];
     var cdi = pt.data.data;
     var separators = fullLayout.separators;
     if(!texttemplate) {
+        var isInFront = helpers.isLeaf(pt) ||
+            pt.depth === helpers.getMaxDepth(trace);
+
         var parts = textinfo.split('+');
         var hasFlag = function(flag) { return parts.indexOf(flag) !== -1; };
         var thisText = [];
+        var tx;
 
         if(hasFlag('label') && cdi.label) {
             thisText.push(cdi.label);
         }
 
-        if(cdi.hasOwnProperty('v') && hasFlag('value')) {
+        var hasV = cdi.hasOwnProperty('v');
+
+        if(hasFlag('value') && hasV) {
             thisText.push(formatPieValue(cdi.v, separators));
         }
 
+        var nPercent = 0;
+        if(hasFlag('percent parent')) nPercent++;
+        if(hasFlag('percent total')) nPercent++;
+        var hasMultiplePercents = nPercent > 1;
+
+        if(nPercent) {
+            var percent;
+            var addPercent = function(key) {
+                tx = Lib.formatPercent(percent, 0);
+                if(tx === '0%') tx = Lib.formatPercent(percent, 1);
+                if(tx !== '0.0%') {
+                    if(hasMultiplePercents && isInFront) tx += ' of ' + key + ' ';
+                    thisText.push(tx);
+                }
+            };
+
+            var ref;
+            var calcPercent = function(key) {
+                percent = (hasV) ? cdi.v / ref.v : (cdi.numDescendants + 1) / ref.numDescendants;
+                addPercent(key);
+            };
+
+            if(hasFlag('percent parent') && pt.parent) {
+                ref = pt.parent.data.data;
+                calcPercent('parent');
+            }
+            if(hasFlag('percent total') && pt.parent) {
+                ref = cd0;
+                calcPercent('total');
+            }
+        }
+
         if(hasFlag('text')) {
-            var tx = Lib.castOption(trace, cdi.i, 'text');
+            tx = Lib.castOption(trace, cdi.i, 'text');
             if(Lib.isValidTextValue(tx)) thisText.push(tx);
         }
 
-        var isOnTop = helpers.isLeaf(pt) ||
-            pt.depth === helpers.getMaxDepth(trace) - 1;
-
-        var divider = isOnTop ? '<br>' : ' | ';
-
+        var divider = isInFront ? '<br>' : ' | ';
         return thisText.join(divider);
     }
 

@@ -11,9 +11,32 @@
 var sunburstCalc = require('../sunburst/calc');
 
 exports.calc = function(gd, trace) {
-    return sunburstCalc._runCalc('treemap', gd, trace);
+    var cd = sunburstCalc._runCalc('treemap', gd, trace);
+
+    if(cd) countDescendants(cd[0].hierarchy);
+
+    return cd;
 };
 
 exports.crossTraceCalc = function(gd) {
     return sunburstCalc._runCrossTraceCalc('treemap', gd);
 };
+
+function countDescendants(node) {
+    var descendants = 0;
+
+    var children = node['child' + 'ren'];
+    if(children) {
+        var len = children.length;
+        descendants += len;
+
+        for(var i = 0; i < len; i++) {
+            descendants += countDescendants(children[i]);
+        }
+    }
+
+    // save to the node
+    node.data.data.numDescendants = descendants;
+
+    return descendants;
+}

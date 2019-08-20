@@ -2,6 +2,7 @@
   "data": [
     {
       "type": "treemap",
+      "textinfo": "label+value+percent total",
       "ids": [
         "flare",
         "flare-analytics",

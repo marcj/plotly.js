@@ -288,8 +288,8 @@ module.exports = {
         valType: 'flaglist',
         role: 'info',
         flags: [
-            // 'percent parent',
-            // 'percent total',
+            'percent parent',
+            'percent total',
             'label',
             'text',
             'value'
@@ -304,8 +304,8 @@ module.exports = {
     /*
     texttemplate: texttemplateAttrs({editType: 'plot'}, {
         keys: [
-            // 'percent parent',
-            // 'percent total',
+            'percentParent',
+            'percentTotal',
             'label',
             'text',
             'value',
@@ -327,8 +327,8 @@ module.exports = {
     }),
     hovertemplate: hovertemplateAttrs({
         keys: [
-            // 'percent parent',
-            // 'percent total',
+            // 'percentParent',
+            // 'percentTotal',
             'label',
             'text',
             'value',

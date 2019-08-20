@@ -2,6 +2,7 @@
   "data": [
     {
       "type": "treemap",
+      "textinfo": "label+value+percent parent",
       "ids": [
         "Aromas",
         "Tastes",

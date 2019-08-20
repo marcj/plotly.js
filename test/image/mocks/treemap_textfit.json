@@ -2,6 +2,7 @@
   "data": [
     {
       "type": "treemap",
+      "textinfo": "label+value+percent parent+percent total",
       "ids": [
         "Parent Name One",
         "Parent Name Two",
