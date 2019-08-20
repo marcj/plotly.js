@@ -317,8 +317,8 @@ module.exports = {
     hovertext: pieAttrs.hovertext,
     hoverinfo: extendFlat({}, plotAttrs.hoverinfo, {
         flags: [
-            // 'percent parent',
-            // 'percent total',
+            'percent parent',
+            'percent total',
             'label',
             'text',
             'value',
@@ -327,8 +327,8 @@ module.exports = {
     }),
     hovertemplate: hovertemplateAttrs({
         keys: [
-            // 'percentParent',
-            // 'percentTotal',
+            'percentParent',
+            'percentTotal',
             'label',
             'text',
             'value',

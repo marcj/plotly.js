@@ -17,7 +17,9 @@ var constants = require('./constants');
 var appendArrayPointValue = require('../../components/fx/helpers').appendArrayPointValue;
 
 var helpers = require('./helpers');
-var formatValue = require('../pie/helpers').formatPieValue;
+var pieHelpers = require('../pie/helpers');
+var formatValue = pieHelpers.formatPieValue;
+var formatPercent = pieHelpers.formatPiePercent;
 
 function makeEventData(pt, trace) {
     var cdi = pt.data.data;
@@ -85,6 +87,7 @@ module.exports = function attachFxHandlers(sliceTop, gd, cd, styleOne) {
             var parts = [];
             var thisText = [];
             var hasFlag = function(flag) { return parts.indexOf(flag) !== -1; };
+            var hasV = cdi.hasOwnProperty('v');
 
             if(hoverinfo) {
                 parts = hoverinfo === 'all' ?
@@ -95,10 +98,23 @@ module.exports = function attachFxHandlers(sliceTop, gd, cd, styleOne) {
             hoverPt.label = cdi.label;
             if(hasFlag('label') && hoverPt.label) thisText.push(hoverPt.label);
 
-            if(cdi.hasOwnProperty('v')) {
+            if(hasV) {
                 hoverPt.value = cdi.v;
                 hoverPt.valueLabel = formatValue(hoverPt.value, separators);
                 if(hasFlag('value')) thisText.push(hoverPt.valueLabel);
+            }
+
+            if(hasFlag('percent parent') && pt.parent) {
+                var ref = pt.parent.data.data;
+                hoverPt.percentParent = hasV ? cdi.v / ref.v : (cdi.numDescendants + 1) / ref.numDescendants;
+                hoverPt.percentParentLabel = formatPercent(hoverPt.percentParent, separators) + ' of parent';
+                thisText.push(hoverPt.percentParentLabel);
+            }
+
+            if(hasFlag('percent total') && pt.parent) {
+                hoverPt.percentTotal = hasV ? cdi.v / cd0.v : (cdi.numDescendants + 1) / cd0.numDescendants;
+                hoverPt.percentTotalLabel = formatPercent(hoverPt.percentTotal, separators) + ' of total';
+                thisText.push(hoverPt.percentTotalLabel);
             }
 
             hoverPt.text = _cast('hovertext') || _cast('text');
