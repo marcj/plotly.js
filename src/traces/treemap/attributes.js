@@ -18,31 +18,6 @@ var pieAttrs = require('../pie/attributes');
 var extendFlat = require('../../lib/extend').extendFlat;
 
 module.exports = {
-    tiling: {
-        dflt: 'Squarify',
-        values: [
-            'Binary',
-            'Squarify',
-            'SliceDice',
-            'Slice',
-            'Dice'
-        ],
-        valType: 'enumerated',
-        role: 'info',
-        editType: 'plot'
-    },
-
-    aspectratio: {
-        valType: 'number',
-        role: 'info',
-        min: 0,
-        dflt: 1,
-        editType: 'plot',
-        description: [
-            'Sets the preferred ratio between height and width of individual tiles.'
-        ].join(' ')
-    },
-
     labels: {
         valType: 'data_array',
         editType: 'calc',
@@ -108,40 +83,48 @@ module.exports = {
         ].join(' ')
     },
 
-    marker: extendFlat({
-        colors: {
-            valType: 'data_array',
-            editType: 'calc',
+    tiling: {
+        packing: {
+            dflt: 'Squarify',
+            values: [
+                'Binary',
+                'Squarify',
+                'SliceDice',
+                'Slice',
+                'Dice'
+            ],
+            valType: 'enumerated',
+            role: 'info',
+            editType: 'plot'
+        },
+
+        aspectratio: {
+            valType: 'number',
+            role: 'info',
+            min: 0,
+            dflt: 1,
+            editType: 'plot',
             description: [
-                'Sets the color of each sector of this treemap chart.',
-                'If not specified, the default trace color set is used',
-                'to pick the sector colors.'
+                'Sets the preferred ratio between height and width of individual tiles.'
             ].join(' ')
         },
 
-        opacity: {
+        offset: {
             valType: 'number',
-            editType: 'style',
             role: 'style',
             min: 0,
-            max: 1,
+            dflt: 1,
+            editType: 'plot',
             description: [
-                'Sets the opacity for the sectors. With colorscale',
-                'it is defaulted to 1; otherwise it is defaulted to 0.5'
+                'Sets the inner offset (in px).'
             ].join(' ')
         },
 
+        editType: 'plot',
+    },
+
+    marker: extendFlat({
         padding: {
-            inside: {
-                valType: 'number',
-                role: 'style',
-                min: 0,
-                dflt: 1,
-                editType: 'plot',
-                description: [
-                    'Sets the inner padding (in px).'
-                ].join(' ')
-            },
             top: {
                 valType: 'number',
                 role: 'style',
@@ -183,6 +166,28 @@ module.exports = {
                 ].join(' ')
             },
             editType: 'plot'
+        },
+
+        colors: {
+            valType: 'data_array',
+            editType: 'calc',
+            description: [
+                'Sets the color of each sector of this treemap chart.',
+                'If not specified, the default trace color set is used',
+                'to pick the sector colors.'
+            ].join(' ')
+        },
+
+        opacity: {
+            valType: 'number',
+            editType: 'style',
+            role: 'style',
+            min: 0,
+            max: 1,
+            description: [
+                'Sets the opacity for the sectors. With colorscale',
+                'it is defaulted to 1; otherwise it is defaulted to 0.5'
+            ].join(' ')
         },
 
         line: {

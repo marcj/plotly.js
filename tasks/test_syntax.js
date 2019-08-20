@@ -140,7 +140,7 @@ function assertSrcContents() {
                     } else if(IE_BLACK_LIST.indexOf(lastPart) !== -1) {
                         logs.push(file + ' : contains .' + lastPart + ' (IE failure)');
                     } else if(IE_SVG_BLACK_LIST.indexOf(lastPart) !== -1) {
-                        // add special case for sunburst where we use 'children'
+                        // add special case for sunburst and treemap where we use 'children'
                         // off the d3-hierarchy output
                         var dirParts = path.dirname(file).split(path.sep);
                         var filename = dirParts[dirParts.length - 1];

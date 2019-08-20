@@ -278,8 +278,9 @@ function plotOne(gd, cd, element, transitionOpts) {
     // N.B. slice data isn't the calcdata,
     // grab corresponding calcdata item in sliceData[i].data.data
     var sliceData = partition(entry, [vpw, vph], {
-        tiling: trace.tiling,
-        aspectratio: trace.aspectratio * (vpw / vph),
+        aspectratio: trace.tiling.aspectratio * (vpw / vph),
+        packing: trace.tiling.packing,
+        offset: trace.tiling.offset,
         padding: trace.marker.padding
     }).descendants();
 
@@ -544,37 +545,35 @@ function plotOne(gd, cd, element, transitionOpts) {
     }
 }
 
-// x[0-1] keys are hierarchy heights [integers]
-// y[0-1] keys are hierarchy heights [integers]
-function partition(entry, size, opts) {
-    var result = d3Hierarchy
-        .treemap()
-        .tile(d3Hierarchy['treemap' + opts.tiling])
-        .paddingInner(opts.padding.inside)
-        .paddingLeft(opts.padding.left)
-        .paddingRight(opts.padding.right)
-        .paddingTop(opts.padding.top / opts.aspectratio)
-        .paddingBottom(opts.padding.bottom / opts.aspectratio)
-        .size([size[0], size[1] / opts.aspectratio])(
-            entry
-        );
-
-    scaleTree(result, 1, opts.aspectratio);
-
-    return result;
-}
-
 function scaleTree(node, scaleX, scaleY) {
     node.x0 *= scaleX;
     node.x1 *= scaleX;
     node.y0 *= scaleY;
     node.y1 *= scaleY;
 
-    if(node.children) {
-        for(var i = 0; i < node.children.length; i++) {
-            scaleTree(node.children[i], scaleX, scaleY);
+    var children = node['child' + 'ren'];
+    if(children) {
+        for(var i = 0; i < children.length; i++) {
+            scaleTree(children[i], scaleX, scaleY);
         }
     }
+}
+
+// x[0-1] keys are hierarchy heights [integers]
+// y[0-1] keys are hierarchy heights [integers]
+function partition(entry, size, opts) {
+    var result = d3Hierarchy
+        .treemap()
+        .tile(d3Hierarchy['treemap' + opts.packing])
+        .paddingInner(opts.offset)
+        .paddingLeft(opts.padding.left)
+        .paddingRight(opts.padding.right)
+        .paddingTop(opts.padding.top / opts.aspectratio)
+        .paddingBottom(opts.padding.bottom / opts.aspectratio)
+        .size([size[0], size[1] / opts.aspectratio])(entry);
+
+    scaleTree(result, 1, opts.aspectratio);
+    return result;
 }
 
 function formatSliceLabel(pt, trace, fullLayout) {

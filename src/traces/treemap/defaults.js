@@ -35,8 +35,9 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     coerce('level');
     coerce('maxdepth');
 
-    coerce('tiling');
-    coerce('aspectratio');
+    coerce('tiling.packing');
+    coerce('tiling.aspectratio');
+    var tilingOffset = coerce('tiling.offset');
 
     var text = coerce('text');
     /* coerce('texttemplate');
@@ -67,14 +68,13 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     coerce('marker.padding.left', headerSize / 4);
     coerce('marker.padding.right', headerSize / 4);
     coerce('marker.padding.bottom', headerSize / 4);
-    var paddingInside = coerce('marker.padding.inside');
 
     if(withColorscale) {
         colorscaleDefaults(traceIn, traceOut, layout, coerce, {prefix: 'marker.', cLetter: 'c'});
     }
     var markerOpacity = coerce('marker.opacity', withColorscale ? 1 : 0.5);
     coerce('hovered.marker.opacity', withColorscale ? 1 : 0.5 + markerOpacity / 2);
-    coerce('hovered.marker.line.width', paddingInside < 2 ? paddingInside : 2);
+    coerce('hovered.marker.line.width', tilingOffset < 2 ? tilingOffset : 2);
     coerce('hovered.marker.line.color', Color.contrast(layout.paper_bgcolor));
 
     var dirSide = coerce('directory.side');

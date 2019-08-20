@@ -60,9 +60,6 @@
                     "title": "trace A",
                     "x": 0,
                     "xanchor": "right"
-                },
-                "padding": {
-                    "inside": 4
                 }
             },
             "hovered": {
@@ -82,7 +79,10 @@
                     "family": "Times New Roman"
                 }
             },
-            "textinfo": "label+value"
+            "textinfo": "label+value",
+            "tiling": {
+                "offset": 4
+            }
         },
         {
             "type": "treemap",
