@@ -288,11 +288,11 @@ module.exports = {
         valType: 'flaglist',
         role: 'info',
         flags: [
-            'percent parent',
-            'percent total',
             'label',
             'text',
-            'value'
+            'value',
+            'percent parent',
+            'percent total'
         ],
         extras: ['none'],
         editType: 'plot',
@@ -304,12 +304,12 @@ module.exports = {
     /*
     texttemplate: texttemplateAttrs({editType: 'plot'}, {
         keys: [
-            'percentParent',
-            'percentTotal',
             'label',
             'text',
             'value',
-            'color'
+            'color',
+            'percentParent',
+            'percentTotal'
         ]
     }),
     */
@@ -317,22 +317,22 @@ module.exports = {
     hovertext: pieAttrs.hovertext,
     hoverinfo: extendFlat({}, plotAttrs.hoverinfo, {
         flags: [
-            'percent parent',
-            'percent total',
             'label',
             'text',
             'value',
-            'name'
+            'name',
+            'percent parent',
+            'percent total'
         ]
     }),
     hovertemplate: hovertemplateAttrs({
         keys: [
-            'percentParent',
-            'percentTotal',
             'label',
             'text',
             'value',
-            'text'
+            'text',
+            'percentParent',
+            'percentTotal'
         ]
     }),
 

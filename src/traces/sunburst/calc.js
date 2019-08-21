@@ -23,6 +23,25 @@ var isArrayOrTypedArray = Lib.isArrayOrTypedArray;
 var sunburstExtendedColorWays = {};
 var treemapExtendedColorWays = {};
 
+function countDescendants(node) {
+    var descendants = 0;
+
+    var children = node['child' + 'ren'];
+    if(children) {
+        var len = children.length;
+        descendants += len;
+
+        for(var i = 0; i < len; i++) {
+            descendants += countDescendants(children[i]);
+        }
+    }
+
+    // save to the node
+    node.data.data.numDescendants = descendants;
+
+    return descendants;
+}
+
 exports._runCalc = function(desiredType, gd, trace) {
     var fullLayout = gd._fullLayout;
     var ids = trace.ids;
@@ -173,6 +192,7 @@ exports._runCalc = function(desiredType, gd, trace) {
         }
     } else {
         hierarchy.count();
+        countDescendants(hierarchy);
     }
 
     if(failed) return;

@@ -344,7 +344,7 @@ describe('Test sunburst hover:', function() {
         pos: 2,
         exp: {
             label: {
-                nums: 'Seth',
+                nums: 'Seth\n37.5% of parent\n37.5% of total',
             },
             ptData: {
                 curveNumber: 0,
@@ -359,7 +359,7 @@ describe('Test sunburst hover:', function() {
         pos: 3,
         exp: {
             label: {
-                nums: 'Cain\nA',
+                nums: 'Cain\n12.5% of parent\n12.5% of total\nA',
             },
             ptData: {
                 curveNumber: 0,
@@ -377,7 +377,7 @@ describe('Test sunburst hover:', function() {
         pos: 4,
         exp: {
             label: {
-                nums: 'Abel\n6',
+                nums: 'Abel\n12.5% of parent\n12.5% of total\n6',
                 name: 'trace 0'
             },
             ptData: {
@@ -396,7 +396,7 @@ describe('Test sunburst hover:', function() {
         pos: 4,
         exp: {
             label: {
-                nums: 'Abel',
+                nums: 'Abel\n12.5% of parent\n12.5% of total',
                 name: 't...'
             },
             ptData: {
@@ -1178,7 +1178,7 @@ describe('Test sunburst interactions edge cases', function() {
         })
         .then(hover(gd, 4))
         .then(function() {
-            assertHoverLabelContent({ nums: 'D\n4\n0' });
+            assertHoverLabelContent({ nums: 'D\n4\n80% of parent\n57.1% of total\n0' });
         })
         .then(done);
     });

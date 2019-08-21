@@ -111,8 +111,9 @@ function plotOne(gd, cd, element, transitionOpts) {
     var viewportY = function(y) { return y + cy - vph / 2; };
 
     if(trace.directory.side) {
-        var bardir = d3.select(element).append('g')
-            .attr('class', 'directory');
+        var bardir = d3.select(element)
+            .append('g')
+            .classed('directory', true);
 
         var barW = vpw;
         var barH = trace.directory.height;
