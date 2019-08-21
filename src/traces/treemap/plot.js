@@ -110,37 +110,6 @@ function plotOne(gd, cd, element, transitionOpts) {
     var viewportX = function(x) { return x + cx - vpw / 2; };
     var viewportY = function(y) { return y + cy - vph / 2; };
 
-    if(trace.directory.side) {
-        var bardir = d3.select(element)
-            .append('g')
-            .classed('directory', true);
-
-        var barW = vpw;
-        var barH = trace.directory.height;
-        var barX = viewportX(0);
-        var barY = (trace.directory.side === 'top') ? viewportY(0) - barH : viewportY(vph);
-
-        bardir.append('rect')
-            .attr('x', barX)
-            .attr('y', barY)
-            .attr('width', barW)
-            .attr('height', barH)
-            .style('fill', trace.directory.color);
-
-        bardir.append('text')
-            .text(helpers.getDirectory(entry.data))
-            .attr('text-anchor', 'left')
-            .attr('dy', '.75em')
-            .attr('x', 2 + barX)
-            .attr('y', 2 + barY)
-            .call(Drawing.font, {
-                size: trace.directory.textfont.size,
-                color: trace.directory.textfont.color,
-                family: trace.directory.textfont.family
-            })
-            .call(svgTextUtils.convertToTspans, gd);
-    }
-
     var getOrigin = function(pt) {
         var x0 = pt.x0;
         var x1 = pt.x1;
@@ -543,6 +512,35 @@ function plotOne(gd, cd, element, transitionOpts) {
         }
 
         return Lib.extendFlat({}, getOrigin(pt));
+    }
+
+    var dirGroup = Lib.ensureSingle(d3.select(element), 'g', 'directory');
+    if(trace.directory.side) {
+        var barW = vpw;
+        var barH = trace.directory.height;
+        var barX = viewportX(0);
+        var barY = (trace.directory.side === 'top') ? viewportY(0) - barH : viewportY(vph);
+
+        dirGroup.append('rect')
+            .attr('x', barX)
+            .attr('y', barY)
+            .attr('width', barW)
+            .attr('height', barH)
+            .style('fill', trace.directory.color)
+            .on('click', function() { alert('Clicked!'); });
+
+        dirGroup.append('text')
+            .text(helpers.getDirectory(entry.data))
+            .attr('text-anchor', 'left')
+            .attr('dy', '.75em')
+            .attr('x', 2 + barX)
+            .attr('y', 2 + barY)
+            .call(Drawing.font, {
+                size: trace.directory.textfont.size,
+                color: trace.directory.textfont.color,
+                family: trace.directory.textfont.family
+            })
+            .call(svgTextUtils.convertToTspans, gd);
     }
 }
 
