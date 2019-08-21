@@ -577,7 +577,7 @@ function partition(entry, size, opts) {
     return result;
 }
 
-function formatSliceLabel(pt, trace, cd, fullLayout) {
+function formatSliceLabel(pt, trace, cd, fullLayout) { // TODO: merge this & sunburst version into one function when texttemplate is merged
     var texttemplate = trace.texttemplate;
     var textinfo = trace.textinfo;
 

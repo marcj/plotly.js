@@ -23,7 +23,7 @@ var isArrayOrTypedArray = Lib.isArrayOrTypedArray;
 var sunburstExtendedColorWays = {};
 var treemapExtendedColorWays = {};
 
-function countDescendants(node) {
+function countDescendants(node, trace) {
     var descendants = 0;
 
     var children = node['child' + 'ren'];
@@ -32,12 +32,16 @@ function countDescendants(node) {
         descendants += len;
 
         for(var i = 0; i < len; i++) {
-            descendants += countDescendants(children[i]);
+            descendants += countDescendants(children[i], trace);
         }
     }
 
     // save to the node
     node.data.data.numDescendants = descendants;
+
+    // save to the trace
+    if(!trace._numDescendants) trace._numDescendants = [];
+    trace._numDescendants[node.data.data.i] = descendants;
 
     return descendants;
 }
@@ -48,8 +52,8 @@ exports._runCalc = function(desiredType, gd, trace) {
     var hasIds = isArrayOrTypedArray(ids);
     var labels = trace.labels;
     var parents = trace.parents;
-    var vals = trace.values;
-    var hasVals = isArrayOrTypedArray(vals);
+    var values = trace.values;
+    var hasValues = isArrayOrTypedArray(values);
     var cd = [];
 
     var parent2children = {};
@@ -66,7 +70,7 @@ exports._runCalc = function(desiredType, gd, trace) {
     };
 
     var isValidVal = function(i) {
-        return !hasVals || (isNumeric(vals[i]) && vals[i] >= 0);
+        return !hasValues || (isNumeric(values[i]) && values[i] >= 0);
     };
 
     var len;
@@ -90,7 +94,7 @@ exports._runCalc = function(desiredType, gd, trace) {
         getId = function(i) { return String(labels[i]); };
     }
 
-    if(hasVals) len = Math.min(len, vals.length);
+    if(hasValues) len = Math.min(len, values.length);
 
     for(var i = 0; i < len; i++) {
         if(isValid(i)) {
@@ -104,7 +108,7 @@ exports._runCalc = function(desiredType, gd, trace) {
                 label: isValidKey(labels[i]) ? String(labels[i]) : ''
             };
 
-            if(hasVals) cdi.v = +vals[i];
+            if(hasValues) cdi.v = +values[i];
             cd.push(cdi);
             addToLookup(pid, id);
         }
@@ -164,7 +168,7 @@ exports._runCalc = function(desiredType, gd, trace) {
     var hierarchy = d3Hierarchy.hierarchy(root);
     var failed = false;
 
-    if(hasVals) {
+    if(hasValues) {
         switch(trace.branchvalues) {
             case 'remainder':
                 hierarchy.sum(function(d) { return d.data.v; });
@@ -192,7 +196,7 @@ exports._runCalc = function(desiredType, gd, trace) {
         }
     } else {
         hierarchy.count();
-        countDescendants(hierarchy);
+        countDescendants(hierarchy, trace);
     }
 
     if(failed) return;
@@ -205,8 +209,8 @@ exports._runCalc = function(desiredType, gd, trace) {
     var colors = trace.marker.colors || [];
     trace._hasColorscale = hasColorscale(trace, 'marker');
     if(trace._hasColorscale) {
-        if(!colors.length && hasVals) {
-            colors = trace.values;
+        if(!colors.length) {
+            colors = hasValues ? trace.values : trace._numDescendants;
         }
 
         colorscaleCalc(gd, trace, {
