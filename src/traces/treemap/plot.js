@@ -250,7 +250,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     var sliceData = partition(entry, [vpw, vph], {
         aspectratio: trace.tiling.aspectratio,
         packing: trace.tiling.packing,
-        offset: trace.tiling.offset,
+        offset: trace.tiling.pad,
         padding: trace.marker.padding
     }).descendants();
 

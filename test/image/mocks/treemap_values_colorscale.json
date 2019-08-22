@@ -81,7 +81,7 @@
             },
             "textinfo": "label+value",
             "tiling": {
-                "offset": 4
+                "pad": 4
             }
         },
         {

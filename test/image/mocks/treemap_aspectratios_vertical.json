@@ -11,7 +11,7 @@
             },
             "tiling": {
                 "aspectratio": 1,
-                "offset": 4
+                "pad": 4
             },
 			"marker": {
 				"line": {
@@ -99,7 +99,7 @@
             },
             "tiling": {
                 "aspectratio": 1,
-                "offset": 0
+                "pad": 0
             },
 			"marker": {
 				"line": {
@@ -187,7 +187,7 @@
             },
             "tiling": {
                 "aspectratio": 0.5,
-                "offset": 4
+                "pad": 4
             },
 			"marker": {
 				"line": {
@@ -275,7 +275,7 @@
             },
             "tiling": {
                 "aspectratio": 2,
-                "offset": 4
+                "pad": 4
             },
 			"marker": {
 				"line": {

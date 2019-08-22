@@ -109,14 +109,14 @@ module.exports = {
             ].join(' ')
         },
 
-        offset: {
+        pad: {
             valType: 'number',
             role: 'style',
             min: 0,
             dflt: 1,
             editType: 'plot',
             description: [
-                'Sets the inner offset (in px).'
+                'Sets the inner padding i.e in pixels when using `aspectratio` 1.'
             ].join(' ')
         },
 

@@ -37,7 +37,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
 
     coerce('tiling.packing');
     coerce('tiling.aspectratio');
-    var tilingOffset = coerce('tiling.offset');
+    var tilingPad = coerce('tiling.pad');
 
     var text = coerce('text');
     /* coerce('texttemplate');
@@ -74,7 +74,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     }
     var markerOpacity = coerce('marker.opacity', withColorscale ? 1 : 0.5);
     coerce('hovered.marker.opacity', withColorscale ? 1 : 0.5 + markerOpacity / 2);
-    coerce('hovered.marker.line.width', tilingOffset < 2 ? tilingOffset : 2);
+    coerce('hovered.marker.line.width', tilingPad < 2 ? tilingPad : 2);
     coerce('hovered.marker.line.color', Color.contrast(layout.paper_bgcolor));
 
     var dirSide = coerce('directory.side');
