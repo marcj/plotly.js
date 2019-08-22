@@ -64,10 +64,10 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     var withColorscale = hasColorscale(traceIn, 'marker');
 
     var headerSize = traceOut.textfont.size * 1.6;
-    coerce('marker.padding.top', headerSize);
-    coerce('marker.padding.left', headerSize / 4);
-    coerce('marker.padding.right', headerSize / 4);
-    coerce('marker.padding.bottom', headerSize / 4);
+    coerce('marker.pad.top', headerSize);
+    coerce('marker.pad.left', headerSize / 4);
+    coerce('marker.pad.right', headerSize / 4);
+    coerce('marker.pad.bottom', headerSize / 4);
 
     if(withColorscale) {
         colorscaleDefaults(traceIn, traceOut, layout, coerce, {prefix: 'marker.', cLetter: 'c'});

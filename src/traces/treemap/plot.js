@@ -251,7 +251,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         aspectratio: trace.tiling.aspectratio,
         packing: trace.tiling.packing,
         offset: trace.tiling.pad,
-        padding: trace.marker.padding
+        pad: trace.marker.pad
     }).descendants();
 
     // filter out slices that won't show up on graph
@@ -269,8 +269,8 @@ function plotOne(gd, cd, element, transitionOpts) {
             hasFlag('right') ? 'right' : 'center';
 
         var offsetPad =
-            hasFlag('left') ? trace.marker.padding.left :
-            hasFlag('right') ? trace.marker.padding.right : 0;
+            hasFlag('left') ? trace.marker.pad.left :
+            hasFlag('right') ? trace.marker.pad.right : 0;
 
         // position the text relative to the slice
         var transform = toMoveInsideBar(x0, x1, y0, y1, textBB, {
@@ -565,10 +565,10 @@ function partition(entry, size, opts) {
         .treemap()
         .tile(d3Hierarchy['treemap' + opts.packing])
         .paddingInner(opts.offset)
-        .paddingLeft(opts.padding.left)
-        .paddingRight(opts.padding.right)
-        .paddingTop(opts.padding.top / opts.aspectratio)
-        .paddingBottom(opts.padding.bottom / opts.aspectratio)
+        .paddingLeft(opts.pad.left)
+        .paddingRight(opts.pad.right)
+        .paddingTop(opts.pad.top / opts.aspectratio)
+        .paddingBottom(opts.pad.bottom / opts.aspectratio)
         .size([size[0], size[1] / opts.aspectratio])(entry);
 
     scaleTree(result, 1, opts.aspectratio);

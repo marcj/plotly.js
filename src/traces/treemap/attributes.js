@@ -124,7 +124,7 @@ module.exports = {
     },
 
     marker: extendFlat({
-        padding: {
+        pad: {
             top: {
                 valType: 'number',
                 role: 'style',
