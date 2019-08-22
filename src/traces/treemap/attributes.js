@@ -251,7 +251,7 @@ module.exports = {
         side: {
             valType: 'enumerated',
             values: ['top', 'bottom', false],
-            dflt: 'bottom',
+            dflt: false,
             role: 'info',
             editType: 'plot',
             description: [

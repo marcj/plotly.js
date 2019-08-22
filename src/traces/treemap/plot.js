@@ -248,7 +248,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     // N.B. slice data isn't the calcdata,
     // grab corresponding calcdata item in sliceData[i].data.data
     var sliceData = partition(entry, [vpw, vph], {
-        aspectratio: trace.tiling.aspectratio * (vpw / vph),
+        aspectratio: trace.tiling.aspectratio,
         packing: trace.tiling.packing,
         offset: trace.tiling.offset,
         padding: trace.marker.padding
