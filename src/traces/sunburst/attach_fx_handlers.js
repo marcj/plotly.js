@@ -79,8 +79,8 @@ module.exports = function attachFxHandlers(sliceTop, gd, cd, styleOne) {
                 hoverCenterY = cd0.cy + pt.pxmid[1] * (1 - pt.rInscribed);
             }
             if(isTreemap) {
-                hoverCenterX = pt._right[0];
-                hoverCenterY = pt._right[1];
+                hoverCenterX = pt._hoverPos[0];
+                hoverCenterY = pt._hoverPos[1];
             }
 
             var hoverPt = {};

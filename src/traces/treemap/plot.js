@@ -355,9 +355,12 @@ function plotOne(gd, cd, element, transitionOpts) {
             s.style('pointer-events', 'all');
         });
 
-        pt._right = [
+        pt._hoverPos = [
             viewportX(pt.x1),
-            viewportY((pt.y0 + pt.y1) / 2)
+            viewportY(isOnTop(pt, trace) ?
+                (pt.y0 + pt.y1) / 2 :
+                pt.y0
+            )
         ];
 
         if(hasTransition) {
@@ -597,6 +600,10 @@ function partition(entry, size, opts) {
     return result;
 }
 
+function isOnTop(pt, trace) {
+    return helpers.isLeaf(pt) || pt.depth === helpers.getMaxDepth(trace);
+}
+
 function formatSliceLabel(pt, trace, cd, fullLayout) { // TODO: merge this & sunburst version into one function when texttemplate is merged
     var texttemplate = trace.texttemplate;
     var textinfo = trace.textinfo;
@@ -609,8 +616,7 @@ function formatSliceLabel(pt, trace, cd, fullLayout) { // TODO: merge this & sun
     var cdi = pt.data.data;
     var separators = fullLayout.separators;
     if(!texttemplate) {
-        var isInFront = helpers.isLeaf(pt) ||
-            pt.depth === helpers.getMaxDepth(trace);
+        var isInFront = isOnTop(pt, trace);
 
         var parts = textinfo.split('+');
         var hasFlag = function(flag) { return parts.indexOf(flag) !== -1; };

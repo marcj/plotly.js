@@ -89,7 +89,7 @@ module.exports = {
             values: [
                 'binary',
                 'squarify',
-                'slice-dice',
+                'slice-dice', // TODO: add 'dice-slice' too!
                 'slice',
                 'dice'
             ],
