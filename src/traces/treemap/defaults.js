@@ -36,6 +36,9 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     coerce('maxdepth');
 
     coerce('tiling.packing');
+    coerce('tiling.mirror.x');
+    coerce('tiling.mirror.x');
+    coerce('tiling.mirror.xy');
     coerce('tiling.aspectratio');
     var tilingPad = coerce('tiling.pad');
 
@@ -77,8 +80,9 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     coerce('hovered.marker.line.width', tilingPad < 2 ? tilingPad : 2);
     coerce('hovered.marker.line.color', Color.contrast(layout.paper_bgcolor));
 
-    var dirSide = coerce('directory.side');
-    if(dirSide) {
+    var hasDir = coerce('directory.visible');
+    if(hasDir) {
+        coerce('directory.position');
         coerce('directory.color');
         Lib.coerceFont(coerce, 'directory.textfont', layout.font);
         coerce('directory.height', traceOut.directory.textfont.size + 4);

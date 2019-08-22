@@ -70,7 +70,8 @@
                 }
             },
             "directory": {
-                "side": "top",
+                "visible": true,
+                "position": "top",
                 "height": 32,
                 "color": "black",
                 "textfont": {

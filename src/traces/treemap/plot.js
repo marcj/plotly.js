@@ -96,14 +96,14 @@ function plotOne(gd, cd, element, transitionOpts) {
     var vpw = gs.w * (domain.x[1] - domain.x[0]);
     var vph = gs.h * (domain.y[1] - domain.y[0]);
 
-    if(trace.directory.side) {
+    if(trace.directory.visible) {
         vph -= trace.directory.height;
     }
 
     var cx = cd0.cx = gs.l + gs.w * (domain.x[1] + domain.x[0]) / 2;
     var cy = cd0.cy = gs.t + gs.h * (1 - domain.y[0]) - vph / 2;
 
-    if(trace.directory.side === 'bottom') {
+    if(trace.directory.visible === true && trace.directory.position === 'bottom') {
         cy -= trace.directory.height;
     }
 
@@ -250,8 +250,9 @@ function plotOne(gd, cd, element, transitionOpts) {
     var sliceData = partition(entry, [vpw, vph], {
         aspectratio: trace.tiling.aspectratio,
         packing: trace.tiling.packing,
+        mirror: trace.tiling.mirror,
         offset: trace.tiling.pad,
-        pad: trace.marker.pad
+        padding: trace.marker.pad
     }).descendants();
 
     // filter out slices that won't show up on graph
@@ -518,11 +519,11 @@ function plotOne(gd, cd, element, transitionOpts) {
     }
 
     var dirGroup = Lib.ensureSingle(d3.select(element), 'g', 'directory');
-    if(trace.directory.side) {
+    if(trace.directory.visible) {
         var barW = vpw;
         var barH = trace.directory.height;
         var barX = viewportX(0);
-        var barY = (trace.directory.side === 'top') ? viewportY(0) - barH : viewportY(vph);
+        var barY = (trace.directory.position === 'top') ? viewportY(0) - barH : viewportY(vph);
 
         dirGroup.append('rect')
             .attr('x', barX)
@@ -547,20 +548,6 @@ function plotOne(gd, cd, element, transitionOpts) {
     }
 }
 
-function scaleTree(node, scaleX, scaleY) {
-    node.x0 *= scaleX;
-    node.x1 *= scaleX;
-    node.y0 *= scaleY;
-    node.y1 *= scaleY;
-
-    var children = node['child' + 'ren'];
-    if(children) {
-        for(var i = 0; i < children.length; i++) {
-            scaleTree(children[i], scaleX, scaleY);
-        }
-    }
-}
-
 function getTilingMethod(key) {
     var method;
     switch(key) {
@@ -576,7 +563,7 @@ function getTilingMethod(key) {
         case 'slice':
             method = d3Hierarchy.treemapSlice;
             break;
-        default: // i.e. 'slice-dice'
+        default: // i.e. 'slice-dice' | 'dice-slice'
             method = d3Hierarchy.treemapSliceDice;
     }
 
@@ -586,18 +573,110 @@ function getTilingMethod(key) {
 // x[0-1] keys are hierarchy heights [integers]
 // y[0-1] keys are hierarchy heights [integers]
 function partition(entry, size, opts) {
+    var flipX = opts.mirror.x;
+    var flipY = opts.mirror.y;
+    var swapXY = opts.mirror.xy;
+
+    var top = opts.padding.top;
+    var left = opts.padding.left;
+    var right = opts.padding.right;
+    var bottom = opts.padding.bottom;
+
+    var tmp;
+    if(swapXY) {
+        tmp = left;
+        left = top;
+        top = tmp;
+
+        tmp = right;
+        right = bottom;
+        bottom = tmp;
+    }
+
+    if(flipX) {
+        tmp = left;
+        left = right;
+        right = tmp;
+    }
+
+    if(flipY) {
+        tmp = top;
+        top = bottom;
+        bottom = tmp;
+    }
+
+    var aspectratio = swapXY ? 1 / opts.aspectratio : opts.aspectratio;
     var result = d3Hierarchy
         .treemap()
         .tile(getTilingMethod(opts.packing))
         .paddingInner(opts.offset)
-        .paddingLeft(opts.pad.left)
-        .paddingRight(opts.pad.right)
-        .paddingTop(opts.pad.top / opts.aspectratio)
-        .paddingBottom(opts.pad.bottom / opts.aspectratio)
-        .size([size[0], size[1] / opts.aspectratio])(entry);
+        .paddingLeft(left)
+        .paddingRight(right)
+        .paddingTop(top / aspectratio)
+        .paddingBottom(bottom / aspectratio)
+        .size([
+            size[swapXY ? 1 : 0],
+            size[swapXY ? 0 : 1] / aspectratio]
+        )(entry);
 
-    scaleTree(result, 1, opts.aspectratio);
+    scaleTree(result, 1, aspectratio);
+    if(swapXY || flipX || flipY) {
+        flipTree(result, size, {
+            swapXY: swapXY,
+            flipX: flipX,
+            flipY: flipY
+        });
+    }
     return result;
+}
+
+function scaleTree(node, scaleX, scaleY) {
+    node.x0 *= scaleX;
+    node.x1 *= scaleX;
+    node.y0 *= scaleY;
+    node.y1 *= scaleY;
+
+    var children = node['child' + 'ren'];
+    if(children) {
+        for(var i = 0; i < children.length; i++) {
+            scaleTree(children[i], scaleX, scaleY);
+        }
+    }
+}
+
+function flipTree(node, size, opts) {
+    var tmp;
+
+    if(opts.swapXY) {
+        // swap x0 and y0
+        tmp = node.x0;
+        node.x0 = node.y0;
+        node.y0 = tmp;
+
+        // swap x1 and y1
+        tmp = node.x1;
+        node.x1 = node.y1;
+        node.y1 = tmp;
+    }
+
+    if(opts.flipX) {
+        tmp = node.x0;
+        node.x0 = size[0] - node.x1;
+        node.x1 = size[0] - tmp;
+    }
+
+    if(opts.flipY) {
+        tmp = node.y0;
+        node.y0 = size[1] - node.y1;
+        node.y1 = size[1] - tmp;
+    }
+
+    var children = node['child' + 'ren'];
+    if(children) {
+        for(var i = 0; i < children.length; i++) {
+            flipTree(children[i], size, opts);
+        }
+    }
 }
 
 function isOnTop(pt, trace) {

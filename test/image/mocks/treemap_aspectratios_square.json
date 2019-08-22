@@ -7,7 +7,7 @@
                 "size": 20
             },
             "directory": {
-                "side": false
+                "visible": false
             },
             "tiling": {
                 "aspectratio": 1,
@@ -95,7 +95,7 @@
                 "size": 20
             },
             "directory": {
-                "side": false
+                "visible": false
             },
             "tiling": {
                 "aspectratio": 1,
@@ -183,7 +183,7 @@
                 "size": 20
             },
             "directory": {
-                "side": false
+                "visible": false
             },
             "tiling": {
                 "aspectratio": 0.5,
@@ -271,7 +271,7 @@
                 "size": 20
             },
             "directory": {
-                "side": false
+                "visible": false
             },
             "tiling": {
                 "aspectratio": 2,

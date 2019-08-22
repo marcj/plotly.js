@@ -85,17 +85,53 @@ module.exports = {
 
     tiling: {
         packing: {
-            dflt: 'squarify',
-            values: [
-                'binary',
-                'squarify',
-                'slice-dice', // TODO: add 'dice-slice' too!
-                'slice',
-                'dice'
-            ],
             valType: 'enumerated',
+            values: [
+                'squarify',
+                'binary',
+                'dice',
+                'slice',
+                'slice-dice'
+            ],
+            dflt: 'squarify',
             role: 'info',
-            editType: 'plot'
+            editType: 'plot',
+            description: [
+                'Determines d3 treemap solver',
+                'See https://github.com/d3/d3-hierarchy#treemap-tiling'
+            ].join(' ')
+        },
+
+        mirror: {
+            xy: {
+                valType: 'boolean',
+                dflt: false,
+                role: 'style',
+                editType: 'plot',
+                description: [
+                    'Determines if the x and y positions obtained from solver are swapped.'
+                ].join(' ')
+            },
+
+            x: {
+                valType: 'boolean',
+                dflt: false,
+                role: 'style',
+                editType: 'plot',
+                description: [
+                    'Determines if the x positions obtained from solver are mirrored on the axis.'
+                ].join(' ')
+            },
+
+            y: {
+                valType: 'boolean',
+                dflt: false,
+                role: 'style',
+                editType: 'plot',
+                description: [
+                    'Determines if the y positions obtained from solver are mirrored on the axis.'
+                ].join(' ')
+            }
         },
 
         aspectratio: {
@@ -248,10 +284,24 @@ module.exports = {
     },
 
     directory: {
-        side: {
-            valType: 'enumerated',
-            values: ['top', 'bottom', false],
+        visible: {
+            valType: 'boolean',
             dflt: false,
+            role: 'info',
+            editType: 'plot',
+            description: [
+                'Determines if directory bar is drawn.'
+            ].join(' ')
+        },
+
+        position: {
+            valType: 'enumerated',
+            values: [
+                'top',
+                // 'inside', // TODO!
+                'bottom'
+            ],
+            dflt: 'top',
             role: 'info',
             editType: 'plot',
             description: [
