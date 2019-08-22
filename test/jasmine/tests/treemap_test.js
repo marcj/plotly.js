@@ -342,7 +342,7 @@ describe('Test treemap hover:', function() {
 
     [{
         desc: 'base',
-        pos: 3,
+        pos: 2,
         exp: {
             label: {
                 nums: 'Seth\n37.5% of parent\n37.5% of total',
@@ -357,7 +357,7 @@ describe('Test treemap hover:', function() {
     }, {
         desc: 'with scalar hovertext',
         traces: [{ hovertext: 'A' }],
-        pos: 4,
+        pos: 3,
         exp: {
             label: {
                 nums: 'Cain\n12.5% of parent\n12.5% of total\nA',
@@ -375,7 +375,7 @@ describe('Test treemap hover:', function() {
             hovertext: values0,
             hoverinfo: 'all'
         }],
-        pos: 5,
+        pos: 4,
         exp: {
             label: {
                 nums: 'Abel\n12.5% of parent\n12.5% of total\n6',
@@ -394,7 +394,7 @@ describe('Test treemap hover:', function() {
             hoverlabel: {namelength: 4},
             hoverinfo: 'all'
         }],
-        pos: 5,
+        pos: 4,
         exp: {
             label: {
                 nums: 'Abel\n12.5% of parent\n12.5% of total',
@@ -413,7 +413,7 @@ describe('Test treemap hover:', function() {
             values: values0,
             hoverinfo: 'value'
         }],
-        pos: 6,
+        pos: 5,
         exp: {
             label: {
                 nums: '6'
@@ -432,7 +432,7 @@ describe('Test treemap hover:', function() {
             values: values0,
             hovertemplate: '%{label} :: %{value:.2f}<extra><b>N.B.</b></extra>'
         }],
-        pos: 6,
+        pos: 5,
         exp: {
             label: {
                 nums: 'Abel :: 6.00',
@@ -464,7 +464,7 @@ describe('Test treemap hover:', function() {
                 }
             }
         }],
-        pos: 2,
+        pos: 1,
         exp: {
             label: {
                 nums: 'Eve',
@@ -526,7 +526,7 @@ describe('Test treemap hover lifecycle:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(hover(gd, 2))
+        .then(hover(gd, 1))
         .then(function() {
             if(hoverCnt === 1) {
                 expect(hoverData.event).toBeDefined();
@@ -539,8 +539,8 @@ describe('Test treemap hover lifecycle:', function() {
                 fail('should not have triggered plotly_unhover');
             }
         })
-        .then(unhover(gd, 2))
-        .then(hover(gd, 3))
+        .then(unhover(gd, 1))
+        .then(hover(gd, 2))
         .then(function() {
             if(hoverCnt === 2) {
                 expect(hoverData.event).toBeDefined();
@@ -602,7 +602,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 3))
+        .then(click(gd, 2))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -628,7 +628,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 2))
+        .then(click(gd, 1))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -657,7 +657,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 9))
+        .then(click(gd, 8))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -690,7 +690,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners())
-        .then(click(gd, 3))
+        .then(click(gd, 2))
         .then(function() {
             var msg = 'after 1st click';
 
@@ -703,7 +703,7 @@ describe('Test treemap clicks:', function() {
 
             _assertCommon(msg);
         })
-        .then(click(gd, 5))
+        .then(click(gd, 4))
         .then(function() {
             var msg = 'after 2nd click';
 
@@ -728,7 +728,7 @@ describe('Test treemap clicks:', function() {
 
         Plotly.plot(gd, mock)
         .then(setupListeners({turnOffAnimation: true}))
-        .then(click(gd, 3))
+        .then(click(gd, 2))
         .then(function() {
             if(trackers.treemapclick.length === 1) {
                 expect(trackers.treemapclick[0].event).toBeDefined();
@@ -956,7 +956,7 @@ describe('Test treemap interactions edge cases', function() {
                 Plotly.restyle(gd, 'textinfo', null);
             });
         })
-        .then(hover(gd, 2))
+        .then(hover(gd, 1))
         .then(function() {
             _assert('after hovering on first sector', {
                 hoverCnt: 1,
@@ -964,7 +964,7 @@ describe('Test treemap interactions edge cases', function() {
                 hoverLabel: 1
             });
         })
-        .then(unhover(gd, 2))
+        .then(unhover(gd, 1))
         .then(function() {
             _assert('after un-hovering from first sector', {
                 hoverCnt: 0,
@@ -972,7 +972,7 @@ describe('Test treemap interactions edge cases', function() {
                 hoverLabel: 0
             });
         })
-        .then(hover(gd, 3))
+        .then(hover(gd, 2))
         .then(function() {
             _assert('after hovering onto second sector', {
                 hoverCnt: 1,
@@ -999,7 +999,7 @@ describe('Test treemap interactions edge cases', function() {
                 height: 400
             }
         })
-        .then(hover(gd, 5))
+        .then(hover(gd, 4))
         .then(function() {
             assertHoverLabelContent({ nums: 'D\n4\n80% of parent\n57.1% of total\n0' });
         })
