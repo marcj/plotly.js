@@ -563,7 +563,7 @@ function getTilingMethod(key) {
         case 'slice':
             method = d3Hierarchy.treemapSlice;
             break;
-        default: // i.e. 'slice-dice' | 'dice-slice'
+        default: // i.e. 'slice-dice'
             method = d3Hierarchy.treemapSliceDice;
     }
 

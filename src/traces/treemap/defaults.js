@@ -37,7 +37,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
 
     coerce('tiling.packing');
     coerce('tiling.mirror.x');
-    coerce('tiling.mirror.x');
+    coerce('tiling.mirror.y');
     coerce('tiling.mirror.xy');
     coerce('tiling.aspectratio');
     var tilingPad = coerce('tiling.pad');
