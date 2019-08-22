@@ -85,13 +85,13 @@ module.exports = {
 
     tiling: {
         packing: {
-            dflt: 'Squarify',
+            dflt: 'squarify',
             values: [
-                'Binary',
-                'Squarify',
-                'SliceDice',
-                'Slice',
-                'Dice'
+                'binary',
+                'squarify',
+                'slice-dice',
+                'slice',
+                'dice'
             ],
             valType: 'enumerated',
             role: 'info',

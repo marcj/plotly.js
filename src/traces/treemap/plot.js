@@ -558,12 +558,34 @@ function scaleTree(node, scaleX, scaleY) {
     }
 }
 
+function getTilingMethod(key) {
+    var method;
+    switch(key) {
+        case 'squarify':
+            method = d3Hierarchy.treemapSquarify;
+            break;
+        case 'binary':
+            method = d3Hierarchy.treemapBinary;
+            break;
+        case 'dice':
+            method = d3Hierarchy.treemapDice;
+            break;
+        case 'slice':
+            method = d3Hierarchy.treemapSlice;
+            break;
+        default: // i.e. 'slice-dice'
+            method = d3Hierarchy.treemapSliceDice;
+    }
+
+    return method;
+}
+
 // x[0-1] keys are hierarchy heights [integers]
 // y[0-1] keys are hierarchy heights [integers]
 function partition(entry, size, opts) {
     var result = d3Hierarchy
         .treemap()
-        .tile(d3Hierarchy['treemap' + opts.packing])
+        .tile(getTilingMethod(opts.packing))
         .paddingInner(opts.offset)
         .paddingLeft(opts.pad.left)
         .paddingRight(opts.pad.right)

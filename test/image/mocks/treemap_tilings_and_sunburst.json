@@ -4,7 +4,7 @@
             "type": "treemap",
             "textinfo": "label+value",
             "name": "Binary treemap",
-            "tiling": { "packing": "Binary" },
+            "tiling": { "packing": "binary" },
             "labels": [
                 "Eve",
                 "Cain",
@@ -101,7 +101,7 @@
             "type": "treemap",
             "textinfo": "label+value",
             "name": "Squarify treemap",
-            "tiling": { "packing": "Squarify" },
+            "tiling": { "packing": "squarify" },
             "labels": [
                 "Eve",
                 "Cain",
@@ -150,7 +150,7 @@
             "type": "treemap",
             "textinfo": "label+value",
             "name": "Slice treemap",
-            "tiling": { "packing": "Slice" },
+            "tiling": { "packing": "slice" },
             "labels": [
                 "Eve",
                 "Cain",
@@ -199,7 +199,7 @@
             "type": "treemap",
             "textinfo": "label+value",
             "name": "SliceDice treemap",
-            "tiling": { "packing": "SliceDice" },
+            "tiling": { "packing": "slice-dice" },
             "labels": [
                 "Eve",
                 "Cain",
@@ -248,7 +248,7 @@
             "type": "treemap",
             "textinfo": "label+value",
             "name": "Dice treemap",
-            "tiling": { "packing": "Dice" },
+            "tiling": { "packing": "dice" },
             "labels": [
                 "Eve",
                 "Cain",
