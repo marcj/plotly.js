@@ -29,19 +29,20 @@ function countDescendants(node, trace) {
     var children = node['child' + 'ren'];
     if(children) {
         var len = children.length;
-        descendants += len;
 
         for(var i = 0; i < len; i++) {
             descendants += countDescendants(children[i], trace);
         }
+    } else { // only count leaves!
+        descendants++;
     }
 
     // save to the node
     node.data.data.numDescendants = descendants;
 
     // save to the trace
-    if(!trace._numDescendants) trace._numDescendants = [];
-    trace._numDescendants[node.data.data.i] = descendants;
+    if(!trace._values) trace._values = [];
+    trace._values[node.data.data.i] = descendants;
 
     return descendants;
 }
@@ -210,7 +211,7 @@ exports._runCalc = function(desiredType, gd, trace) {
     trace._hasColorscale = hasColorscale(trace, 'marker');
     if(trace._hasColorscale) {
         if(!colors.length) {
-            colors = hasValues ? trace.values : trace._numDescendants;
+            colors = hasValues ? trace.values : trace._values;
         }
 
         colorscaleCalc(gd, trace, {

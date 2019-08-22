@@ -730,7 +730,7 @@ function formatSliceLabel(pt, trace, cd, fullLayout) { // TODO: merge this & sun
 
             var ref;
             var calcPercent = function(key) {
-                percent = (hasV) ? cdi.v / ref.v : (cdi.numDescendants + 1) / ref.numDescendants;
+                percent = (hasV) ? cdi.v / ref.v : cdi.numDescendants / ref.numDescendants;
                 addPercent(key);
             };
 

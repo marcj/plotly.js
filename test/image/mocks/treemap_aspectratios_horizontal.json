@@ -2,7 +2,7 @@
     "data": [
         {
             "type": "treemap",
-            "textinfo": "label+value+percent total",
+            "textinfo": "label+value+percent parent+percent total",
             "textfont": {
                 "size": 20
             },
@@ -90,7 +90,7 @@
         },
         {
             "type": "treemap",
-            "textinfo": "label+value+percent total",
+            "textinfo": "label+value+percent parent+percent total",
             "textfont": {
                 "size": 20
             },
@@ -178,7 +178,7 @@
         },
         {
             "type": "treemap",
-            "textinfo": "label+value+percent total",
+            "textinfo": "label+value+percent parent+percent total",
             "textfont": {
                 "size": 20
             },
@@ -266,7 +266,7 @@
         },
         {
             "type": "treemap",
-            "textinfo": "label+value+percent total",
+            "textinfo": "label+value+percent parent+percent total",
             "textfont": {
                 "size": 20
             },
