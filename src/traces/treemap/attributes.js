@@ -83,6 +83,8 @@ module.exports = {
         ].join(' ')
     },
 
+    sort: pieAttrs.sort,
+
     tiling: {
         packing: {
             valType: 'enumerated',
@@ -131,7 +133,9 @@ module.exports = {
                 description: [
                     'Determines if the y positions obtained from solver are mirrored on the axis.'
                 ].join(' ')
-            }
+            },
+
+            editType: 'plot'
         },
 
         aspectratio: {

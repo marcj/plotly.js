@@ -47,7 +47,7 @@ function countDescendants(node, trace) {
     return descendants;
 }
 
-exports._runCalc = function(desiredType, gd, trace) {
+exports._runCalc = function(desiredType, gd, trace, opts) {
     var fullLayout = gd._fullLayout;
     var ids = trace.ids;
     var hasIds = isArrayOrTypedArray(ids);
@@ -202,8 +202,10 @@ exports._runCalc = function(desiredType, gd, trace) {
 
     if(failed) return;
 
-    // TODO add way to sort by height also?
-    hierarchy.sort(function(a, b) { return b.value - a.value; });
+    if(opts.sort) {
+        // TODO add way to sort by height also?
+        hierarchy.sort(function(a, b) { return b.value - a.value; });
+    }
 
     var pullColor;
     var scaleColor;
@@ -294,7 +296,9 @@ exports._runCrossTraceCalc = function(desiredType, gd) {
 };
 
 exports.calc = function(gd, trace) {
-    return exports._runCalc('sunburst', gd, trace);
+    return exports._runCalc('sunburst', gd, trace, {
+        sort: true
+    });
 };
 
 exports.crossTraceCalc = function(gd) {

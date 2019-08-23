@@ -19,7 +19,8 @@
 				},
 				"colorscale": "Reds",
 				"showscale": false
-			},
+            },
+            "sort": true,
             "labels": [
                 "Alpha",
                 "Bravo",
@@ -107,7 +108,8 @@
 				},
 				"colorscale": "Reds",
 				"showscale": false
-			},
+            },
+            "sort": true,
             "labels": [
                 "Alpha",
                 "Bravo",
@@ -195,7 +197,8 @@
 				},
 				"colorscale": "Reds",
 				"showscale": false
-			},
+            },
+            "sort": true,
             "labels": [
                 "Alpha",
                 "Bravo",
@@ -283,7 +286,8 @@
 				},
 				"colorscale": "Reds",
 				"showscale": false
-			},
+            },
+            "sort": true,
             "labels": [
                 "Alpha",
                 "Bravo",

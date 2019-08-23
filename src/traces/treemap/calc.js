@@ -11,7 +11,9 @@
 var sunburstCalc = require('../sunburst/calc');
 
 exports.calc = function(gd, trace) {
-    return sunburstCalc._runCalc('treemap', gd, trace);
+    return sunburstCalc._runCalc('treemap', gd, trace, {
+        sort: trace.sort
+    });
 };
 
 exports.crossTraceCalc = function(gd) {
