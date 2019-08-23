@@ -69,6 +69,10 @@
                     }
                 }
             },
+            "textinfo": "label+value",
+            "tiling": {
+                "pad": 4
+            },
             "directory": {
                 "visible": true,
                 "position": "top",
@@ -79,10 +83,6 @@
                     "size": 28,
                     "family": "Times New Roman"
                 }
-            },
-            "textinfo": "label+value",
-            "tiling": {
-                "pad": 4
             }
         },
         {
@@ -150,7 +150,16 @@
                     "title": "trace B"
                 }
             },
-            "textinfo": "label+text"
+            "textinfo": "label+text",
+            "directory": {
+                "visible": true,
+                "position": "bottom",
+                "color": "#7F7",
+                "textfont": {
+                    "size": 20,
+                    "family": "Times New Roman"
+                }
+            }
         }
     ],
     "layout": {

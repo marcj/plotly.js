@@ -97,14 +97,14 @@ function plotOne(gd, cd, element, transitionOpts) {
     var vpw = gs.w * (domain.x[1] - domain.x[0]);
     var vph = gs.h * (domain.y[1] - domain.y[0]);
 
-    if(trace.directory.visible) {
+    if(trace.directory.visible && trace.directory.position !== 'inside') {
         vph -= trace.directory.height;
     }
 
     var cx = cd0.cx = gs.l + gs.w * (domain.x[1] + domain.x[0]) / 2;
     var cy = cd0.cy = gs.t + gs.h * (1 - domain.y[0]) - vph / 2;
 
-    if(trace.directory.visible === true && trace.directory.position === 'bottom') {
+    if(trace.directory.visible && trace.directory.position === 'bottom') {
         cy -= trace.directory.height;
     }
 
@@ -388,7 +388,15 @@ function plotOne(gd, cd, element, transitionOpts) {
             s.attr('data-notex', 1);
         });
 
-        sliceText.text(formatSliceLabel(pt, trace, cd, fullLayout))
+        var tx = '';
+        if((pt.parent === '' || pt.parent === null) && trace.directory.visible && trace.directory.position === 'inside') {
+            tx = helpers.getDirectory(entry.data);
+        }
+        tx = formatSliceLabel(pt, trace, cd, fullLayout, {
+            label: tx
+        });
+
+        sliceText.text(tx)
             .classed('slicetext', true)
             .attr('text-anchor', 'middle')
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
@@ -521,7 +529,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     }
 
     var dirGroup = Lib.ensureSingle(d3.select(element), 'g', 'directory');
-    if(trace.directory.visible) {
+    if(trace.directory.visible && trace.directory.position !== 'inside') {
         var barW = vpw;
         var barH = trace.directory.height;
         var barX = viewportX(0);
@@ -686,7 +694,7 @@ function isOnTop(pt, trace) {
     return helpers.isLeaf(pt) || pt.depth === helpers.getMaxDepth(trace);
 }
 
-function formatSliceLabel(pt, trace, cd, fullLayout) { // TODO: merge this & sunburst version into one function when texttemplate is merged
+function formatSliceLabel(pt, trace, cd, fullLayout, opts) { // TODO: merge this & sunburst version into one function when texttemplate is merged
     var texttemplate = trace.texttemplate;
     var textinfo = trace.textinfo;
 
@@ -706,7 +714,7 @@ function formatSliceLabel(pt, trace, cd, fullLayout) { // TODO: merge this & sun
         var tx;
 
         if(hasFlag('label') && cdi.label) {
-            thisText.push(cdi.label);
+            thisText.push(opts.label || cdi.label);
         }
 
         var hasV = cdi.hasOwnProperty('v');

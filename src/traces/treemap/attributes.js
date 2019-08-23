@@ -99,8 +99,8 @@ module.exports = {
             role: 'info',
             editType: 'plot',
             description: [
-                'Determines d3 treemap solver',
-                'See https://github.com/d3/d3-hierarchy#treemap-tiling'
+                'Determines d3 treemap solver.',
+                'For more info please refer to https://github.com/d3/d3-hierarchy#treemap-tiling'
             ].join(' ')
         },
 
@@ -290,7 +290,7 @@ module.exports = {
     directory: {
         visible: {
             valType: 'boolean',
-            dflt: false,
+            dflt: true,
             role: 'info',
             editType: 'plot',
             description: [
@@ -302,10 +302,10 @@ module.exports = {
             valType: 'enumerated',
             values: [
                 'top',
-                // 'inside', // TODO!
+                'inside',
                 'bottom'
             ],
-            dflt: 'top',
+            dflt: 'inside',
             role: 'info',
             editType: 'plot',
             description: [
