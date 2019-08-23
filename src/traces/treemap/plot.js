@@ -257,7 +257,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     }).descendants();
 
     // filter out slices that won't show up on graph
-    sliceData = sliceData.filter(function(pt) { return pt.depth <= maxDepth; });
+    sliceData = sliceData.filter(function(pt) { return pt.depth < maxDepth; });
 
     function toMoveInsideSlice(x0, x1, y0, y1, textBB, isInFront) {
         var hasFlag = function(f) { return trace.textposition.indexOf(f) !== -1; };
@@ -691,7 +691,7 @@ function flipTree(node, size, opts) {
 }
 
 function isOnTop(pt, trace) {
-    return helpers.isLeaf(pt) || pt.depth === helpers.getMaxDepth(trace);
+    return helpers.isLeaf(pt) || pt.depth === helpers.getMaxDepth(trace) - 1;
 }
 
 function formatSliceLabel(pt, trace, cd, fullLayout, opts) { // TODO: merge this & sunburst version into one function when texttemplate is merged

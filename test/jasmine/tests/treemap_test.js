@@ -806,9 +806,9 @@ describe('Test treemap restyle:', function() {
             spyOn(Plots, 'doCalcdata').and.callThrough();
         })
         .then(_restyle({maxdepth: 3}))
-        .then(_assert('with maxdepth:3', 27))
+        .then(_assert('with maxdepth:3', 10))
         .then(_restyle({level: 'Aromas'}))
-        .then(_assert('with non-root level', 31))
+        .then(_assert('with non-root level', 13))
         .then(_restyle({maxdepth: null, level: null}))
         .then(_assert('back to first view', 97))
         .catch(failTest)

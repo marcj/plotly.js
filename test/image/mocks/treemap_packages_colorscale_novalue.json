@@ -2,7 +2,7 @@
 	"data": [
 		{
 			"type": "treemap",
-			"maxdepth": 2,
+			"maxdepth": 3,
 			"textinfo": "label+percent parent",
 			"marker": {
 				"line": {
