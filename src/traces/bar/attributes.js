@@ -12,7 +12,7 @@ var scatterAttrs = require('../scatter/attributes');
 var hovertemplateAttrs = require('../../components/fx/hovertemplate_attributes');
 var colorScaleAttrs = require('../../components/colorscale/attributes');
 var fontAttrs = require('../../plots/font_attributes');
-var constants = require('./constants.js');
+var constants = require('./constants');
 
 var extendFlat = require('../../lib/extend').extendFlat;
 

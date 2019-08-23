@@ -19,6 +19,7 @@ var Lib = require('../../lib');
 var svgTextUtils = require('../../lib/svg_text_utils');
 var styleOne = require('./style').styleOne;
 var formatPieValue = require('../pie/helpers').formatPieValue;
+var TEXTPAD = require('../bar/constants').TEXTPAD;
 var barPlot = require('../bar/plot');
 var toMoveInsideBar = barPlot.toMoveInsideBar;
 var getTransform = barPlot.getTransform;
@@ -258,7 +259,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     // filter out slices that won't show up on graph
     sliceData = sliceData.filter(function(pt) { return pt.depth <= maxDepth; });
 
-    function toMoveInsideSlice(x0, x1, y0, y1, textBB) {
+    function toMoveInsideSlice(x0, x1, y0, y1, textBB, isInFront) {
         var hasFlag = function(f) { return trace.textposition.indexOf(f) !== -1; };
 
         var anchor =
@@ -269,9 +270,10 @@ function plotOne(gd, cd, element, transitionOpts) {
             hasFlag('left') ? 'left' :
             hasFlag('right') ? 'right' : 'center';
 
-        var offsetPad =
-            hasFlag('left') ? trace.marker.pad.left :
-            hasFlag('right') ? trace.marker.pad.right : 0;
+        if(!isInFront) {
+            x0 += hasFlag('left') ? TEXTPAD : 0;
+            x1 -= hasFlag('right') ? TEXTPAD : 0;
+        }
 
         // position the text relative to the slice
         var transform = toMoveInsideBar(x0, x1, y0, y1, textBB, {
@@ -284,8 +286,8 @@ function plotOne(gd, cd, element, transitionOpts) {
         if(offsetDir !== 'center' && transform.scale >= 1) {
             var deltaX = (x1 - x0) / 2 - (textBB.right - textBB.left) / 2;
 
-            if(offsetDir === 'left') transform.targetX -= deltaX - offsetPad;
-            else if(offsetDir === 'right') transform.targetX += deltaX - offsetPad;
+            if(offsetDir === 'left') transform.targetX -= deltaX - TEXTPAD;
+            else if(offsetDir === 'right') transform.targetX += deltaX - TEXTPAD;
         }
 
         return {
@@ -393,7 +395,7 @@ function plotOne(gd, cd, element, transitionOpts) {
             .call(svgTextUtils.convertToTspans, gd);
 
         pt.textBB = Drawing.bBox(sliceText.node());
-        pt.transform = toMoveInsideSlice(pt.x0, pt.x1, pt.y0, pt.y1, pt.textBB);
+        pt.transform = toMoveInsideSlice(pt.x0, pt.x1, pt.y0, pt.y1, pt.textBB, isOnTop(pt, trace));
 
         if(helpers.isOutsideText(trace, pt)) {
             // consider in/out diff font sizes
@@ -461,7 +463,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         var origin = getOrigin(pt);
 
         Lib.extendFlat(prev, {
-            transform: toMoveInsideSlice(origin.x0, origin.x1, origin.y0, origin.y1, pt.textBB)
+            transform: toMoveInsideSlice(origin.x0, origin.x1, origin.y0, origin.y1, pt.textBB, isOnTop(pt, trace))
         });
 
         if(prev0) {
