@@ -573,6 +573,8 @@ function getTilingMethod(key) {
 // x[0-1] keys are hierarchy heights [integers]
 // y[0-1] keys are hierarchy heights [integers]
 function partition(entry, size, opts) {
+    var aspectratio = opts.aspectratio;
+
     var flipX = opts.mirror.x;
     var flipY = opts.mirror.y;
     var swapXY = opts.mirror.xy;
@@ -605,7 +607,6 @@ function partition(entry, size, opts) {
         bottom = tmp;
     }
 
-    var aspectratio = swapXY ? 1 / opts.aspectratio : opts.aspectratio;
     var result = d3Hierarchy
         .treemap()
         .tile(getTilingMethod(opts.packing))

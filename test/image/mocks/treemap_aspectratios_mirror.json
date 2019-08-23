@@ -10,7 +10,7 @@
                 "visible": false
             },
             "tiling": {
-                "packing": "slice-dice",
+                "packing": "binary",
                 "mirror": {
                     "xy": false,
                     "x": false,
@@ -105,7 +105,7 @@
                 "visible": false
             },
             "tiling": {
-                "packing": "slice-dice",
+                "packing": "binary",
                 "mirror": {
                     "xy": false,
                     "x": false,
@@ -200,7 +200,7 @@
                 "visible": false
             },
             "tiling": {
-                "packing": "slice-dice",
+                "packing": "binary",
                 "mirror": {
                     "xy": false,
                     "x": true,
@@ -295,7 +295,7 @@
                 "visible": false
             },
             "tiling": {
-                "packing": "slice-dice",
+                "packing": "binary",
                 "mirror": {
                     "xy": true,
                     "x": false,
