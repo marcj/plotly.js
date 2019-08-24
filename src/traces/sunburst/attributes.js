@@ -146,7 +146,9 @@ module.exports = {
         extras: ['none'],
         editType: 'plot',
         description: [
-            'Determines which trace information appear on the graph.'
+            'Determines which trace information appear on the graph.',
+            'Total percents are computed from the current directory',
+            'not the hierarchy root.'
         ].join(' ')
     },
 

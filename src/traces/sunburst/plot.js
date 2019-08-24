@@ -225,7 +225,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         }
 
         sliceTop
-            .call(attachFxHandlers, gd, cd, styleOne)
+            .call(attachFxHandlers, entry, gd, cd, styleOne)
             .call(helpers.setSliceCursor, gd, {isTransitioning: gd._transitioning});
 
         slicePath.call(styleOne, pt, trace);
@@ -237,7 +237,7 @@ function plotOne(gd, cd, element, transitionOpts) {
             s.attr('data-notex', 1);
         });
 
-        sliceText.text(formatSliceLabel(pt, trace, cd, fullLayout))
+        sliceText.text(formatSliceLabel(pt, entry, trace, fullLayout))
             .classed('slicetext', true)
             .attr('text-anchor', 'middle')
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
@@ -465,14 +465,13 @@ function partition(entry) {
         .size([2 * Math.PI, entry.height + 1])(entry);
 }
 
-function formatSliceLabel(pt, trace, cd, fullLayout) {
+function formatSliceLabel(pt, entry, trace, fullLayout) {
     var textinfo = trace.textinfo;
 
     if(!textinfo || textinfo === 'none') {
         return '';
     }
 
-    var cd0 = cd[0];
     var cdi = pt.data.data;
     var separators = fullLayout.separators;
     var parts = textinfo.split('+');
@@ -515,7 +514,7 @@ function formatSliceLabel(pt, trace, cd, fullLayout) {
             calcPercent('parent');
         }
         if(hasFlag('percent total') && pt.parent) {
-            ref = cd0;
+            ref = entry.data.data;
             calcPercent('total');
         }
     }

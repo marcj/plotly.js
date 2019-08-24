@@ -398,7 +398,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         }
 
         sliceTop
-            .call(attachFxHandlers, gd, cd, styleOne)
+            .call(attachFxHandlers, entry, gd, cd, styleOne)
             .call(helpers.setSliceCursor, gd, {isTransitioning: gd._transitioning});
 
         slicePath.call(styleOne, pt, trace);
@@ -414,7 +414,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         if((pt.parent === '' || pt.parent === null) && trace.directory.visible && trace.directory.position === 'inside') {
             tx = helpers.getDirectory(entry.data);
         }
-        tx = formatSliceLabel(pt, trace, cd, fullLayout, {
+        tx = formatSliceLabel(pt, entry, trace, fullLayout, {
             label: tx
         });
 
@@ -716,7 +716,7 @@ function isOnTop(pt, trace) {
     return helpers.isLeaf(pt) || pt.depth === trace._maxDepth - 1;
 }
 
-function formatSliceLabel(pt, trace, cd, fullLayout, opts) { // TODO: merge this & sunburst version into one function when texttemplate is merged
+function formatSliceLabel(pt, entry, trace, fullLayout, opts) { // TODO: merge this & sunburst version into one function when texttemplate is merged
     var texttemplate = trace.texttemplate;
     var textinfo = trace.textinfo;
 
@@ -724,7 +724,6 @@ function formatSliceLabel(pt, trace, cd, fullLayout, opts) { // TODO: merge this
         return '';
     }
 
-    var cd0 = cd[0];
     var cdi = pt.data.data;
     var separators = fullLayout.separators;
     if(!texttemplate) {
@@ -772,7 +771,7 @@ function formatSliceLabel(pt, trace, cd, fullLayout, opts) { // TODO: merge this
                 calcPercent('parent');
             }
             if(hasFlag('percent total') && pt.parent) {
-                ref = cd0;
+                ref = entry.data.data;
                 calcPercent('total');
             }
         }

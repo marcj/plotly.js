@@ -38,7 +38,7 @@ function makeEventData(pt, trace) {
     return out;
 }
 
-module.exports = function attachFxHandlers(sliceTop, gd, cd, styleOne) {
+module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne) {
     var cd0 = cd[0];
     var trace = cd0.trace;
 
@@ -112,7 +112,7 @@ module.exports = function attachFxHandlers(sliceTop, gd, cd, styleOne) {
             }
 
             if(hasFlag('percent total') && pt.parent) {
-                hoverPt.percentTotal = hasV ? cdi.v / cd0.v : cdi.numDescendants / cd0.numDescendants;
+                hoverPt.percentTotal = hasV ? cdi.v / entry.data.data.v : cdi.numDescendants / entry.data.data.numDescendants;
                 hoverPt.percentTotalLabel = formatPercent(hoverPt.percentTotal, separators) + ' of total';
                 thisText.push(hoverPt.percentTotalLabel);
             }
