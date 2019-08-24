@@ -54,7 +54,7 @@ module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne) {
     // in the same slice that you moused up in
     if(!('_hasHoverEvent' in trace)) trace._hasHoverEvent = false;
 
-    sliceTop.on('mouseover', function(pt) {
+    var onMouseOver = function(pt) {
         var fullLayoutNow = gd._fullLayout;
 
         if(gd._dragging || fullLayoutNow.hovermode === false) return;
@@ -171,9 +171,9 @@ module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne) {
                 slices.call(styleOne, pt, traceNow, true);
             });
         }
-    });
+    };
 
-    sliceTop.on('mouseout', function(evt) {
+    var onMouseOut = function(evt) {
         var fullLayoutNow = gd._fullLayout;
         var traceNow = gd._fullData[trace.index];
         var pt = d3.select(this).datum();
@@ -198,9 +198,9 @@ module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne) {
                 slices.call(styleOne, pt, traceNow, false);
             });
         }
-    });
+    };
 
-    sliceTop.on('click', function(pt) {
+    var onClick = function(pt) {
         // TODO: this does not support right-click. If we want to support it, we
         // would likely need to change pie to use dragElement instead of straight
         // mapbox event binding. Or perhaps better, make a simple wrapper with the
@@ -276,5 +276,9 @@ module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne) {
 
         Fx.loneUnhover(fullLayoutNow._hoverlayer.node());
         Registry.call('animate', gd, frame, animOpts);
-    });
+    };
+
+    sliceTop.on('mouseover', onMouseOver);
+    sliceTop.on('mouseout', onMouseOut);
+    sliceTop.on('click', onClick);
 };
