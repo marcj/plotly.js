@@ -115,15 +115,18 @@ function plotOne(gd, cd, element, transitionOpts) {
         vph -= trace.directory.height;
     }
 
-    var cx = cd0.cx = gs.l + gs.w * (domain.x[1] + domain.x[0]) / 2 + mvX / 2;
-    var cy = cd0.cy = gs.t + gs.h * (1 - domain.y[0]) - vph / 2 + mvY / 2;
+    var cx = cd0.cx = mvX / 2 + gs.l + gs.w * (domain.x[1] + domain.x[0]) / 2;
+    var cy = cd0.cy = mvY / 2 + gs.t + gs.h * (1 - domain.y[0]) - vph / 2;
 
     if(trace.directory.visible && trace.directory.position === 'bottom') {
         cy -= trace.directory.height;
     }
 
-    var viewportX = function(x) { return x + cx - vpw / 2; };
-    var viewportY = function(y) { return y + cy - vph / 2; };
+    var limitX = function(x) { return Math.max(0, Math.min(vpw, x)); };
+    var limitY = function(y) { return Math.max(0, Math.min(vph, y)); };
+
+    var viewportX = function(x) { return limitX(x) + cx - vpw / 2; };
+    var viewportY = function(y) { return limitY(y) + cy - vph / 2; };
 
     var getOrigin = function(pt) {
         var x0 = pt.x0;
