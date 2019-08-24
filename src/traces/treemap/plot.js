@@ -88,21 +88,35 @@ function plotOne(gd, cd, element, transitionOpts) {
 
     var cd0 = cd[0];
     var trace = cd0.trace;
-    var hierarchy = cd0.hierarchy;
-    var entry = helpers.findEntryWithLevel(hierarchy, trace.level);
-    var maxDepth = helpers.getMaxDepth(trace);
 
     var gs = fullLayout._size;
     var domain = trace.domain;
     var vpw = gs.w * (domain.x[1] - domain.x[0]);
     var vph = gs.h * (domain.y[1] - domain.y[0]);
 
+    var hierarchy = cd0.hierarchy;
+    var entry = helpers.findEntryWithLevel(hierarchy, trace.level);
+    var maxDepth = helpers.getMaxDepth(trace);
+    // N.B. handle multiple-root special case
+    var mvX = 0;
+    var mvY = 0;
+    if(cd0.hasMultipleRoots && helpers.isHierachyRoot(entry)) {
+        mvX = (trace.marker.pad.right - trace.marker.pad.left) / 2;
+        mvY = (trace.marker.pad.top - trace.marker.pad.bottom) / 2;
+
+        vpw += trace.marker.pad.right + trace.marker.pad.left;
+        vph += trace.marker.pad.top + trace.marker.pad.bottom;
+
+        maxDepth++;
+    }
+    trace._maxDepth = maxDepth;
+
     if(trace.directory.visible && trace.directory.position !== 'inside') {
         vph -= trace.directory.height;
     }
 
-    var cx = cd0.cx = gs.l + gs.w * (domain.x[1] + domain.x[0]) / 2;
-    var cy = cd0.cy = gs.t + gs.h * (1 - domain.y[0]) - vph / 2;
+    var cx = cd0.cx = gs.l + gs.w * (domain.x[1] + domain.x[0]) / 2 + mvX / 2;
+    var cy = cd0.cy = gs.t + gs.h * (1 - domain.y[0]) - vph / 2 + mvY / 2;
 
     if(trace.directory.visible && trace.directory.position === 'bottom') {
         cy -= trace.directory.height;
@@ -691,7 +705,7 @@ function flipTree(node, size, opts) {
 }
 
 function isOnTop(pt, trace) {
-    return helpers.isLeaf(pt) || pt.depth === helpers.getMaxDepth(trace) - 1;
+    return helpers.isLeaf(pt) || pt.depth === trace._maxDepth - 1;
 }
 
 function formatSliceLabel(pt, trace, cd, fullLayout, opts) { // TODO: merge this & sunburst version into one function when texttemplate is merged
