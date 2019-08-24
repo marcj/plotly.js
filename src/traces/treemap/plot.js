@@ -102,25 +102,30 @@ function plotOne(gd, cd, element, transitionOpts) {
     var mvY = 0;
     if(cd0.hasMultipleRoots && helpers.isHierachyRoot(entry)) {
         mvX = (trace.marker.pad.right - trace.marker.pad.left) / 2;
-        mvY = (trace.marker.pad.top - trace.marker.pad.bottom) / 2;
+        mvY = (trace.marker.pad.bottom - trace.marker.pad.top) / 2;
 
         vpw += trace.marker.pad.right + trace.marker.pad.left;
-        vph += trace.marker.pad.top + trace.marker.pad.bottom;
+        vph += trace.marker.pad.bottom + trace.marker.pad.top;
 
         maxDepth++;
     }
     trace._maxDepth = maxDepth;
 
-    if(trace.directory.visible && trace.directory.position !== 'inside') {
-        vph -= trace.directory.height;
+    if(trace.directory.visible) {
+        if(trace.directory.position === 'top') {
+            mvY += trace.directory.height / 2;
+            vph -= trace.directory.height;
+        } else if(trace.directory.position === 'bottom') {
+            mvY -= trace.directory.height / 2;
+            vph -= trace.directory.height;
+        }
     }
 
-    var cx = cd0.cx = mvX / 2 + gs.l + gs.w * (domain.x[1] + domain.x[0]) / 2;
-    var cy = cd0.cy = mvY / 2 + gs.t + gs.h * (1 - domain.y[0]) - vph / 2;
+    var domainMidX = (domain.x[1] + domain.x[0]) / 2;
+    var domainMidY = (domain.y[1] + domain.y[0]) / 2;
 
-    if(trace.directory.visible && trace.directory.position === 'bottom') {
-        cy -= trace.directory.height;
-    }
+    var cx = cd0.cx = mvX + gs.l + gs.w * domainMidX;
+    var cy = cd0.cy = mvY + gs.t + gs.h * (1 - domainMidY);
 
     var limitX = function(x) { return Math.max(0, Math.min(vpw, x)); };
     var limitY = function(y) { return Math.max(0, Math.min(vph, y)); };
