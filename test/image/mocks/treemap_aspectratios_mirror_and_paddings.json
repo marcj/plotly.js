@@ -384,6 +384,12 @@
     "layout": {
         "width": 1000,
         "height": 1000,
+        "shapes": [
+            { "type": "rect", "layer": "below", "x0": 0.02, "x1": 0.48, "y0": 0.02, "y1": 0.48 },
+            { "type": "rect", "layer": "below", "x0": 0.02, "x1": 0.48, "y0": 0.52, "y1": 0.98 },
+            { "type": "rect", "layer": "below", "x0": 0.52, "x1": 0.98, "y0": 0.02, "y1": 0.48 },
+            { "type": "rect", "layer": "below", "x0": 0.52, "x1": 0.98, "y0": 0.52, "y1": 0.98 }
+        ],
         "annotations": [
             {
                 "showarrow": false,
