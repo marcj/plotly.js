@@ -344,7 +344,7 @@ describe('Test sunburst hover:', function() {
         pos: 2,
         exp: {
             label: {
-                nums: 'Seth\n33.3% of parent\n33.3% of total',
+                nums: 'Seth\n2\n33.3% of parent\n33.3% of total',
             },
             ptData: {
                 curveNumber: 0,
@@ -359,7 +359,7 @@ describe('Test sunburst hover:', function() {
         pos: 3,
         exp: {
             label: {
-                nums: 'Cain\n16.7% of parent\n16.7% of total\nA',
+                nums: 'Cain\n1\n16.7% of parent\n16.7% of total\nA',
             },
             ptData: {
                 curveNumber: 0,
@@ -377,7 +377,7 @@ describe('Test sunburst hover:', function() {
         pos: 4,
         exp: {
             label: {
-                nums: 'Abel\n16.7% of parent\n16.7% of total\n6',
+                nums: 'Abel\n1\n16.7% of parent\n16.7% of total\n6',
                 name: 'trace 0'
             },
             ptData: {
@@ -396,7 +396,7 @@ describe('Test sunburst hover:', function() {
         pos: 4,
         exp: {
             label: {
-                nums: 'Abel\n16.7% of parent\n16.7% of total',
+                nums: 'Abel\n1\n16.7% of parent\n16.7% of total',
                 name: 't...'
             },
             ptData: {

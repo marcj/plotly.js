@@ -483,8 +483,8 @@ function formatSliceLabel(pt, entry, trace, fullLayout) {
 
     var hasV = cdi.hasOwnProperty('v');
 
-    if(hasV && hasFlag('value')) {
-        thisText.push(formatPieValue(cdi.v, separators));
+    if(hasFlag('value')) {
+        thisText.push(formatPieValue(hasV ? cdi.v : cdi.value, separators));
     }
 
     var nPercent = 0;

@@ -98,11 +98,9 @@ module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne) {
             hoverPt.label = cdi.label;
             if(hasFlag('label') && hoverPt.label) thisText.push(hoverPt.label);
 
-            if(hasV) {
-                hoverPt.value = cdi.v;
-                hoverPt.valueLabel = formatValue(hoverPt.value, separators);
-                if(hasFlag('value')) thisText.push(hoverPt.valueLabel);
-            }
+            hoverPt.value = (hasV) ? cdi.v : cdi.value;
+            hoverPt.valueLabel = formatValue(hoverPt.value, separators);
+            if(hasFlag('value')) thisText.push(hoverPt.valueLabel);
 
             if(hasFlag('percent parent') && pt.parent) {
                 var ref = pt.parent.data.data;

@@ -611,10 +611,10 @@ function partition(entry, size, opts) {
     var flipY = opts.mirror.y;
     var swapXY = opts.mirror.xy;
 
-    var top = opts.padding.top;
-    var left = opts.padding.left;
-    var right = opts.padding.right;
-    var bottom = opts.padding.bottom;
+    var top = opts.padding[flipY ? 'bottom' : 'top'];
+    var left = opts.padding[flipX ? 'right' : 'left'];
+    var right = opts.padding[flipX ? 'left' : 'right'];
+    var bottom = opts.padding[flipY ? 'top' : 'bottom'];
 
     var tmp;
     if(swapXY) {
@@ -624,18 +624,6 @@ function partition(entry, size, opts) {
 
         tmp = right;
         right = bottom;
-        bottom = tmp;
-    }
-
-    if(flipX) {
-        tmp = left;
-        left = right;
-        right = tmp;
-    }
-
-    if(flipY) {
-        tmp = top;
-        top = bottom;
         bottom = tmp;
     }
 
@@ -740,8 +728,8 @@ function formatSliceLabel(pt, entry, trace, fullLayout, opts) { // TODO: merge t
 
         var hasV = cdi.hasOwnProperty('v');
 
-        if(hasFlag('value') && hasV) {
-            thisText.push(formatPieValue(cdi.v, separators));
+        if(hasFlag('value')) {
+            thisText.push(formatPieValue(hasV ? cdi.v : cdi.value, separators));
         }
 
         var nPercent = 0;
