@@ -14,6 +14,7 @@ var hovertemplateAttrs = require('../../components/fx/hovertemplate_attributes')
 var colorScaleAttrs = require('../../components/colorscale/attributes');
 var domainAttrs = require('../../plots/domain').attributes;
 var pieAttrs = require('../pie/attributes');
+var sunburstAttrs = require('../sunburst/attributes');
 
 var extendFlat = require('../../lib/extend').extendFlat;
 
@@ -46,19 +47,8 @@ module.exports = {
             'Use with `branchvalues` to determine how the values are summed.'
         ].join(' ')
     },
-    branchvalues: {
-        valType: 'enumerated',
-        values: ['remainder', 'total'],
-        dflt: 'remainder',
-        editType: 'calc',
-        role: 'info',
-        description: [
-            'Determines how the items in `values` are summed.',
-            'When set to *total*, items in `values` are taken to be value of all its descendants.',
-            'When set to *remainder*, items in `values` corresponding to the root and the branches sectors',
-            'are taken to be the extra part not part of the sum of the values at their leaves.'
-        ].join(' ')
-    },
+    branchvalues: sunburstAttrs.branchvalues,
+    countbranches: sunburstAttrs.countbranches,
 
     level: {
         valType: 'any',

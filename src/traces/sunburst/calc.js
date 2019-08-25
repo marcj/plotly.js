@@ -33,12 +33,17 @@ function countDescendants(node, trace) {
         for(var i = 0; i < len; i++) {
             descendants += countDescendants(children[i], trace);
         }
-    } else { // only count leaves!
-        descendants++;
+
+        // count branch
+        descendants += trace.countbranches;
+    } else { // count leaf
+        descendants += 1;
     }
 
     // save to the node
     node.data.data.numDescendants = descendants;
+
+    node.value = descendants;
 
     // save to the trace
     if(!trace._values) trace._values = [];
@@ -196,7 +201,6 @@ exports._runCalc = function(desiredType, gd, trace, opts) {
                 break;
         }
     } else {
-        hierarchy.count();
         countDescendants(hierarchy, trace);
     }
 

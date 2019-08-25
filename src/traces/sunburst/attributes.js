@@ -58,6 +58,17 @@ module.exports = {
             'are taken to be the extra part not part of the sum of the values at their leaves.'
         ].join(' ')
     },
+    countbranches: {
+        valType: 'number',
+        dflt: 0,
+        min: 0,
+        editType: 'calc',
+        role: 'info',
+        description: [
+            'Determines a value for counting branches when `values` array is not provided.',
+            'Please note that by default each leaf is counted as one and each branch is counted as zero.'
+        ].join(' ')
+    },
 
     level: {
         valType: 'any',
