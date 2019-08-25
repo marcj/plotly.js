@@ -12,6 +12,7 @@ var d3 = require('d3');
 var d3Hierarchy = require('d3-hierarchy');
 
 var helpers = require('./helpers');
+var constants = require('./constants');
 var attachFxHandlers = require('./attach_fx_handlers');
 
 var Drawing = require('../../components/drawing');
@@ -225,7 +226,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         }
 
         sliceTop
-            .call(attachFxHandlers, entry, gd, cd, styleOne)
+            .call(attachFxHandlers, entry, gd, cd, styleOne, constants)
             .call(helpers.setSliceCursor, gd, {isTransitioning: gd._transitioning});
 
         slicePath.call(styleOne, pt, trace);

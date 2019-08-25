@@ -13,7 +13,6 @@ var Lib = require('../../lib');
 var Fx = require('../../components/fx');
 var Events = require('../../lib/events');
 var Registry = require('../../registry');
-var constants = require('./constants');
 var appendArrayPointValue = require('../../components/fx/helpers').appendArrayPointValue;
 
 var helpers = require('./helpers');
@@ -38,7 +37,7 @@ function makeEventData(pt, trace) {
     return out;
 }
 
-module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne) {
+module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne, constants) {
     var cd0 = cd[0];
     var trace = cd0.trace;
 
