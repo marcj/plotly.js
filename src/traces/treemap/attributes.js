@@ -19,59 +19,15 @@ var sunburstAttrs = require('../sunburst/attributes');
 var extendFlat = require('../../lib/extend').extendFlat;
 
 module.exports = {
-    labels: {
-        valType: 'data_array',
-        editType: 'calc',
-        description: [
-            'Sets the labels of each of the treemap sectors.'
-        ].join(' ')
-    },
-    parents: {
-        valType: 'data_array',
-        editType: 'calc',
-        description: [
-            'Sets the parent sectors for each of the treemap sectors.',
-            'Empty string items \'\' are understood to reference',
-            'the root node in the hierarchy.',
-            'If `ids` is filled, `parents` items are understood to be "ids" themselves.',
-            'When `ids` is not set, plotly attempts to find matching items in `labels`,',
-            'but beware they must be unique.'
-        ].join(' ')
-    },
+    labels: sunburstAttrs.labels,
+    parents: sunburstAttrs.parents,
 
-    values: {
-        valType: 'data_array',
-        editType: 'calc',
-        description: [
-            'Sets the values associated with each of the treemap sectors.',
-            'Use with `branchvalues` to determine how the values are summed.'
-        ].join(' ')
-    },
+    values: sunburstAttrs.values,
     branchvalues: sunburstAttrs.branchvalues,
     countbranches: sunburstAttrs.countbranches,
 
-    level: {
-        valType: 'any',
-        editType: 'plot',
-        anim: true,
-        role: 'info',
-        description: [
-            'Sets the level from which this treemap trace hierarchy is rendered.',
-            'Set `level` to `\'\'` to start the treemap from the root node in the hierarchy.',
-            'Must be an "id" if `ids` is filled in, otherwise plotly attempts to find a matching',
-            'item in `labels`.'
-        ].join(' ')
-    },
-    maxdepth: {
-        valType: 'integer',
-        editType: 'plot',
-        role: 'info',
-        dflt: -1,
-        description: [
-            'Sets the number of rendered treemap depth from any given `level`.',
-            'Set `maxdepth` to *-1* to render all the levels in the hierarchy.'
-        ].join(' ')
-    },
+    level: sunburstAttrs.level,
+    maxdepth: sunburstAttrs.maxdepth,
 
     sort: pieAttrs.sort,
 

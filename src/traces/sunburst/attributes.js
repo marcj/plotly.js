@@ -21,14 +21,14 @@ module.exports = {
         valType: 'data_array',
         editType: 'calc',
         description: [
-            'Sets the labels of each of the sunburst sectors.'
+            'Sets the labels of each of the sectors.'
         ].join(' ')
     },
     parents: {
         valType: 'data_array',
         editType: 'calc',
         description: [
-            'Sets the parent sectors for each of the sunburst sectors.',
+            'Sets the parent sectors for each of the sectors.',
             'Empty string items \'\' are understood to reference',
             'the root node in the hierarchy.',
             'If `ids` is filled, `parents` items are understood to be "ids" themselves.',
@@ -41,7 +41,7 @@ module.exports = {
         valType: 'data_array',
         editType: 'calc',
         description: [
-            'Sets the values associated with each of the sunburst sectors.',
+            'Sets the values associated with each of the sectors.',
             'Use with `branchvalues` to determine how the values are summed.'
         ].join(' ')
     },
@@ -76,8 +76,8 @@ module.exports = {
         anim: true,
         role: 'info',
         description: [
-            'Sets the level from which this sunburst trace hierarchy is rendered.',
-            'Set `level` to `\'\'` to start the sunburst from the root node in the hierarchy.',
+            'Sets the level from which this trace hierarchy is rendered.',
+            'Set `level` to `\'\'` to start from the root node in the hierarchy.',
             'Must be an "id" if `ids` is filled in, otherwise plotly attempts to find a matching',
             'item in `labels`.'
         ].join(' ')
@@ -88,7 +88,7 @@ module.exports = {
         role: 'info',
         dflt: -1,
         description: [
-            'Sets the number of rendered sunburst rings from any given `level`.',
+            'Sets the number of rendered sectors from any given `level`.',
             'Set `maxdepth` to *-1* to render all the levels in the hierarchy.'
         ].join(' ')
     },
@@ -98,7 +98,7 @@ module.exports = {
             valType: 'data_array',
             editType: 'calc',
             description: [
-                'Sets the color of each sector of this sunburst chart.',
+                'Sets the color of each sector of this trace.',
                 'If not specified, the default trace color set is used',
                 'to pick the sector colors.'
             ].join(' ')
