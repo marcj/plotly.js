@@ -282,14 +282,14 @@ function plotOne(gd, cd, element, transitionOpts) {
     // filter out slices that won't show up on graph
     sliceData = sliceData.filter(function(pt) { return pt.depth < maxDepth; });
 
-    function toMoveInsideSlice(x0, x1, y0, y1, textBB, isInFront) {
+    function toMoveInsideSlice(x0, x1, y0, y1, textBB, isInFront, isEntry) {
         var hasFlag = function(f) { return trace.textposition.indexOf(f) !== -1; };
 
         var anchor =
             hasFlag('top') ? 'start' :
             hasFlag('bottom') ? 'end' : 'middle';
 
-        var offsetDir =
+        var offsetDir = (isInFront && !isEntry) ? 'center' :
             hasFlag('left') ? 'left' :
             hasFlag('right') ? 'right' : 'center';
 
@@ -306,8 +306,8 @@ function plotOne(gd, cd, element, transitionOpts) {
             anchor: anchor
         });
 
-        if(offsetDir !== 'center' && transform.scale >= 1) {
-            var deltaX = (x1 - x0) / 2 - (textBB.right - textBB.left) / 2;
+        if(offsetDir !== 'center') {
+            var deltaX = (x1 - x0) / 2 - transform.scale * (textBB.right - textBB.left) / 2;
 
             if(offsetDir === 'left') transform.targetX -= deltaX - TEXTPAD;
             else if(offsetDir === 'right') transform.targetX += deltaX - TEXTPAD;
@@ -426,7 +426,7 @@ function plotOne(gd, cd, element, transitionOpts) {
             .call(svgTextUtils.convertToTspans, gd);
 
         pt.textBB = Drawing.bBox(sliceText.node());
-        pt.transform = toMoveInsideSlice(pt.x0, pt.x1, pt.y0, pt.y1, pt.textBB, isOnTop(pt, trace));
+        pt.transform = toMoveInsideSlice(pt.x0, pt.x1, pt.y0, pt.y1, pt.textBB, isOnTop(pt, trace), helpers.isEntry(pt));
 
         if(helpers.isOutsideText(trace, pt)) {
             // consider in/out diff font sizes
@@ -494,7 +494,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         var origin = getOrigin(pt);
 
         Lib.extendFlat(prev, {
-            transform: toMoveInsideSlice(origin.x0, origin.x1, origin.y0, origin.y1, pt.textBB, isOnTop(pt, trace))
+            transform: toMoveInsideSlice(origin.x0, origin.x1, origin.y0, origin.y1, pt.textBB, isOnTop(pt, trace), helpers.isEntry(pt))
         });
 
         if(prev0) {
