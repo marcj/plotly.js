@@ -505,7 +505,7 @@ function formatSliceLabel(pt, entry, trace, fullLayout) {
 
         var ref;
         var calcPercent = function(key) {
-            percent = (hasV) ? cdi.v / ref.v : cdi.numDescendants / ref.numDescendants;
+            percent = (hasV) ? cdi.v / ref.v : cdi.value / ref.value;
             addPercent(key);
         };
 

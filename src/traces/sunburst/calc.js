@@ -41,9 +41,7 @@ function countDescendants(node, trace) {
     }
 
     // save to the node
-    node.data.data.numDescendants = descendants;
-
-    node.value = descendants;
+    node.value = node.data.data.value = descendants;
 
     // save to the trace
     if(!trace._values) trace._values = [];
