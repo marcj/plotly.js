@@ -6,9 +6,6 @@
             "textfont": {
                 "size": 10
             },
-            "directory": {
-                "visible": false
-            },
             "tiling": {
                 "packing": "squarify",
                 "mirror": {
@@ -100,9 +97,6 @@
             "textinfo": "label",
             "textfont": {
                 "size": 10
-            },
-            "directory": {
-                "visible": false
             },
             "tiling": {
                 "packing": "squarify",
@@ -196,9 +190,6 @@
             "textfont": {
                 "size": 10
             },
-            "directory": {
-                "visible": false
-            },
             "tiling": {
                 "packing": "squarify",
                 "mirror": {
@@ -290,9 +281,6 @@
             "textinfo": "label",
             "textfont": {
                 "size": 10
-            },
-            "directory": {
-                "visible": false
             },
             "tiling": {
                 "packing": "squarify",
