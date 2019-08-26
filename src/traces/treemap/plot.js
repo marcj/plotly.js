@@ -102,12 +102,13 @@ function plotOne(gd, cd, element, transitionOpts) {
     var mvX = 0;
     var mvY = 0;
     if(cd0.hasMultipleRoots && helpers.isHierarchyRoot(entry)) {
+        /*
         mvX = (trace.marker.pad.right - trace.marker.pad.left) / 2;
         mvY = (trace.marker.pad.bottom - trace.marker.pad.top) / 2;
 
         vpw += trace.marker.pad.right + trace.marker.pad.left;
         vph += trace.marker.pad.bottom + trace.marker.pad.top;
-
+        */
         maxDepth++;
     }
     trace._maxDepth = maxDepth;
@@ -368,7 +369,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     if(hasTransition) {
         updateSlices = updateSlices.transition().each('end', function() {
             // N.B. gd._transitioning is (still) *true* by the time
-            // transition updates get hare
+            // transition updates get here
             var sliceTop = d3.select(this);
             helpers.setSliceCursor(sliceTop, gd, {isTransitioning: false});
         });
