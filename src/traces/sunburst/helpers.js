@@ -12,14 +12,35 @@ var Lib = require('../../lib');
 var Color = require('../../components/color');
 var setCursor = require('../../lib/setcursor');
 
-function getLabelStr(label) {
-    if(!label && label !== 0) return '~';
-    return label;
+function has(v) {
+    return v || v === 0;
 }
 
-exports.getDirectory = function(d) {
+exports.isLeaf = function(pt) {
+    return !has(pt.children);
+};
+
+exports.isEntry = function(pt) {
+    return !has(pt.parent);
+};
+
+exports.getPtId = function(pt) {
+    var cdi = pt.data.data;
+    return cdi.id;
+};
+
+exports.isHierarchyRoot = function(pt) {
+    var cdi = pt.data.data;
+    return cdi.pid === '';
+};
+
+function getLabelStr(label) {
+    return has(label) ? label : '~';
+}
+
+exports.getDirectoryLabel = function(d) {
     var labelStr = getLabelStr(d.data.label);
-    return d.parent ? exports.getDirectory(d.parent) + ' | ' + labelStr : labelStr;
+    return has(d.parent) ? exports.getDirectoryLabel(d.parent) + ' | ' + labelStr : labelStr;
 };
 
 exports.getMaxDepth = function(trace) {
@@ -52,28 +73,14 @@ exports.findEntryWithChild = function(hierarchy, childId) {
     return out || hierarchy;
 };
 
-exports.isHierachyRoot = function(pt) {
-    var cdi = pt.data.data;
-    return cdi.pid === '';
-};
-
-exports.isEntry = function(pt) {
-    return !pt.parent;
-};
-
-exports.isLeaf = function(pt) {
-    return !pt.children;
-};
-
-exports.getPtId = function(pt) {
-    var cdi = pt.data.data;
-    return cdi.id;
-};
-
 exports.setSliceCursor = function(sliceTop, gd, opts) {
     var pt = sliceTop.datum();
     var isTransitioning = (opts || {}).isTransitioning;
-    setCursor(sliceTop, (isTransitioning || exports.isLeaf(pt) || exports.isHierachyRoot(pt)) ? null : 'pointer');
+    setCursor(sliceTop, (
+        isTransitioning ||
+        exports.isLeaf(pt) ||
+        exports.isHierarchyRoot(pt)
+    ) ? null : 'pointer');
 };
 
 exports.getInsideTextFontKey = function(keyStr, trace, pt, layoutFont) {
@@ -125,7 +132,7 @@ function determineInsideTextFont(trace, pt, layoutFont) {
 }
 
 exports.isOutsideText = function(trace, pt) {
-    return !trace._hasColorscale && exports.isHierachyRoot(pt);
+    return !trace._hasColorscale && exports.isHierarchyRoot(pt);
 };
 
 exports.determineTextFont = function(trace, pt, layoutFont) {

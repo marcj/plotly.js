@@ -215,7 +215,7 @@ module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne, co
         // clicking on leaves or the hierarchy root
         if(
             clickVal === false ||
-            helpers.isHierachyRoot(pt) ||
+            helpers.isHierarchyRoot(pt) ||
             (isSunburst && helpers.isLeaf(pt))
         ) {
             if(fullLayoutNow.hovermode) {

@@ -101,7 +101,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     // N.B. handle multiple-root special case
     var mvX = 0;
     var mvY = 0;
-    if(cd0.hasMultipleRoots && helpers.isHierachyRoot(entry)) {
+    if(cd0.hasMultipleRoots && helpers.isHierarchyRoot(entry)) {
         mvX = (trace.marker.pad.right - trace.marker.pad.left) / 2;
         mvY = (trace.marker.pad.bottom - trace.marker.pad.top) / 2;
 
@@ -131,8 +131,8 @@ function plotOne(gd, cd, element, transitionOpts) {
     var limitX = function(x) { return Math.max(0, Math.min(vpw, x)); };
     var limitY = function(y) { return Math.max(0, Math.min(vph, y)); };
 
-    var viewportX = function(x) { return limitX(x) + cx - vpw / 2; };
-    var viewportY = function(y) { return limitY(y) + cy - vph / 2; };
+    var sliceViewX = function(x) { return limitX(x) + cx - vpw / 2; };
+    var sliceViewY = function(y) { return limitY(y) + cy - vph / 2; };
 
     var getOrigin = function(pt) {
         var x0 = pt.x0;
@@ -318,17 +318,17 @@ function plotOne(gd, cd, element, transitionOpts) {
             rotate: transform.rotate,
             textX: transform.textX,
             textY: transform.textY,
-            targetX: viewportX(transform.targetX),
-            targetY: viewportY(transform.targetY)
+            targetX: sliceViewX(transform.targetX),
+            targetY: sliceViewY(transform.targetY)
         };
     }
 
     // slice path generation fn
     var pathSlice = function(d) {
-        var _x0 = viewportX(d.x0);
-        var _x1 = viewportX(d.x1);
-        var _y0 = viewportY(d.y0);
-        var _y1 = viewportY(d.y1);
+        var _x0 = sliceViewX(d.x0);
+        var _x1 = sliceViewX(d.x1);
+        var _y0 = sliceViewY(d.y0);
+        var _y1 = sliceViewY(d.y1);
 
         return (
            'M' + _x0 + ',' + _y0 +
@@ -382,8 +382,8 @@ function plotOne(gd, cd, element, transitionOpts) {
         });
 
         pt._hoverPos = [
-            viewportX(pt.x1),
-            viewportY(isOnTop(pt, trace) ?
+            sliceViewX(pt.x1),
+            sliceViewY(isOnTop(pt, trace) ?
                 (pt.y0 + pt.y1) / 2 :
                 pt.y0
             )
@@ -412,8 +412,8 @@ function plotOne(gd, cd, element, transitionOpts) {
         });
 
         var tx = '';
-        if((pt.parent === '' || pt.parent === null) && trace.directory.visible && trace.directory.position === 'inside') {
-            tx = helpers.getDirectory(entry.data);
+        if(helpers.isEntry(pt) && trace.directory.visible && trace.directory.position === 'inside') {
+            tx = helpers.getDirectoryLabel(entry.data);
         }
         tx = formatSliceLabel(pt, entry, trace, fullLayout, {
             label: tx
@@ -439,17 +439,6 @@ function plotOne(gd, cd, element, transitionOpts) {
                 helpers.getInsideTextFontKey('size', trace, pt, fullLayout.font)
             );
         }
-
-        var strTransform = function(d) {
-            return getTransform({
-                textX: d.transform.textX,
-                textY: d.transform.textY,
-                targetX: d.transform.targetX,
-                targetY: d.transform.targetY,
-                scale: d.transform.scale,
-                rotate: d.transform.rotate
-            });
-        };
 
         if(hasTransition) {
             sliceText.transition().attrTween('transform', function(pt2) {
@@ -559,8 +548,8 @@ function plotOne(gd, cd, element, transitionOpts) {
     if(trace.directory.visible && trace.directory.position !== 'inside') {
         var barW = vpw;
         var barH = trace.directory.height;
-        var barX = viewportX(0);
-        var barY = (trace.directory.position === 'top') ? viewportY(0) - barH : viewportY(vph);
+        var barX = sliceViewX(0);
+        var barY = (trace.directory.position === 'top') ? sliceViewY(0) - barH : sliceViewY(vph);
 
         dirGroup.append('rect')
             .attr('x', barX)
@@ -571,7 +560,7 @@ function plotOne(gd, cd, element, transitionOpts) {
             .on('click', function() { alert('Clicked!'); });
 
         dirGroup.append('text')
-            .text(helpers.getDirectory(entry.data))
+            .text(helpers.getDirectoryLabel(entry.data))
             .attr('text-anchor', 'left')
             .attr('dy', '.75em')
             .attr('x', 2 + barX)
@@ -583,6 +572,17 @@ function plotOne(gd, cd, element, transitionOpts) {
             })
             .call(svgTextUtils.convertToTspans, gd);
     }
+}
+
+function strTransform(d) {
+    return getTransform({
+        textX: d.transform.textX,
+        textY: d.transform.textY,
+        targetX: d.transform.targetX,
+        targetY: d.transform.targetY,
+        scale: d.transform.scale,
+        rotate: d.transform.rotate
+    });
 }
 
 function getTilingMethod(key) {

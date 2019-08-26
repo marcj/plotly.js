@@ -132,7 +132,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     var yOffset = 0;
     var cutoff = maxDepth;
     // N.B. handle multiple-root special case
-    if(cd0.hasMultipleRoots && helpers.isHierachyRoot(entry)) {
+    if(cd0.hasMultipleRoots && helpers.isHierarchyRoot(entry)) {
         sliceData = sliceData.slice(1);
         maxHeight -= 1;
         yOffset = 1;
