@@ -559,31 +559,41 @@ function plotOne(gd, cd, element, transitionOpts) {
     if(trace.directory.visible && trace.directory.position !== 'inside') {
         var barW = vpw;
         var barH = trace.directory.height;
+        var halfH = barH / 2;
 
+        var diffX = rightText ? -halfH : halfH;
         var diffY = (trace.directory.position === 'top') ? -barH : vph;
         var barY0 = sliceViewY(0) + diffY;
         var barX0 = sliceViewX(0);
 
-        var directoryViewX = function(x) { return barX0 + x; };
-        var directoryViewY = function(y) { return barY0 + y; };
+        var limitX0 = function(x) { return isNaN(x) ? 0 : Math.max(x, 0); };
+        var limitY0 = function(y) { return isNaN(y) ? 0 : Math.max(y, 0); };
+        var limitX1 = function(x) { return isNaN(x) ? barW : Math.min(x, barW); };
+        var limitY1 = function(y) { return isNaN(y) ? barH : Math.min(y, barH); };
 
         // directory path generation fn
         var pathDirectory = function(d) {
-            var _x0 = directoryViewX(d.x0);
-            var _x1 = directoryViewX(d.x1);
-            var _y0 = directoryViewY(d.y0);
-            var _y1 = directoryViewY(d.y1);
+            var _x0 = limitX0(Math.min(d.x0, d.x0 - diffX)) + barX0;
+            var _x1 = limitX1(Math.max(d.x1, d.x1 - diffX)) + barX0;
+            var _y0 = limitY0(d.y0) + barY0;
+            var _y1 = limitY1(d.y1) + barY0;
 
-            if(isNaN(_x0)) _x0 = barW;
-            if(isNaN(_x1)) _x1 = barW + barX0;
-            if(isNaN(_y0)) _y0 = barH;
-            if(isNaN(_y1)) _y1 = barH + barY0;
+            var _yMid = _y0 + halfH;
+            var _xMid;
+            if(rightText) {
+                _xMid = (_x1 < barX0 + barW) ? _x1 - halfH : _x1;
+            } else {
+                _xMid = (_x0 > barX0) ? _x0 + halfH : _x0;
+            }
 
             return (
                'M' + _x0 + ',' + _y0 +
                'L' + _x1 + ',' + _y0 +
+               (rightText ? 'L' + _xMid + ',' + _yMid : '') +
                'L' + _x1 + ',' + _y1 +
-               'L' + _x0 + ',' + _y1 + 'Z'
+               'L' + _x0 + ',' + _y1 +
+               (rightText ? '' : 'L' + _xMid + ',' + _yMid) +
+               'Z'
             );
         };
 
@@ -657,8 +667,8 @@ function plotOne(gd, cd, element, transitionOpts) {
                 .call(helpers.setSliceCursor, gd, {isTransitioning: gd._transitioning});
 
             pt._hoverPos = [
-                directoryViewX(pt.x0),
-                directoryViewY(pt.y0)
+                limitX0(pt.x0) + barX0,
+                limitY0(pt.y0) + barY0
             ];
 
             var directoryPath = Lib.ensureSingle(directoryTop, 'path', 'directoryrect', function(s) {
@@ -684,10 +694,10 @@ function plotOne(gd, cd, element, transitionOpts) {
 
             pt.textBB = Drawing.bBox(directoryText.node());
             pt.transform = toMoveInsideSlice(
-                !isNaN(pt.x0) ? pt.x0 : barX0,
-                !isNaN(pt.x1) ? pt.x1 : barX0 + barW,
-                !isNaN(pt.y0 + diffY) ? pt.y0 + diffY : barY0,
-                !isNaN(pt.y1 + diffY) ? pt.y1 + diffY : barY0 + barH,
+                limitX0(pt.x0),
+                limitX1(pt.x1),
+                limitY0(pt.y0) + diffY,
+                limitY1(pt.y1) + diffY,
                 pt.textBB,
                 isOnTop(pt, trace)
             );
