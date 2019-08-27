@@ -72,7 +72,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     coerce('marker.colors');
     var withColorscale = hasColorscale(traceIn, 'marker');
 
-    var headerSize = traceOut.textfont.size * 1.6;
+    var headerSize = traceOut.textfont.size * 2;
     coerce('marker.pad.top', headerSize);
     coerce('marker.pad.left', headerSize / 4);
     coerce('marker.pad.right', headerSize / 4);
