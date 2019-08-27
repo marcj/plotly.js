@@ -284,20 +284,23 @@ function plotOne(gd, cd, element, transitionOpts) {
     // filter out slices that won't show up on graph
     sliceData = sliceData.filter(function(pt) { return pt.depth < maxDepth; });
 
-    function toMoveInsideSlice(x0, x1, y0, y1, textBB, isInFront) {
+    function toMoveInsideSlice(x0, x1, y0, y1, textBB, opts) {
         var hasFlag = function(f) { return trace.textposition.indexOf(f) !== -1; };
 
         var anchor =
             hasFlag('top') ? 'start' :
             hasFlag('bottom') ? 'end' : 'middle';
 
-        var offsetDir =
-            hasFlag('left') ? 'left' :
-            hasFlag('right') ? 'right' : 'center';
+        var isRight = hasFlag('right');
+        var isLeft = hasFlag('left') || (opts.noCenter && !isRight);
 
-        if(!isInFront) {
-            x0 += hasFlag('left') ? TEXTPAD : 0;
-            x1 -= hasFlag('right') ? TEXTPAD : 0;
+        var offsetDir =
+            isLeft ? 'left' :
+            isRight ? 'right' : 'center';
+
+        if(!opts.isFront) {
+            x0 += isLeft ? TEXTPAD : 0;
+            x1 -= isRight ? TEXTPAD : 0;
         }
 
         // position the text relative to the slice
@@ -433,8 +436,7 @@ function plotOne(gd, cd, element, transitionOpts) {
             pt.x1,
             pt.y0,
             pt.y1,
-            pt.textBB,
-            isOnTop(pt, trace)
+            pt.textBB, { isFront: isOnTop(pt, trace) }
         );
 
         if(helpers.isOutsideText(trace, pt)) {
@@ -497,8 +499,7 @@ function plotOne(gd, cd, element, transitionOpts) {
                 origin.x1,
                 origin.y0,
                 origin.y1,
-                pt.textBB,
-                isOnTop(pt, trace)
+                pt.textBB, { isFront: isOnTop(pt, trace) }
             )
         });
 
@@ -566,17 +567,18 @@ function plotOne(gd, cd, element, transitionOpts) {
         var barY0 = sliceViewY(0) + diffY;
         var barX0 = sliceViewX(0);
 
-        var limitX0 = function(x) { return isNaN(x) ? 0 : Math.max(x, 0); };
-        var limitY0 = function(y) { return isNaN(y) ? 0 : Math.max(y, 0); };
-        var limitX1 = function(x) { return isNaN(x) ? barW : Math.min(x, barW); };
-        var limitY1 = function(y) { return isNaN(y) ? barH : Math.min(y, barH); };
+        // TODO: figure out why we get NaN values here!
+        var limitDirX0 = function(x) { return isNaN(x) ? 0 : Math.max(x, 0); };
+        var limitDirY0 = function(y) { return isNaN(y) ? 0 : Math.max(y, 0); };
+        var limitDirX1 = function(x) { return isNaN(x) ? barW : Math.min(x, barW); };
+        var limitDirY1 = function(y) { return isNaN(y) ? barH : Math.min(y, barH); };
 
         // directory path generation fn
         var pathDirectory = function(d) {
-            var _x0 = limitX0(Math.min(d.x0, d.x0 - diffX)) + barX0;
-            var _x1 = limitX1(Math.max(d.x1, d.x1 - diffX)) + barX0;
-            var _y0 = limitY0(d.y0) + barY0;
-            var _y1 = limitY1(d.y1) + barY0;
+            var _x0 = limitDirX0(Math.min(d.x0, d.x0 - diffX)) + barX0;
+            var _x1 = limitDirX1(Math.max(d.x1, d.x1 - diffX)) + barX0;
+            var _y0 = limitDirY0(d.y0) + barY0;
+            var _y1 = limitDirY1(d.y1) + barY0;
 
             var _yMid = _y0 + halfH;
             var _xMid;
@@ -657,6 +659,8 @@ function plotOne(gd, cd, element, transitionOpts) {
 
         directories.exit().remove();
 
+        directories.order();
+
         var updateDirectories = directories;
 
         updateDirectories.each(function(pt) {
@@ -667,8 +671,8 @@ function plotOne(gd, cd, element, transitionOpts) {
                 .call(helpers.setSliceCursor, gd, {isTransitioning: gd._transitioning});
 
             pt._hoverPos = [
-                limitX0(pt.x0) + barX0,
-                limitY0(pt.y0) + barY0
+                limitDirX0(pt.x0) + barX0,
+                limitDirY0(pt.y0) + barY0
             ];
 
             var directoryPath = Lib.ensureSingle(directoryTop, 'path', 'directoryrect', function(s) {
@@ -694,12 +698,14 @@ function plotOne(gd, cd, element, transitionOpts) {
 
             pt.textBB = Drawing.bBox(directoryText.node());
             pt.transform = toMoveInsideSlice(
-                limitX0(pt.x0),
-                limitX1(pt.x1),
-                limitY0(pt.y0) + diffY,
-                limitY1(pt.y1) + diffY,
-                pt.textBB,
-                isOnTop(pt, trace)
+                limitDirX0(pt.x0),
+                limitDirX1(pt.x1),
+                limitDirY0(pt.y0) + diffY,
+                limitDirY1(pt.y1) + diffY,
+                pt.textBB, {
+                    isFront: isOnTop(pt, trace),
+                    noCenter: true
+                }
             );
 
             if(helpers.isOutsideText(trace, pt)) {
