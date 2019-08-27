@@ -39,7 +39,8 @@ module.exports = {
                 'binary',
                 'dice',
                 'slice',
-                'slice-dice'
+                'slice-dice',
+                'dice-slice'
             ],
             dflt: 'squarify',
             role: 'info',
@@ -251,7 +252,7 @@ module.exports = {
                 'inside',
                 'bottom'
             ],
-            dflt: 'inside',
+            dflt: 'bottom',
             role: 'info',
             editType: 'plot',
             description: [
@@ -266,14 +267,6 @@ module.exports = {
             role: 'info',
             editType: 'plot',
             description: 'Sets the height of directory bar (in px).'
-        },
-
-        color: {
-            dflt: '#ddd',
-            valType: 'color',
-            role: 'style',
-            editType: 'style',
-            description: 'Sets the color of directory bar.'
         },
 
         textfont: extendFlat({}, pieAttrs.textfont, {

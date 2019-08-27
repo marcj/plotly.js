@@ -9,7 +9,8 @@
       "textinfo": "label+value+percent parent+percent total",
       "domain": {"x": [0, 0.48]},
       "outsidetextfont": {"size": 20, "color": "#377eb8"},
-      "marker": {"opacity": 0.4, "line": {"width": 2}}
+      "marker": {"opacity": 0.4, "line": {"width": 2}},
+      "directory": {"visible": false}
     },
     {
       "type": "treemap",
@@ -21,7 +22,8 @@
       "values": [65, 14, 12, 10, 2, 6, 6, 1, 4],
       "textinfo": "label+value+percent parent+percent total",
       "outsidetextfont": {"size": 20, "color": "#377eb8"},
-      "marker": {"opacity": 0.4, "line": {"width": 2}}
+      "marker": {"opacity": 0.4, "line": {"width": 2}},
+      "directory": {"visible": false}
     }
   ],
   "layout": {

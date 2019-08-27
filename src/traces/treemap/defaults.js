@@ -15,6 +15,7 @@ var hasColorscale = require('../../components/colorscale/helpers').hasColorscale
 var colorscaleDefaults = require('../../components/colorscale/defaults');
 var handleDomainDefaults = require('../../plots/domain').defaults;
 var handleText = require('../bar/defaults').handleText;
+var TEXTPAD = require('../bar/constants').TEXTPAD;
 
 module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout) {
     function coerce(attr, dflt) {
@@ -88,9 +89,8 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     var hasDir = coerce('directory.visible');
     if(hasDir) {
         coerce('directory.position');
-        coerce('directory.color');
         Lib.coerceFont(coerce, 'directory.textfont', layout.font);
-        coerce('directory.height', traceOut.directory.textfont.size + 4);
+        coerce('directory.height', traceOut.directory.textfont.size + 2 * TEXTPAD);
     }
 
     handleDomainDefaults(traceOut, layout, coerce);

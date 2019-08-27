@@ -86,6 +86,7 @@ function plotOne(gd, cd, element, transitionOpts) {
 
     var gTrace = d3.select(element);
     var slices = gTrace.selectAll('g.slice');
+    var directories = gTrace.selectAll('g.directory');
 
     var cd0 = cd[0];
     var trace = cd0.trace;
@@ -129,11 +130,8 @@ function plotOne(gd, cd, element, transitionOpts) {
     var cx = cd0.cx = mvX + gs.l + gs.w * domainMidX;
     var cy = cd0.cy = mvY + gs.t + gs.h * (1 - domainMidY);
 
-    var limitX = function(x) { return Math.max(0, Math.min(vpw, x)); };
-    var limitY = function(y) { return Math.max(0, Math.min(vph, y)); };
-
-    var sliceViewX = function(x) { return limitX(x) + cx - vpw / 2; };
-    var sliceViewY = function(y) { return limitY(y) + cy - vph / 2; };
+    var sliceViewX = function(x) { return x + cx - vpw / 2; };
+    var sliceViewY = function(y) { return y + cy - vph / 2; };
 
     var getOrigin = function(pt) {
         var x0 = pt.x0;
@@ -431,7 +429,14 @@ function plotOne(gd, cd, element, transitionOpts) {
             .call(svgTextUtils.convertToTspans, gd);
 
         pt.textBB = Drawing.bBox(sliceText.node());
-        pt.transform = toMoveInsideSlice(pt.x0, pt.x1, pt.y0, pt.y1, pt.textBB, isOnTop(pt, trace));
+        pt.transform = toMoveInsideSlice(
+            pt.x0,
+            pt.x1,
+            pt.y0,
+            pt.y1,
+            pt.textBB,
+            isOnTop(pt, trace)
+        );
 
         if(helpers.isOutsideText(trace, pt)) {
             // consider in/out diff font sizes
@@ -488,7 +493,14 @@ function plotOne(gd, cd, element, transitionOpts) {
         var origin = getOrigin(pt);
 
         Lib.extendFlat(prev, {
-            transform: toMoveInsideSlice(origin.x0, origin.x1, origin.y0, origin.y1, pt.textBB, isOnTop(pt, trace))
+            transform: toMoveInsideSlice(
+                origin.x0,
+                origin.x1,
+                origin.y0,
+                origin.y1,
+                pt.textBB,
+                isOnTop(pt, trace)
+            )
         });
 
         if(prev0) {
@@ -545,33 +557,151 @@ function plotOne(gd, cd, element, transitionOpts) {
         return Lib.extendFlat({}, getOrigin(pt));
     }
 
-    var dirGroup = Lib.ensureSingle(d3.select(element), 'g', 'directory');
     if(trace.directory.visible && trace.directory.position !== 'inside') {
         var barW = vpw;
         var barH = trace.directory.height;
-        var barX = sliceViewX(0);
-        var barY = (trace.directory.position === 'top') ? sliceViewY(0) - barH : sliceViewY(vph);
 
-        dirGroup.append('rect')
-            .attr('x', barX)
-            .attr('y', barY)
-            .attr('width', barW)
-            .attr('height', barH)
-            .style('fill', trace.directory.color)
-            .on('click', function() { alert('Clicked!'); });
+        var diffY = (trace.directory.position === 'top') ? -barH : vph;
+        var barY0 = sliceViewY(0) + diffY;
+        var barX0 = sliceViewX(0);
 
-        dirGroup.append('text')
-            .text(helpers.getDirectoryLabel(entry.data))
-            .attr('text-anchor', 'left')
-            .attr('dy', '.75em')
-            .attr('x', 2 + barX)
-            .attr('y', 2 + barY)
-            .call(Drawing.font, {
-                size: trace.directory.textfont.size,
-                color: trace.directory.textfont.color,
-                family: trace.directory.textfont.family
-            })
+        var directoryViewX = function(x) { return barX0 + x; };
+        var directoryViewY = function(y) { return barY0 + y; };
+
+        // directory path generation fn
+        var pathDirectory = function(d) {
+            var _x0 = directoryViewX(d.x0);
+            var _x1 = directoryViewX(d.x1);
+            var _y0 = directoryViewY(d.y0);
+            var _y1 = directoryViewY(d.y1);
+
+            if(isNaN(_x0)) _x0 = barW;
+            if(isNaN(_x1)) _x1 = barW + barX0;
+            if(isNaN(_y0)) _y0 = barH;
+            if(isNaN(_y1)) _y1 = barH + barY0;
+
+            return (
+               'M' + _x0 + ',' + _y0 +
+               'L' + _x1 + ',' + _y0 +
+               'L' + _x1 + ',' + _y1 +
+               'L' + _x0 + ',' + _y1 + 'Z'
+            );
+        };
+
+        var rawAncestors = entry.data.ancestors();
+
+        var ancestors = [];
+        for(var q = 0; q < rawAncestors.length; q++) {
+            var raw = rawAncestors[q].data;
+
+            ancestors[q] = {
+                id: raw.id,
+                pid: raw.pid,
+                label: raw.label,
+                color: raw.color
+            };
+
+            if(raw.hasOwnProperty('v')) {
+                ancestors[q].v = raw.v;
+            } else {
+                ancestors[q].value = raw.value;
+            }
+        }
+
+        var root;
+        try {
+            root = d3Hierarchy.stratify()
+                .id(function(d) { return d.id; })
+                .parentId(function(d) { return d.pid; })(ancestors);
+        } catch(e) {
+            return Lib.warn('Failed to build directory hierarchy. Error: ' + e.message);
+        }
+
+        var dirEntry = d3Hierarchy.hierarchy(root);
+
+        var directoryData = partition(dirEntry, [barW, barH], {
+            aspectratio: 1,
+            packing: 'dice',
+            mirror: {
+                x: false,
+                y: false,
+                xy: false
+            },
+            offset: 0,
+            padding: {
+                top: 0,
+                left: barW / (dirEntry.height + 1),
+                right: 0,
+                bottom: 0
+            }
+        }).descendants();
+
+        directories = directories.data(directoryData, function(pt) { return helpers.getPtId(pt); });
+
+        directories.enter().append('g')
+            .classed('directory', true);
+
+        directories.exit().remove();
+
+        var updateDirectories = directories;
+
+        updateDirectories.each(function(pt) {
+            var directoryTop = d3.select(this);
+
+            var directoryPath = Lib.ensureSingle(directoryTop, 'path', 'directoryrect', function(s) {
+                s.style('pointer-events', 'all');
+            });
+
+            directoryPath.attr('d', pathDirectory);
+
+            directoryPath.call(styleOne, pt, trace);
+
+            var directoryTextGroup = Lib.ensureSingle(directoryTop, 'g', 'directorytext');
+            var directoryText = Lib.ensureSingle(directoryTextGroup, 'text', '', function(s) {
+                // prohibit tex interpretation until we can handle
+                // tex and regular text together
+                s.attr('data-notex', 1);
+            });
+
+            /*
+            var tx = '';
+            tx = formatSliceLabel(pt, dirEntry, trace, fullLayout, {
+                label: tx
+            });
+            */
+
+            var tx = pt.data.data.label;
+
+            directoryText.text(tx)
+                .classed('directorytext', true)
+                .attr('text-anchor',
+                    trace.textposition.indexOf('left') !== -1 ? 'start' :
+                    trace.textposition.indexOf('right') !== -1 ? 'end' :
+                    'middle'
+                )
+                .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
+
+            pt.textBB = Drawing.bBox(directoryText.node());
+            pt.transform = toMoveInsideSlice(
+                !isNaN(pt.x0) ? pt.x0 : barX0,
+                !isNaN(pt.x1) ? pt.x1 : barX0 + barW,
+                !isNaN(pt.y0 + diffY) ? pt.y0 + diffY : barY0,
+                !isNaN(pt.y1 + diffY) ? pt.y1 + diffY : barY0 + barH,
+                pt.textBB,
+                isOnTop(pt, trace)
+            );
+
+            if(helpers.isOutsideText(trace, pt)) {
+                // consider in/out diff font sizes
+                pt.transform.targetY -= (
+                    helpers.getOutsideTextFontKey('size', trace, pt, fullLayout.font) -
+                    helpers.getInsideTextFontKey('size', trace, pt, fullLayout.font)
+                );
+            }
+
+            directoryText.attr('transform', strTransform(pt));
+        });
     }
 }
 
@@ -601,7 +731,7 @@ function getTilingMethod(key) {
         case 'slice':
             method = d3Hierarchy.treemapSlice;
             break;
-        default: // i.e. 'slice-dice'
+        default: // i.e. 'slice-dice' | 'dice-slice'
             method = d3Hierarchy.treemapSliceDice;
     }
 
@@ -616,6 +746,7 @@ function partition(entry, size, opts) {
     var flipX = opts.mirror.x;
     var flipY = opts.mirror.y;
     var swapXY = opts.mirror.xy;
+    if(opts.packing === 'dice-slice') swapXY = !swapXY;
 
     var top = opts.padding[flipY ? 'bottom' : 'top'];
     var left = opts.padding[flipX ? 'right' : 'left'];
@@ -635,6 +766,7 @@ function partition(entry, size, opts) {
 
     var result = d3Hierarchy
         .treemap()
+        .round(true)
         .tile(getTilingMethod(opts.packing))
         .paddingInner(opts.offset)
         .paddingLeft(left)
