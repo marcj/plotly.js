@@ -676,13 +676,11 @@ function plotOne(gd, cd, element, transitionOpts) {
                 s.attr('data-notex', 1);
             });
 
-            var tx = pt.data.data.label;
-
-            directoryText.text(tx)
+            directoryText.text(pt.data.data.label)
                 .classed('directorytext', true)
                 .attr('text-anchor', rightText ? 'end' : 'start') // No middle
-                .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
-            .call(svgTextUtils.convertToTspans, gd);
+                .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font, trace.directory))
+                .call(svgTextUtils.convertToTspans, gd);
 
             pt.textBB = Drawing.bBox(directoryText.node());
             pt.transform = toMoveInsideSlice(

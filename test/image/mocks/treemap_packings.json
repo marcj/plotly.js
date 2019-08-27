@@ -8,8 +8,11 @@
                 "packing": "binary"
             },
             "directory": {
+                "visible": true,
                 "position": "top",
-                "visible": true
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
             },
             "level": "Oscar",
             "labels": [
@@ -91,8 +94,11 @@
                 "packing": "dice-slice"
             },
             "directory": {
+                "visible": true,
                 "position": "top",
-                "visible": true
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
             },
             "level": "Oscar",
             "labels": [
@@ -174,8 +180,11 @@
                 "packing": "squarify"
             },
             "directory": {
+                "visible": true,
                 "position": "top",
-                "visible": true
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
             },
             "level": "Oscar",
             "labels": [
@@ -257,8 +266,11 @@
                 "packing": "slice"
             },
             "directory": {
+                "visible": true,
                 "position": "top",
-                "visible": true
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
             },
             "level": "Oscar",
             "labels": [
@@ -340,8 +352,11 @@
                 "packing": "slice-dice"
             },
             "directory": {
+                "visible": true,
                 "position": "top",
-                "visible": true
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
             },
             "level": "Oscar",
             "labels": [
@@ -423,8 +438,11 @@
                 "packing": "dice"
             },
             "directory": {
+                "visible": true,
                 "position": "top",
-                "visible": true
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
             },
             "level": "Oscar",
             "labels": [

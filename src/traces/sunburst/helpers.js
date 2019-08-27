@@ -111,7 +111,7 @@ function determineOutsideTextFont(trace, pt, layoutFont) {
     };
 }
 
-function determineInsideTextFont(trace, pt, layoutFont) {
+function determineInsideTextFont(trace, pt, layoutFont, cont) {
     var cdi = pt.data.data;
     var ptNumber = cdi.i;
 
@@ -126,8 +126,8 @@ function determineInsideTextFont(trace, pt, layoutFont) {
 
     return {
         color: customColor || Color.contrast(cdi.color),
-        family: exports.getInsideTextFontKey('family', trace, pt, layoutFont),
-        size: exports.getInsideTextFontKey('size', trace, pt, layoutFont)
+        family: exports.getInsideTextFontKey('family', cont || trace, pt, layoutFont),
+        size: exports.getInsideTextFontKey('size', cont || trace, pt, layoutFont)
     };
 }
 
@@ -135,8 +135,8 @@ exports.isOutsideText = function(trace, pt) {
     return !trace._hasColorscale && exports.isHierarchyRoot(pt);
 };
 
-exports.determineTextFont = function(trace, pt, layoutFont) {
+exports.determineTextFont = function(trace, pt, layoutFont, cont) {
     return exports.isOutsideText(trace, pt) ?
-        determineOutsideTextFont(trace, pt, trace, pt, layoutFont) :
-        determineInsideTextFont(trace, pt, trace, pt, layoutFont);
+        determineOutsideTextFont(trace, pt, layoutFont) :
+        determineInsideTextFont(trace, pt, layoutFont, cont);
 };
