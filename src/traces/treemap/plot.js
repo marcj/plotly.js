@@ -91,6 +91,9 @@ function plotOne(gd, cd, element, transitionOpts) {
     var cd0 = cd[0];
     var trace = cd0.trace;
 
+    var leftText = trace.textposition.indexOf('left') !== -1;
+    var rightText = trace.textposition.indexOf('right') !== -1;
+
     var gs = fullLayout._size;
     var domain = trace.domain;
     var vpw = gs.w * (domain.x[1] - domain.x[0]);
@@ -420,11 +423,7 @@ function plotOne(gd, cd, element, transitionOpts) {
 
         sliceText.text(tx)
             .classed('slicetext', true)
-            .attr('text-anchor',
-                trace.textposition.indexOf('left') !== -1 ? 'start' :
-                trace.textposition.indexOf('right') !== -1 ? 'end' :
-                'middle'
-            )
+            .attr('text-anchor', leftText ? 'start' : rightText ? 'end' : 'middle')
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
 
@@ -622,19 +621,21 @@ function plotOne(gd, cd, element, transitionOpts) {
         // link to hierarchy.value
         dirEntry.value = hierarchy.value;
 
+        var eachWidth = barW / (dirEntry.height + 1);
+
         var directoryData = partition(dirEntry, [barW, barH], {
             aspectratio: 1,
             packing: 'dice',
             mirror: {
-                x: false,
+                x: rightText,
                 y: false,
                 xy: false
             },
             offset: 0,
             padding: {
                 top: 0,
-                left: barW / (dirEntry.height + 1),
-                right: 0,
+                left: rightText ? 0 : eachWidth,
+                right: rightText ? eachWidth : 0,
                 bottom: 0
             }
         }).descendants();
@@ -679,11 +680,7 @@ function plotOne(gd, cd, element, transitionOpts) {
 
             directoryText.text(tx)
                 .classed('directorytext', true)
-                .attr('text-anchor',
-                    trace.textposition.indexOf('left') !== -1 ? 'start' :
-                    trace.textposition.indexOf('right') !== -1 ? 'end' :
-                    'middle'
-                )
+                .attr('text-anchor', rightText ? 'end' : 'start') // No middle
                 .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
 

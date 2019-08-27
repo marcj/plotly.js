@@ -3,7 +3,7 @@
         {
             "type": "treemap",
             "textinfo": "label+value",
-            "name": "Binary treemap",
+            "name": "binary treemap",
             "tiling": {
                 "packing": "binary"
             },
@@ -69,6 +69,9 @@
                 "Uniform",
                 "Uniform"
             ],
+            "marker": {
+                "colorscale": "Reds"
+            },
             "domain": {
                 "x": [
                     0,
@@ -83,7 +86,7 @@
         {
             "type": "treemap",
             "textinfo": "label+value",
-            "name": "DiceSlice treemap",
+            "name": "dice-slice treemap",
             "tiling": {
                 "packing": "dice-slice"
             },
@@ -149,6 +152,9 @@
                 "Uniform",
                 "Uniform"
             ],
+            "marker": {
+                "colorscale": "Reds"
+            },
             "domain": {
                 "x": [
                     0.35,
@@ -163,7 +169,7 @@
         {
             "type": "treemap",
             "textinfo": "label+value",
-            "name": "Squarify treemap",
+            "name": "squarify treemap",
             "tiling": {
                 "packing": "squarify"
             },
@@ -229,6 +235,9 @@
                 "Uniform",
                 "Uniform"
             ],
+            "marker": {
+                "colorscale": "Reds"
+            },
             "domain": {
                 "x": [
                     0.7,
@@ -243,7 +252,7 @@
         {
             "type": "treemap",
             "textinfo": "label+value",
-            "name": "Slice treemap",
+            "name": "slice treemap",
             "tiling": {
                 "packing": "slice"
             },
@@ -309,6 +318,9 @@
                 "Uniform",
                 "Uniform"
             ],
+            "marker": {
+                "colorscale": "Reds"
+            },
             "domain": {
                 "x": [
                     0,
@@ -323,7 +335,7 @@
         {
             "type": "treemap",
             "textinfo": "label+value",
-            "name": "SliceDice treemap",
+            "name": "slice-dice treemap",
             "tiling": {
                 "packing": "slice-dice"
             },
@@ -389,6 +401,9 @@
                 "Uniform",
                 "Uniform"
             ],
+            "marker": {
+                "colorscale": "Reds"
+            },
             "domain": {
                 "x": [
                     0.35,
@@ -403,7 +418,7 @@
         {
             "type": "treemap",
             "textinfo": "label+value",
-            "name": "Dice treemap",
+            "name": "dice treemap",
             "tiling": {
                 "packing": "dice"
             },
@@ -469,6 +484,9 @@
                 "Uniform",
                 "Uniform"
             ],
+            "marker": {
+                "colorscale": "Reds"
+            },
             "domain": {
                 "x": [
                     0.7,
@@ -482,13 +500,12 @@
         }
     ],
     "layout": {
-        "paper_bgcolor": "#d3d3d3",
         "width": 1200,
         "height": 800,
         "annotations": [
             {
                 "showarrow": false,
-                "text": "<b>Binary</b> treemap",
+                "text": "<b>binary</b> treemap",
                 "x": 0.15,
                 "xanchor": "center",
                 "y": 0,
@@ -496,7 +513,7 @@
             },
             {
                 "showarrow": false,
-                "text": "<b>DiceSlice</b> treemap",
+                "text": "<b>dice-slice</b> treemap",
                 "x": 0.5,
                 "xanchor": "center",
                 "y": 0,
@@ -504,7 +521,7 @@
             },
             {
                 "showarrow": false,
-                "text": "<b>Squarify</b> treemap",
+                "text": "<b>squarify</b> treemap",
                 "x": 0.85,
                 "xanchor": "center",
                 "y": 0,
@@ -512,7 +529,7 @@
             },
             {
                 "showarrow": false,
-                "text": "<b>Slice</b> treemap",
+                "text": "<b>slice</b> treemap",
                 "x": 0.15,
                 "xanchor": "center",
                 "y": 1,
@@ -520,7 +537,7 @@
             },
             {
                 "showarrow": false,
-                "text": "<b>SliceDice</b> treemap",
+                "text": "<b>slice-dice</b> treemap",
                 "x": 0.5,
                 "xanchor": "center",
                 "y": 1,
@@ -528,7 +545,7 @@
             },
             {
                 "showarrow": false,
-                "text": "<b>Dice</b> treemap",
+                "text": "<b>dice</b> treemap",
                 "x": 0.85,
                 "xanchor": "center",
                 "y": 1,
