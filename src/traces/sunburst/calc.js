@@ -17,47 +17,19 @@ var colorscaleCalc = require('../../components/colorscale/calc');
 var makeColorScaleFn = require('../../components/colorscale').makeColorScaleFuncFromTrace;
 var makePullColorFn = require('../pie/calc').makePullColorFn;
 var generateExtendedColors = require('../pie/calc').generateExtendedColors;
-
-var isArrayOrTypedArray = Lib.isArrayOrTypedArray;
+var countDescendants = require('./count_descendants');
 
 var sunburstExtendedColorWays = {};
 var treemapExtendedColorWays = {};
 
-function countDescendants(node, trace) {
-    var descendants = 0;
-
-    var children = node['child' + 'ren'];
-    if(children) {
-        var len = children.length;
-
-        for(var i = 0; i < len; i++) {
-            descendants += countDescendants(children[i], trace);
-        }
-
-        // count branch
-        descendants += trace.countbranches;
-    } else { // count leaf
-        descendants += 1;
-    }
-
-    // save to the node
-    node.value = node.data.data.value = descendants;
-
-    // save to the trace
-    if(!trace._values) trace._values = [];
-    trace._values[node.data.data.i] = descendants;
-
-    return descendants;
-}
-
 exports._runCalc = function(desiredType, gd, trace, opts) {
     var fullLayout = gd._fullLayout;
     var ids = trace.ids;
-    var hasIds = isArrayOrTypedArray(ids);
+    var hasIds = Lib.isArrayOrTypedArray(ids);
     var labels = trace.labels;
     var parents = trace.parents;
     var values = trace.values;
-    var hasValues = isArrayOrTypedArray(values);
+    var hasValues = Lib.isArrayOrTypedArray(values);
     var cd = [];
 
     var parent2children = {};

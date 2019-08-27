@@ -11,9 +11,9 @@
 var d3 = require('d3');
 var d3Hierarchy = require('d3-hierarchy');
 
-var helpers = require('../sunburst/helpers');
 var constants = require('./constants');
 var attachFxHandlers = require('../sunburst/attach_fx_handlers');
+var helpers = require('../sunburst/helpers');
 
 var Drawing = require('../../components/drawing');
 var Lib = require('../../lib');
@@ -619,6 +619,9 @@ function plotOne(gd, cd, element, transitionOpts) {
 
         var dirEntry = d3Hierarchy.hierarchy(root);
 
+        // link to hierarchy.value
+        dirEntry.value = hierarchy.value;
+
         var directoryData = partition(dirEntry, [barW, barH], {
             aspectratio: 1,
             packing: 'dice',
@@ -648,6 +651,15 @@ function plotOne(gd, cd, element, transitionOpts) {
         updateDirectories.each(function(pt) {
             var directoryTop = d3.select(this);
 
+            directoryTop
+                .call(attachFxHandlers, dirEntry, gd, cd, styleOne, constants)
+                .call(helpers.setSliceCursor, gd, {isTransitioning: gd._transitioning});
+
+            pt._hoverPos = [
+                directoryViewX(pt.x0),
+                directoryViewY(pt.y0)
+            ];
+
             var directoryPath = Lib.ensureSingle(directoryTop, 'path', 'directoryrect', function(s) {
                 s.style('pointer-events', 'all');
             });
@@ -662,13 +674,6 @@ function plotOne(gd, cd, element, transitionOpts) {
                 // tex and regular text together
                 s.attr('data-notex', 1);
             });
-
-            /*
-            var tx = '';
-            tx = formatSliceLabel(pt, dirEntry, trace, fullLayout, {
-                label: tx
-            });
-            */
 
             var tx = pt.data.data.label;
 
