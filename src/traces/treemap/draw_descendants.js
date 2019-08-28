@@ -23,6 +23,8 @@ var styleOne = require('./style').styleOne;
 var strTransform = require('./str_transform');
 var formatSliceLabel = require('./format_slice_label');
 
+var isUp = false; // for Descendants
+
 module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     var width = opts.width;
     var height = opts.height;
@@ -70,7 +72,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
 
                 var slicePath = sliceTop.select('path.surface');
                 slicePath.transition().attrTween('d', function(pt2) {
-                    var interp = makeExitSliceInterpolator(pt2);
+                    var interp = makeExitSliceInterpolator(pt2, isUp);
                     return function(t) { return pathSlice(interp(t)); };
                 });
 
@@ -111,7 +113,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
 
         if(hasTransition) {
             slicePath.transition().attrTween('d', function(pt2) {
-                var interp = makeUpdateSliceIntepolator(pt2);
+                var interp = makeUpdateSliceIntepolator(pt2, isUp);
                 return function(t) { return pathSlice(interp(t)); };
             });
         } else {
@@ -164,7 +166,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
 
         if(hasTransition) {
             sliceText.transition().attrTween('transform', function(pt2) {
-                var interp = makeUpdateTextInterpolar(pt2);
+                var interp = makeUpdateTextInterpolar(pt2, isUp);
                 return function(t) { return strTransform(interp(t)); };
             });
         } else {

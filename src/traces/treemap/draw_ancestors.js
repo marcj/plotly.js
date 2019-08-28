@@ -22,6 +22,8 @@ var partition = require('./partition');
 var styleOne = require('./style').styleOne;
 var strTransform = require('./str_transform');
 
+var isUp = true; // for Ancestors
+
 module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     var width = opts.width;
     var height = opts.height;
@@ -38,6 +40,12 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     var rightText = opts.rightText;
     var pathSlice = opts.pathSlice;
     var toMoveInsideSlice = opts.toMoveInsideSlice;
+
+    var hasTransition = opts.hasTransition;
+
+    var makeExitSliceInterpolator = opts.makeExitSliceInterpolator;
+    var makeUpdateSliceIntepolator = opts.makeUpdateSliceIntepolator;
+    var makeUpdateTextInterpolar = opts.makeUpdateTextInterpolar;
 
     var fullLayout = gd._fullLayout;
     var cd0 = cd[0];
@@ -67,8 +75,24 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     slices.enter().append('g')
         .classed('directory', true);
 
-    slices.exit().remove();
+    if(hasTransition) {
+        slices.exit().transition()
+            .each(function() {
+                var sliceTop = d3.select(this);
 
+                var slicePath = sliceTop.select('path.surface');
+                slicePath.transition().attrTween('d', function(pt2) {
+                    var interp = makeExitSliceInterpolator(pt2, isUp);
+                    return function(t) { return pathSlice(interp(t)); };
+                });
+
+                var sliceTextGroup = sliceTop.select('g.slicetext');
+                sliceTextGroup.attr('opacity', 0);
+            })
+            .remove();
+    } else {
+        slices.exit().remove();
+    }
     slices.order();
 
     var updateSlices = slices;
@@ -76,24 +100,31 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     updateSlices.each(function(pt) {
         var sliceTop = d3.select(this);
 
-        sliceTop
-            .call(attachFxHandlers, entry, gd, cd, styleOne, constants)
-            .call(helpers.setSliceCursor, gd, { isTransitioning: gd._transitioning });
+        var slicePath = Lib.ensureSingle(sliceTop, 'path', 'surface', function(s) {
+            s.style('pointer-events', 'all');
+        });
 
         pt._hoverPos = [
             limitDirX0(pt.x0) + dirX0,
             limitDirY0(pt.y0) + dirY0
         ];
 
-        var slicePath = Lib.ensureSingle(sliceTop, 'path', 'directoryrect', function(s) {
-            s.style('pointer-events', 'all');
-        });
+        if(hasTransition) {
+            slicePath.transition().attrTween('d', function(pt2) {
+                var interp = makeUpdateSliceIntepolator(pt2, isUp);
+                return function(t) { return pathSlice(interp(t)); };
+            });
+        } else {
+            slicePath.attr('d', pathSlice);
+        }
 
-        slicePath.attr('d', pathSlice);
+        sliceTop
+            .call(attachFxHandlers, entry, gd, cd, styleOne, constants)
+            .call(helpers.setSliceCursor, gd, { isTransitioning: gd._transitioning });
 
         slicePath.call(styleOne, pt, trace);
 
-        var sliceTextGroup = Lib.ensureSingle(sliceTop, 'g', 'directorytext');
+        var sliceTextGroup = Lib.ensureSingle(sliceTop, 'g', 'slicetext');
         var sliceText = Lib.ensureSingle(sliceTextGroup, 'text', '', function(s) {
             // prohibit tex interpretation until we can handle
             // tex and regular text together
@@ -101,7 +132,7 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
         });
 
         sliceText.text(pt.data.data.label)
-            .classed('directorytext', true)
+            .classed('slicetext', true)
             .attr('text-anchor', rightText ? 'end' : 'start') // No middle
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font, trace.directory))
             .call(svgTextUtils.convertToTspans, gd);
@@ -126,6 +157,13 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
             );
         }
 
-        sliceText.attr('transform', strTransform(pt));
+        if(hasTransition) {
+            sliceText.transition().attrTween('transform', function(pt2) {
+                var interp = makeUpdateTextInterpolar(pt2, isUp);
+                return function(t) { return strTransform(interp(t)); };
+            });
+        } else {
+            sliceText.attr('transform', strTransform(pt));
+        }
     });
 };

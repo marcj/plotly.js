@@ -26,6 +26,12 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
     // stash of 'previous' position data used by tweening functions
     var prevLookup = {};
+    var prevLookdown = {};
+    var getPrev = function(pt, isUp) {
+        return (isUp) ?
+            prevLookup[helpers.getPtId(pt)] :
+            prevLookdown[helpers.getPtId(pt)];
+    };
 
     var cd0 = cd[0];
     var trace = cd0.trace;
@@ -291,9 +297,9 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         };
     };
 
-    var interpFromParent = function(pt) {
+    var interpFromParent = function(pt, isUp) {
         var parent = pt.parent;
-        var parentPrev = prevLookup[helpers.getPtId(parent)];
+        var parentPrev = getPrev(parent, isUp);
 
         if(parentPrev) {
             // if parent is visible
@@ -323,14 +329,14 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         return Lib.extendFlat({}, getOrigin(pt));
     };
 
-    var makeExitSliceInterpolator = function(pt) {
-        var prev = prevLookup[helpers.getPtId(pt)];
+    var makeExitSliceInterpolator = function(pt, isUp) {
+        var prev = getPrev(pt, isUp);
 
         return d3.interpolate(prev, getOrigin(pt));
     };
 
-    var makeUpdateSliceIntepolator = function(pt) {
-        var prev0 = prevLookup[helpers.getPtId(pt)];
+    var makeUpdateSliceIntepolator = function(pt, isUp) {
+        var prev0 = getPrev(pt, isUp);
 
         var prev = {};
         Lib.extendFlat(prev, getOrigin(pt));
@@ -341,7 +347,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         } else {
             // for new pts:
             if(pt.parent) {
-                Lib.extendFlat(prev, interpFromParent(pt));
+                Lib.extendFlat(prev, interpFromParent(pt, isUp));
             }
         }
 
@@ -353,8 +359,8 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         });
     };
 
-    var makeUpdateTextInterpolar = function(pt) {
-        var prev0 = prevLookup[helpers.getPtId(pt)];
+    var makeUpdateTextInterpolar = function(pt, isUp) {
+        var prev0 = getPrev(pt, isUp);
         var prev = {};
 
         var origin = getOrigin(pt);
@@ -375,7 +381,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         } else {
             // for new pts:
             if(pt.parent) {
-                Lib.extendFlat(prev, interpFromParent(pt));
+                Lib.extendFlat(prev, interpFromParent(pt, isUp));
             }
         }
 
@@ -401,8 +407,19 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
     if(hasTransition) {
         // Important: do this before binding new sliceData!
-        selDescendants.each(function(pt) {
+
+        selAncestors.each(function(pt) {
             prevLookup[helpers.getPtId(pt)] = {
+                x0: pt.x0,
+                x1: pt.x1,
+                y0: pt.y0,
+                y1: pt.y1,
+                transform: pt.transform
+            };
+        });
+
+        selDescendants.each(function(pt) {
+            prevLookdown[helpers.getPtId(pt)] = {
                 x0: pt.x0,
                 x1: pt.x1,
                 y0: pt.y0,
@@ -484,6 +501,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             rightText: rightText,
             pathSlice: pathAncestor,
             toMoveInsideSlice: toMoveInsideSlice,
+
+            makeExitSliceInterpolator: makeExitSliceInterpolator,
+            makeUpdateSliceIntepolator: makeUpdateSliceIntepolator,
+            makeUpdateTextInterpolar: makeUpdateTextInterpolar,
 
             hasTransition: hasTransition
         });
