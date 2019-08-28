@@ -47,6 +47,10 @@ exports.getMaxDepth = function(trace) {
     return trace.maxdepth >= 0 ? trace.maxdepth : Infinity;
 };
 
+exports.isOnTop = function(pt, trace) { // it is only used in treemap.
+    return exports.isLeaf(pt) || pt.depth === trace._maxDepth - 1;
+};
+
 exports.findEntryWithLevel = function(hierarchy, level) {
     var out;
     if(level) {
@@ -139,4 +143,10 @@ exports.determineTextFont = function(trace, pt, layoutFont, cont) {
     return exports.isOutsideText(trace, pt) ?
         determineOutsideTextFont(trace, pt, layoutFont) :
         determineInsideTextFont(trace, pt, layoutFont, cont);
+};
+
+exports.hasTransition = function(transitionOpts) {
+    // We could optimize hasTransition per trace,
+    // as sunburst & treemap have no cross-trace logic!
+    return !!(transitionOpts && transitionOpts.duration > 0);
 };

@@ -30,7 +30,7 @@ module.exports = function(gd, cdmodule, transitionOpts, makeOnCompleteCallback) 
     // If transition config is provided, then it is only a partial replot and traces not
     // updated are removed.
     var isFullReplot = !transitionOpts;
-    var hasTransition = transitionOpts && transitionOpts.duration > 0;
+    var hasTransition = helpers.hasTransition(transitionOpts);
 
     join = layer.selectAll('g.trace.sunburst')
         .data(cdmodule, function(cd) { return cd[0].trace.uid; });
@@ -77,9 +77,7 @@ module.exports = function(gd, cdmodule, transitionOpts, makeOnCompleteCallback) 
 
 function plotOne(gd, cd, element, transitionOpts) {
     var fullLayout = gd._fullLayout;
-    // We could optimize hasTransition per trace,
-    // as sunburst has no cross-trace logic!
-    var hasTransition = transitionOpts && transitionOpts.duration > 0;
+    var hasTransition = helpers.hasTransition(transitionOpts);
 
     var gTrace = d3.select(element);
     var slices = gTrace.selectAll('g.slice');
