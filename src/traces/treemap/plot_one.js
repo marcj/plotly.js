@@ -37,8 +37,6 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
     var trace = cd0.trace;
     var hierarchy = cd0.hierarchy;
 
-    var rightToLeft = trace.textposition.indexOf('right') !== -1;
-
     var gs = fullLayout._size;
     var domain = trace.domain;
     var vpw = gs.w * (domain.x[1] - domain.x[0]);
@@ -62,11 +60,18 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
     }
     trace._maxDepth = maxDepth;
 
+    var dirTop;
+    var dirRight;
+    var dirBottom;
     if(trace.directory.visible) {
-        if(trace.directory.position === 'top') {
+        dirTop = trace.directory.position.indexOf('top') !== -1;
+        dirRight = trace.directory.position.indexOf('right') !== -1;
+        dirBottom = trace.directory.position.indexOf('bottom') !== -1;
+
+        if(dirTop) {
             mvY += trace.directory.height / 2;
             vph -= trace.directory.height;
-        } else if(trace.directory.position === 'bottom') {
+        } else if(dirBottom) {
             mvY -= trace.directory.height / 2;
             vph -= trace.directory.height;
         }
@@ -83,10 +88,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
     var dirW = vpw;
     var dirH = trace.directory.height;
-    var halfDirH = dirH / 2;
+    var dirHalfH = dirH / 2;
 
-    var dirDifX = rightToLeft ? -halfDirH : halfDirH;
-    var dirDifY = (trace.directory.position === 'top') ? -dirH : vph;
+    var dirDifX = dirRight ? -dirHalfH : dirHalfH;
+    var dirDifY = dirTop ? -dirH : vph;
     var dirY0 = sliceViewY(0) + dirDifY;
     var dirX0 = sliceViewX(0);
 
@@ -103,21 +108,21 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         var _y0 = limitDirY0(d.y0) + dirY0;
         var _y1 = limitDirY1(d.y1) + dirY0;
 
-        var _yMid = _y0 + halfDirH;
+        var _yMid = _y0 + dirHalfH;
         var _xMid;
-        if(rightToLeft) {
-            _xMid = (_x1 < dirX0 + dirW) ? _x1 - halfDirH : _x1;
+        if(dirRight) {
+            _xMid = (_x1 < dirX0 + dirW) ? _x1 - dirHalfH : _x1;
         } else {
-            _xMid = (_x0 > dirX0) ? _x0 + halfDirH : _x0;
+            _xMid = (_x0 > dirX0) ? _x0 + dirHalfH : _x0;
         }
 
         return (
            'M' + _x0 + ',' + _y0 +
            'L' + _x1 + ',' + _y0 +
-           (rightToLeft ? 'L' + _xMid + ',' + _yMid : '') +
+           (dirRight ? 'L' + _xMid + ',' + _yMid : '') +
            'L' + _x1 + ',' + _y1 +
            'L' + _x0 + ',' + _y1 +
-           (rightToLeft ? '' : 'L' + _xMid + ',' + _yMid) +
+           (dirRight ? '' : 'L' + _xMid + ',' + _yMid) +
            'Z'
         );
     };
@@ -465,7 +470,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         sliceViewX: sliceViewX,
         sliceViewY: sliceViewY,
 
-        rightToLeft: rightToLeft,
+        rightToLeft: trace.textposition.indexOf('right') !== -1,
         pathSlice: pathDescendant,
         toMoveInsideSlice: toMoveInsideSlice,
 
@@ -516,7 +521,6 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
             dirX0: dirX0,
             dirY0: dirY0,
-            dirDifX: dirDifX,
             dirDifY: dirDifY,
 
             limitDirX0: limitDirX0,
@@ -524,7 +528,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             limitDirY0: limitDirY0,
             limitDirY1: limitDirY1,
 
-            rightToLeft: rightToLeft,
+            rightToLeft: dirRight,
             pathSlice: pathAncestor,
             toMoveInsideSlice: toMoveInsideSlice,
 

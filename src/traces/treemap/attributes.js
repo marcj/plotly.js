@@ -248,11 +248,13 @@ module.exports = {
         position: {
             valType: 'enumerated',
             values: [
-                'top',
+                'top left',
+                'top right',
                 'inside',
-                'bottom'
+                'bottom left',
+                'bottom right'
             ],
-            dflt: 'bottom',
+            dflt: 'bottom left',
             role: 'info',
             editType: 'plot',
             description: [

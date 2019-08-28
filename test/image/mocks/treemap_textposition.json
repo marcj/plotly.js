@@ -7,7 +7,7 @@
             "textposition": "bottom left",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "bottom left",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -120,7 +120,7 @@
             "textposition": "bottom center",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -233,7 +233,7 @@
             "textposition": "bottom right",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "bottom right",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -346,7 +346,7 @@
             "textposition": "middle left",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "inside",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -459,7 +459,7 @@
             "textposition": "middle center",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "inside",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -572,7 +572,7 @@
             "textposition": "middle right",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "inside",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -685,7 +685,7 @@
             "textposition": "top left",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -798,7 +798,7 @@
             "textposition": "top center",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "bottom left",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"
@@ -911,7 +911,7 @@
             "textposition": "top right",
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top right",
                 "textfont": {
                     "size": 12,
                     "family": "Times New Roman"

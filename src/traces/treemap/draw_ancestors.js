@@ -81,8 +81,8 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     var updateSlices = slices;
 
     updateSlices.each(function(pt) {
-        pt._hoverPos = [
-            limitDirX0(pt.x0) + dirX0 + eachWidth / 2,
+        pt._hoverPos = [(rightToLeft ? limitDirX1(pt.x1 - eachWidth) :
+            limitDirX0(pt.x0)) + dirX0 + eachWidth / 2,
             limitDirY0(pt.y0) + dirY0 + height / 2
         ];
 

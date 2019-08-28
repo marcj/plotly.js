@@ -9,7 +9,7 @@
             },
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12, "family": "Times New Roman"
                 }
@@ -95,7 +95,7 @@
             },
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12, "family": "Times New Roman"
                 }
@@ -181,7 +181,7 @@
             },
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12, "family": "Times New Roman"
                 }
@@ -267,7 +267,7 @@
             },
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12, "family": "Times New Roman"
                 }
@@ -353,7 +353,7 @@
             },
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12, "family": "Times New Roman"
                 }
@@ -439,7 +439,7 @@
             },
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "textfont": {
                     "size": 12, "family": "Times New Roman"
                 }

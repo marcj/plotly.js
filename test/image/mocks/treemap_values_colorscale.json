@@ -75,7 +75,7 @@
             },
             "directory": {
                 "visible": true,
-                "position": "top",
+                "position": "top left",
                 "height": 32,
                 "color": "black",
                 "textfont": {
@@ -153,7 +153,7 @@
             "textinfo": "label+text",
             "directory": {
                 "visible": true,
-                "position": "bottom",
+                "position": "bottom left",
                 "color": "#7F7",
                 "textfont": {
                     "size": 20,
