@@ -65,6 +65,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
         moduleHasInsideanchor: false
     });
     coerce('textposition');
+    var bottomText = traceOut.textposition.indexOf('bottom') !== -1;
 
     var lineWidth = coerce('marker.line.width');
     if(lineWidth) coerce('marker.line.color', layout.paper_bgcolor);
@@ -73,10 +74,11 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     var withColorscale = hasColorscale(traceIn, 'marker');
 
     var headerSize = traceOut.textfont.size * 2;
-    coerce('marker.pad.top', headerSize);
+
+    coerce('marker.pad.top', bottomText ? headerSize / 4 : headerSize);
     coerce('marker.pad.left', headerSize / 4);
     coerce('marker.pad.right', headerSize / 4);
-    coerce('marker.pad.bottom', headerSize / 4);
+    coerce('marker.pad.bottom', bottomText ? headerSize : headerSize / 4);
 
     if(withColorscale) {
         colorscaleDefaults(traceIn, traceOut, layout, coerce, {prefix: 'marker.', cLetter: 'c'});
