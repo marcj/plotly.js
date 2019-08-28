@@ -32,14 +32,12 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     var sliceViewX = opts.sliceViewX;
     var sliceViewY = opts.sliceViewY;
 
-    var rightToLeft = opts.rightToLeft;
-
     var pathSlice = opts.pathSlice;
     var toMoveInsideSlice = opts.toMoveInsideSlice;
+    var rightToLeft = opts.rightToLeft;
 
     var hasTransition = opts.hasTransition;
-
-    var makeExitSliceInterpolator = opts.makeExitSliceInterpolator;
+    var handleSlicesExit = opts.handleSlicesExit;
     var makeUpdateSliceIntepolator = opts.makeUpdateSliceIntepolator;
     var makeUpdateTextInterpolar = opts.makeUpdateTextInterpolar;
 
@@ -65,24 +63,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     slices.enter().append('g')
         .classed('slice', true);
 
-    if(hasTransition) {
-        slices.exit().transition()
-            .each(function() {
-                var sliceTop = d3.select(this);
-
-                var slicePath = sliceTop.select('path.surface');
-                slicePath.transition().attrTween('d', function(pt2) {
-                    var interp = makeExitSliceInterpolator(pt2, isUp, [width, height]);
-                    return function(t) { return pathSlice(interp(t)); };
-                });
-
-                var sliceTextGroup = sliceTop.select('g.slicetext');
-                sliceTextGroup.attr('opacity', 0);
-            })
-            .remove();
-    } else {
-        slices.exit().remove();
-    }
+    handleSlicesExit(slices, isUp, [width, height], pathSlice);
 
     slices.order();
 
@@ -100,12 +81,6 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     var hasLeft = trace.textposition.indexOf('left') !== -1;
 
     updateSlices.each(function(pt) {
-        var sliceTop = d3.select(this);
-
-        var slicePath = Lib.ensureSingle(sliceTop, 'path', 'surface', function(s) {
-            s.style('pointer-events', 'all');
-        });
-
         pt._hoverPos = [
             sliceViewX(rightToLeft ?
                 pt.x0 + trace.marker.pad.left :
@@ -118,6 +93,12 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
                     pt.y0 + trace.marker.pad.top / 2
             )
         ];
+
+        var sliceTop = d3.select(this);
+
+        var slicePath = Lib.ensureSingle(sliceTop, 'path', 'surface', function(s) {
+            s.style('pointer-events', 'all');
+        });
 
         if(hasTransition) {
             slicePath.transition().attrTween('d', function(pt2) {

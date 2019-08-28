@@ -402,6 +402,30 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         });
     };
 
+    var handleSlicesExit = function(slices, isUp, size, pathSlice) {
+        var width = size[0];
+        var height = size[1];
+
+        if(hasTransition) {
+            slices.exit().transition()
+                .each(function() {
+                    var sliceTop = d3.select(this);
+
+                    var slicePath = sliceTop.select('path.surface');
+                    slicePath.transition().attrTween('d', function(pt2) {
+                        var interp = makeExitSliceInterpolator(pt2, isUp, [width, height]);
+                        return function(t) { return pathSlice(interp(t)); };
+                    });
+
+                    var sliceTextGroup = sliceTop.select('g.slicetext');
+                    sliceTextGroup.attr('opacity', 0);
+                })
+                .remove();
+        } else {
+            slices.exit().remove();
+        }
+    };
+
     var gTrace = d3.select(element);
     var selAncestors = gTrace.selectAll('g.directory');
     var selDescendants = gTrace.selectAll('g.slice');
@@ -445,9 +469,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         pathSlice: pathDescendant,
         toMoveInsideSlice: toMoveInsideSlice,
 
-        makeExitSliceInterpolator: makeExitSliceInterpolator,
         makeUpdateSliceIntepolator: makeUpdateSliceIntepolator,
         makeUpdateTextInterpolar: makeUpdateTextInterpolar,
+
+        handleSlicesExit: handleSlicesExit,
 
         hasTransition: hasTransition
     });
@@ -503,9 +528,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             pathSlice: pathAncestor,
             toMoveInsideSlice: toMoveInsideSlice,
 
-            makeExitSliceInterpolator: makeExitSliceInterpolator,
             makeUpdateSliceIntepolator: makeUpdateSliceIntepolator,
             makeUpdateTextInterpolar: makeUpdateTextInterpolar,
+
+            handleSlicesExit: handleSlicesExit,
 
             hasTransition: hasTransition
         });
