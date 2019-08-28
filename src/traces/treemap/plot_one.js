@@ -137,7 +137,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         );
     };
 
-    var getOrigin = function(pt) {
+    var getOrigin = function(pt, isUp, size) {
+        var width = size[0];
+        var height = size[1];
+
         var x0 = pt.x0;
         var x1 = pt.x1;
         var y0 = pt.y0;
@@ -145,9 +148,9 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
         var rect = trace._rect || {
             x0: 0,
-            x1: vpw,
+            x1: width,
             y0: 0,
-            y1: vph
+            y1: height
         };
 
         var isLeftOfRect = function() {
@@ -188,17 +191,17 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         };
 
         var edgePoints = [];
-        if(isLeftOfRect()) edgePoints.push({id: 0, x: 0, y: vph / 2});
-        if(isBottomOfRect()) edgePoints.push({id: 1, x: vpw / 2, y: 0});
-        if(isRightOfRect()) edgePoints.push({id: 2, x: vpw, y: vph / 2});
-        if(isTopOfRect()) edgePoints.push({id: 3, x: vpw / 2, y: vph});
+        if(isLeftOfRect()) edgePoints.push({id: 0, x: 0, y: height / 2});
+        if(!isUp && isBottomOfRect()) edgePoints.push({id: 1, x: width / 2, y: 0});
+        if(isRightOfRect()) edgePoints.push({id: 2, x: width, y: height / 2});
+        if(!isUp && isTopOfRect()) edgePoints.push({id: 3, x: width / 2, y: height});
 
         if(!edgePoints.length) {
             return {
-                x0: (midX <= vpw / 2) ? 0 : vpw,
-                x1: (midX < vpw / 2) ? 0 : vpw,
-                y0: (midY <= vph / 2) ? 0 : vph,
-                y1: (midY < vph / 2) ? 0 : vph
+                x0: (midX <= width / 2) ? 0 : width,
+                x1: (midX < width / 2) ? 0 : width,
+                y0: (midY <= height / 2) ? 0 : height,
+                y1: (midY < height / 2) ? 0 : height
             };
         }
 
@@ -213,8 +216,8 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
         var minDist = Infinity;
         var q = -1;
-        if(x0 !== 0 || x1 !== vpw ||
-            y0 !== 0 || y1 !== vph
+        if(x0 !== 0 || x1 !== width ||
+            y0 !== 0 || y1 !== height
         ) {
             for(i = 0; i < edgePoints.length; i++) {
                 if(minDist > dists[i]) {
@@ -235,15 +238,15 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             y0: 0,
             y1: 0
         } : (q === 2) ? {
-            x0: vpw,
-            x1: vpw,
+            x0: width,
+            x1: width,
             y0: y0,
             y1: y1
         } : (q === 3) ? {
             x0: x0,
             x1: x1,
-            y0: vph,
-            y1: vph
+            y0: height,
+            y1: height
         } : {
             x0: x0,
             x1: x1,
@@ -296,7 +299,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         };
     };
 
-    var interpFromParent = function(pt, isUp) {
+    var interpFromParent = function(pt, isUp, size) {
         var parent = pt.parent;
         var parentPrev = getPrev(parent, isUp);
 
@@ -325,20 +328,20 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             };
         }
 
-        return Lib.extendFlat({}, getOrigin(pt));
+        return Lib.extendFlat({}, getOrigin(pt, isUp, size));
     };
 
-    var makeExitSliceInterpolator = function(pt, isUp) {
+    var makeExitSliceInterpolator = function(pt, isUp, size) {
         var prev = getPrev(pt, isUp);
 
-        return d3.interpolate(prev, getOrigin(pt));
+        return d3.interpolate(prev, getOrigin(pt, isUp, size));
     };
 
-    var makeUpdateSliceIntepolator = function(pt, isUp) {
+    var makeUpdateSliceIntepolator = function(pt, isUp, size) {
         var prev0 = getPrev(pt, isUp);
 
         var prev = {};
-        Lib.extendFlat(prev, getOrigin(pt));
+        Lib.extendFlat(prev, getOrigin(pt, isUp, size));
 
         if(prev0) {
             // if pt already on graph, this is easy
@@ -346,7 +349,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         } else {
             // for new pts:
             if(pt.parent) {
-                Lib.extendFlat(prev, interpFromParent(pt, isUp));
+                Lib.extendFlat(prev, interpFromParent(pt, isUp, size));
             }
         }
 
@@ -358,11 +361,11 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         });
     };
 
-    var makeUpdateTextInterpolar = function(pt, isUp) {
+    var makeUpdateTextInterpolar = function(pt, isUp, size) {
         var prev0 = getPrev(pt, isUp);
         var prev = {};
 
-        var origin = getOrigin(pt);
+        var origin = getOrigin(pt, isUp, size);
 
         Lib.extendFlat(prev, {
             transform: toMoveInsideSlice(
@@ -380,7 +383,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         } else {
             // for new pts:
             if(pt.parent) {
-                Lib.extendFlat(prev, interpFromParent(pt, isUp));
+                Lib.extendFlat(prev, interpFromParent(pt, isUp, size));
             }
         }
 

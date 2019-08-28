@@ -72,7 +72,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
 
                 var slicePath = sliceTop.select('path.surface');
                 slicePath.transition().attrTween('d', function(pt2) {
-                    var interp = makeExitSliceInterpolator(pt2, isUp);
+                    var interp = makeExitSliceInterpolator(pt2, isUp, [width, height]);
                     return function(t) { return pathSlice(interp(t)); };
                 });
 
@@ -120,7 +120,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
 
         if(hasTransition) {
             slicePath.transition().attrTween('d', function(pt2) {
-                var interp = makeUpdateSliceIntepolator(pt2, isUp);
+                var interp = makeUpdateSliceIntepolator(pt2, isUp, [width, height]);
                 return function(t) { return pathSlice(interp(t)); };
             });
         } else {
@@ -175,7 +175,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
 
         if(hasTransition) {
             sliceText.transition().attrTween('transform', function(pt2) {
-                var interp = makeUpdateTextInterpolar(pt2, isUp);
+                var interp = makeUpdateTextInterpolar(pt2, isUp, [width, height]);
                 return function(t) { return strTransform(interp(t)); };
             });
         } else {
