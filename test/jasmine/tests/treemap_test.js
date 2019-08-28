@@ -820,7 +820,8 @@ describe('Test treemap restyle:', function() {
             data: [{
                 type: 'treemap',
                 labels: ['Root', 'A', 'B', 'b'],
-                parents: ['', 'Root', 'Root', 'B']
+                parents: ['', 'Root', 'Root', 'B'],
+                directory: { visible: false }
             }]
         };
 
@@ -866,7 +867,8 @@ describe('Test treemap restyle:', function() {
                 labels: ['Root', 'A', 'B', 'b'],
                 parents: ['', 'Root', 'Root', 'B'],
                 text: ['node0', 'node1', 'node2', 'node3'],
-                values: [0, 1, 2, 3]
+                values: [0, 1, 2, 3],
+                directory: { visible: false }
             }]
         };
 

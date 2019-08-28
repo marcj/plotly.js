@@ -32,8 +32,8 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     var sliceViewX = opts.sliceViewX;
     var sliceViewY = opts.sliceViewY;
 
-    var rightText = opts.rightText;
-    var leftText = opts.leftText;
+    var rightToLeft = opts.rightToLeft;
+
     var pathSlice = opts.pathSlice;
     var toMoveInsideSlice = opts.toMoveInsideSlice;
 
@@ -96,6 +96,8 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
         });
     }
 
+    var topText = trace.textposition.indexOf('bottom') === -1;
+
     updateSlices.each(function(pt) {
         var sliceTop = d3.select(this);
 
@@ -104,10 +106,15 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
         });
 
         pt._hoverPos = [
-            sliceViewX(pt.x1),
+            sliceViewX(rightToLeft ?
+                pt.x0 + trace.marker.pad.left :
+                pt.x1 - trace.marker.pad.right
+            ),
             sliceViewY(helpers.isOnTop(pt, trace) ?
                 (pt.y0 + pt.y1) / 2 :
-                pt.y0
+                topText ?
+                    pt.y0 + trace.marker.pad.top / 2 :
+                    pt.y1 - trace.marker.pad.bottom / 2
             )
         ];
 
@@ -143,7 +150,7 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
 
         sliceText.text(tx)
             .classed('slicetext', true)
-            .attr('text-anchor', leftText ? 'start' : rightText ? 'end' : 'middle')
+            .attr('text-anchor', trace.textposition.indexOf('left') !== -1 ? 'start' : rightToLeft ? 'end' : 'middle')
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
 
@@ -153,7 +160,9 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
             pt.x1,
             pt.y0,
             pt.y1,
-            pt.textBB, { isFront: helpers.isOnTop(pt, trace) }
+            pt.textBB, {
+                isFront: helpers.isOnTop(pt, trace)
+            }
         );
 
         if(helpers.isOutsideText(trace, pt)) {

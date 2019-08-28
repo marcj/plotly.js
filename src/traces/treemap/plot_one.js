@@ -37,8 +37,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
     var trace = cd0.trace;
     var hierarchy = cd0.hierarchy;
 
-    var leftText = trace.textposition.indexOf('left') !== -1;
-    var rightText = trace.textposition.indexOf('right') !== -1;
+    var rightToLeft = trace.textposition.indexOf('right') !== -1;
 
     var gs = fullLayout._size;
     var domain = trace.domain;
@@ -86,7 +85,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
     var dirH = trace.directory.height;
     var halfDirH = dirH / 2;
 
-    var dirDifX = rightText ? -halfDirH : halfDirH;
+    var dirDifX = rightToLeft ? -halfDirH : halfDirH;
     var dirDifY = (trace.directory.position === 'top') ? -dirH : vph;
     var dirY0 = sliceViewY(0) + dirDifY;
     var dirX0 = sliceViewX(0);
@@ -106,7 +105,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
         var _yMid = _y0 + halfDirH;
         var _xMid;
-        if(rightText) {
+        if(rightToLeft) {
             _xMid = (_x1 < dirX0 + dirW) ? _x1 - halfDirH : _x1;
         } else {
             _xMid = (_x0 > dirX0) ? _x0 + halfDirH : _x0;
@@ -115,10 +114,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         return (
            'M' + _x0 + ',' + _y0 +
            'L' + _x1 + ',' + _y0 +
-           (rightText ? 'L' + _xMid + ',' + _yMid : '') +
+           (rightToLeft ? 'L' + _xMid + ',' + _yMid : '') +
            'L' + _x1 + ',' + _y1 +
            'L' + _x0 + ',' + _y1 +
-           (rightText ? '' : 'L' + _xMid + ',' + _yMid) +
+           (rightToLeft ? '' : 'L' + _xMid + ',' + _yMid) +
            'Z'
         );
     };
@@ -260,16 +259,16 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             hasFlag('top') ? 'start' :
             hasFlag('bottom') ? 'end' : 'middle';
 
-        var isRight = hasFlag('right');
-        var isLeft = hasFlag('left') || (opts.noCenter && !isRight);
+        var hasRight = hasFlag('right');
+        var hasLeft = hasFlag('left') || (opts.noCenter && !hasRight);
 
         var offsetDir =
-            isLeft ? 'left' :
-            isRight ? 'right' : 'center';
+            hasLeft ? 'left' :
+            hasRight ? 'right' : 'center';
 
         if(!opts.isFront) {
-            x0 += isLeft ? TEXTPAD : 0;
-            x1 -= isRight ? TEXTPAD : 0;
+            x0 += hasLeft ? TEXTPAD : 0;
+            x1 -= hasRight ? TEXTPAD : 0;
         }
 
         // position the text relative to the slice
@@ -436,8 +435,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         sliceViewX: sliceViewX,
         sliceViewY: sliceViewY,
 
-        rightText: rightText,
-        leftText: leftText,
+        rightToLeft: rightToLeft,
         pathSlice: pathDescendant,
         toMoveInsideSlice: toMoveInsideSlice,
 
@@ -498,7 +496,7 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             limitDirY0: limitDirY0,
             limitDirY1: limitDirY1,
 
-            rightText: rightText,
+            rightToLeft: rightToLeft,
             pathSlice: pathAncestor,
             toMoveInsideSlice: toMoveInsideSlice,
 

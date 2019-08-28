@@ -37,7 +37,7 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     var limitDirX1 = opts.limitDirX1;
     var limitDirY1 = opts.limitDirY1;
 
-    var rightText = opts.rightText;
+    var rightToLeft = opts.rightToLeft;
     var pathSlice = opts.pathSlice;
     var toMoveInsideSlice = opts.toMoveInsideSlice;
 
@@ -57,15 +57,15 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
         aspectratio: 1,
         packing: 'dice',
         mirror: {
-            x: rightText,
+            x: rightToLeft,
             y: false,
             xy: false
         },
         offset: 0,
         padding: {
             top: 0,
-            left: rightText ? 0 : eachWidth,
-            right: rightText ? eachWidth : 0,
+            left: rightToLeft ? 0 : eachWidth,
+            right: rightToLeft ? eachWidth : 0,
             bottom: 0
         }
     }).descendants();
@@ -105,8 +105,8 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
         });
 
         pt._hoverPos = [
-            limitDirX0(pt.x0) + dirX0,
-            limitDirY0(pt.y0) + dirY0
+            limitDirX0(pt.x0) + dirX0 + eachWidth / 2,
+            limitDirY0(pt.y0) + dirY0 + height / 2
         ];
 
         if(hasTransition) {
@@ -133,7 +133,7 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
 
         sliceText.text(pt.data.data.label)
             .classed('slicetext', true)
-            .attr('text-anchor', rightText ? 'end' : 'start') // No middle
+            .attr('text-anchor', rightToLeft ? 'end' : 'start') // No middle
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font, trace.directory))
             .call(svgTextUtils.convertToTspans, gd);
 
