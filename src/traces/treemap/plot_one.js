@@ -482,9 +482,6 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         // create new hierarchy
         dirEntry = d3Hierarchy.hierarchy(root);
 
-        // link to hierarchy.value
-        dirEntry.value = hierarchy.value;
-
         drawAncestors(gd, cd, dirEntry, selAncestors, {
             width: dirW,
             height: dirH,

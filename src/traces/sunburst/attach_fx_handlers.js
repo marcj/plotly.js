@@ -101,16 +101,18 @@ module.exports = function attachFxHandlers(sliceTop, entry, gd, cd, styleOne, co
             hoverPt.valueLabel = formatValue(hoverPt.value, separators);
             if(hasFlag('value')) thisText.push(hoverPt.valueLabel);
 
+            var ref;
             if(hasFlag('percent parent') && pt.parent) {
-                var ref = pt.parent.data.data;
+                ref = pt.parent.data.data;
                 hoverPt.percentParent = hasV ? cdi.v / ref.v : cdi.value / ref.value;
-                hoverPt.percentParentLabel = formatPercent(hoverPt.percentParent, separators) + ' of parent';
+                hoverPt.percentParentLabel = formatPercent(hoverPt.percentParent, separators) + ' of ' + ref.label;
                 thisText.push(hoverPt.percentParentLabel);
             }
 
             if(hasFlag('percent total') && pt.parent) {
-                hoverPt.percentTotal = hasV ? cdi.v / entry.data.data.v : cdi.value / entry.value;
-                hoverPt.percentTotalLabel = formatPercent(hoverPt.percentTotal, separators) + ' of total';
+                ref = entry.data.data;
+                hoverPt.percentTotal = hasV ? cdi.v / ref.v : cdi.value / ref.value;
+                hoverPt.percentTotalLabel = formatPercent(hoverPt.percentTotal, separators) + ' of ' + ref.label;
                 thisText.push(hoverPt.percentTotalLabel);
             }
 
