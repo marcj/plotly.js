@@ -96,7 +96,8 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
         });
     }
 
-    var topText = trace.textposition.indexOf('bottom') === -1;
+    var hasBottom = trace.textposition.indexOf('bottom') !== -1;
+    var hasLeft = trace.textposition.indexOf('left') !== -1;
 
     updateSlices.each(function(pt) {
         var sliceTop = d3.select(this);
@@ -112,9 +113,9 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
             ),
             sliceViewY(helpers.isOnTop(pt, trace) ?
                 (pt.y0 + pt.y1) / 2 :
-                topText ?
-                    pt.y0 + trace.marker.pad.top / 2 :
-                    pt.y1 - trace.marker.pad.bottom / 2
+                hasBottom ?
+                    pt.y1 - trace.marker.pad.bottom / 2 :
+                    pt.y0 + trace.marker.pad.top / 2
             )
         ];
 
@@ -148,9 +149,11 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
             label: tx
         });
 
+        var isFront = helpers.isOnTop(pt, trace);
+
         sliceText.text(tx)
             .classed('slicetext', true)
-            .attr('text-anchor', trace.textposition.indexOf('left') !== -1 ? 'start' : rightToLeft ? 'end' : 'middle')
+            .attr('text-anchor', rightToLeft ? 'end' : (hasLeft || !isFront) ? 'start' : 'middle')
             .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
 
@@ -160,8 +163,10 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
             pt.x1,
             pt.y0,
             pt.y1,
-            pt.textBB, {
-                isFront: helpers.isOnTop(pt, trace)
+            pt.textBB,
+            {
+                isFront: isFront,
+                noMiddle: !isFront
             }
         );
 

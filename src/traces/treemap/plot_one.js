@@ -258,12 +258,15 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
     var toMoveInsideSlice = function(x0, x1, y0, y1, textBB, opts) {
         var hasFlag = function(f) { return trace.textposition.indexOf(f) !== -1; };
 
+        var hasBottom = hasFlag('bottom');
+        var hasTop = hasFlag('top') || !(hasBottom || !opts.noMiddle);
+
         var anchor =
-            hasFlag('top') ? 'start' :
-            hasFlag('bottom') ? 'end' : 'middle';
+            hasTop ? 'start' :
+            hasBottom ? 'end' : 'middle';
 
         var hasRight = hasFlag('right');
-        var hasLeft = hasFlag('left') || (opts.noCenter && !hasRight);
+        var hasLeft = hasFlag('left') || !(hasRight || !opts.noCenter);
 
         var offsetDir =
             hasLeft ? 'left' :

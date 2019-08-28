@@ -131,6 +131,8 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
             s.attr('data-notex', 1);
         });
 
+        var isFront = helpers.isOnTop(pt, trace);
+
         sliceText.text(pt.data.data.label)
             .classed('slicetext', true)
             .attr('text-anchor', rightToLeft ? 'end' : 'start') // No middle
@@ -143,8 +145,9 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
             limitDirX1(pt.x1),
             limitDirY0(pt.y0) + dirDifY,
             limitDirY1(pt.y1) + dirDifY,
-            pt.textBB, {
-                isFront: helpers.isOnTop(pt, trace),
+            pt.textBB,
+            {
+                isFront: isFront,
                 noCenter: true
             }
         );

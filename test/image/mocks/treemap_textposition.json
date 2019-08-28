@@ -80,7 +80,7 @@
                 ],
                 "y": [
                     0,
-                    0.48
+                    0.3
                 ]
             }
         },
@@ -164,7 +164,7 @@
                 ],
                 "y": [
                     0,
-                    0.48
+                    0.3
                 ]
             }
         },
@@ -248,7 +248,259 @@
                 ],
                 "y": [
                     0,
-                    0.48
+                    0.3
+                ]
+            }
+        },
+        {
+            "type": "treemap",
+            "textinfo": "label+value",
+            "name": "middle left textposition",
+            "textposition": "middle left",
+            "directory": {
+                "visible": true,
+                "position": "top",
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
+            },
+            "level": "Oscar",
+            "labels": [
+                "Alpha",
+                "Bravo",
+                "Charlie",
+                "Delta",
+                "Echo",
+                "Foxtrot",
+                "Golf",
+                "Hotel",
+                "India",
+                "Juliet",
+                "Kilo",
+                "Lima",
+                "Mike",
+                "November",
+                "Oscar",
+                "Papa",
+                "Quebec",
+                "Romeo",
+                "Sierra",
+                "Tango",
+                "Uniform",
+                "Victor",
+                "Whiskey",
+                "X ray",
+                "Yankee",
+                "Zulu"
+            ],
+            "parents": [
+                "",
+                "Alpha",
+                "Alpha",
+                "Charlie",
+                "Charlie",
+                "Charlie",
+                "Foxtrot",
+                "Foxtrot",
+                "Foxtrot",
+                "Foxtrot",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform"
+            ],
+            "marker": {
+                "opacity": 0.5
+            },
+            "domain": {
+                "x": [
+                    0,
+                    0.3
+                ],
+                "y": [
+                    0.35,
+                    0.65
+                ]
+            }
+        },
+        {
+            "type": "treemap",
+            "textinfo": "label+value",
+            "name": "middle center textposition",
+            "textposition": "middle center",
+            "directory": {
+                "visible": true,
+                "position": "top",
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
+            },
+            "level": "Oscar",
+            "labels": [
+                "Alpha",
+                "Bravo",
+                "Charlie",
+                "Delta",
+                "Echo",
+                "Foxtrot",
+                "Golf",
+                "Hotel",
+                "India",
+                "Juliet",
+                "Kilo",
+                "Lima",
+                "Mike",
+                "November",
+                "Oscar",
+                "Papa",
+                "Quebec",
+                "Romeo",
+                "Sierra",
+                "Tango",
+                "Uniform",
+                "Victor",
+                "Whiskey",
+                "X ray",
+                "Yankee",
+                "Zulu"
+            ],
+            "parents": [
+                "",
+                "Alpha",
+                "Alpha",
+                "Charlie",
+                "Charlie",
+                "Charlie",
+                "Foxtrot",
+                "Foxtrot",
+                "Foxtrot",
+                "Foxtrot",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform"
+            ],
+            "marker": {
+                "opacity": 0.5
+            },
+            "domain": {
+                "x": [
+                    0.35,
+                    0.65
+                ],
+                "y": [
+                    0.35,
+                    0.65
+                ]
+            }
+        },
+        {
+            "type": "treemap",
+            "textinfo": "label+value",
+            "name": "middle right textposition",
+            "textposition": "middle right",
+            "directory": {
+                "visible": true,
+                "position": "top",
+                "textfont": {
+                    "size": 12, "family": "Times New Roman"
+                }
+            },
+            "level": "Oscar",
+            "labels": [
+                "Alpha",
+                "Bravo",
+                "Charlie",
+                "Delta",
+                "Echo",
+                "Foxtrot",
+                "Golf",
+                "Hotel",
+                "India",
+                "Juliet",
+                "Kilo",
+                "Lima",
+                "Mike",
+                "November",
+                "Oscar",
+                "Papa",
+                "Quebec",
+                "Romeo",
+                "Sierra",
+                "Tango",
+                "Uniform",
+                "Victor",
+                "Whiskey",
+                "X ray",
+                "Yankee",
+                "Zulu"
+            ],
+            "parents": [
+                "",
+                "Alpha",
+                "Alpha",
+                "Charlie",
+                "Charlie",
+                "Charlie",
+                "Foxtrot",
+                "Foxtrot",
+                "Foxtrot",
+                "Foxtrot",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Juliet",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Oscar",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform",
+                "Uniform"
+            ],
+            "marker": {
+                "opacity": 0.5
+            },
+            "domain": {
+                "x": [
+                    0.7,
+                    1
+                ],
+                "y": [
+                    0.35,
+                    0.65
                 ]
             }
         },
@@ -331,7 +583,7 @@
                     0.3
                 ],
                 "y": [
-                    0.52,
+                    0.7,
                     1
                 ]
             }
@@ -415,7 +667,7 @@
                     0.65
                 ],
                 "y": [
-                    0.52,
+                    0.7,
                     1
                 ]
             }
@@ -499,7 +751,7 @@
                     1
                 ],
                 "y": [
-                    0.52,
+                    0.7,
                     1
                 ]
             }
@@ -507,7 +759,7 @@
     ],
     "layout": {
         "width": 1200,
-        "height": 800,
+        "height": 1200,
         "annotations": [
             {
                 "showarrow": false,
