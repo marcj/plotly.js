@@ -141,15 +141,16 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
             s.attr('data-notex', 1);
         });
 
+        var isFront = helpers.isOnTop(pt, trace);
+
         var tx = '';
         if(helpers.isEntry(pt) && trace.directory.visible && trace.directory.position === 'inside') {
             tx = helpers.getDirectoryLabel(entry.data);
         }
         tx = formatSliceLabel(pt, entry, trace, fullLayout, {
+            noText: !isFront,
             label: tx
         });
-
-        var isFront = helpers.isOnTop(pt, trace);
 
         sliceText.text(tx)
             .classed('slicetext', true)

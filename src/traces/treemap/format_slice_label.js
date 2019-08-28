@@ -72,7 +72,7 @@ module.exports = function formatSliceLabel(pt, entry, trace, fullLayout, opts) {
             }
         }
 
-        if(hasFlag('text')) {
+        if(!opts.noText && hasFlag('text')) {
             tx = Lib.castOption(trace, cdi.i, 'text');
             if(Lib.isValidTextValue(tx)) thisText.push(tx);
         }
