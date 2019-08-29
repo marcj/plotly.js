@@ -11,24 +11,6 @@
 var Lib = require('../../lib');
 var Color = require('../../components/color');
 var setCursor = require('../../lib/setcursor');
-var appendArrayPointValue = require('../../components/fx/helpers').appendArrayPointValue;
-
-exports.makeEventData = function(pt, trace) {
-    var cdi = pt.data.data;
-
-    var out = {
-        curveNumber: trace.index,
-        pointNumber: cdi.i,
-        data: trace._input,
-        fullData: trace,
-
-        // TODO more things like 'children', 'siblings', 'hierarchy?
-    };
-
-    appendArrayPointValue(out, trace, cdi.i);
-
-    return out;
-};
 
 exports.findEntryWithLevel = function(hierarchy, level) {
     var out;
