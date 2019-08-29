@@ -12,12 +12,16 @@ var Lib = require('../../lib');
 var Color = require('../../components/color');
 var setCursor = require('../../lib/setcursor');
 
+function has(v) {
+    return v || v === 0;
+}
+
 exports.isLeaf = function(pt) {
-    return !pt.children;
+    return !has(pt.children);
 };
 
 exports.isEntry = function(pt) {
-    return !pt.parent;
+    return !has(pt.parent);
 };
 
 exports.getPtId = function(pt) {
@@ -25,9 +29,26 @@ exports.getPtId = function(pt) {
     return cdi.id;
 };
 
-exports.isHierachyRoot = function(pt) {
+exports.isHierarchyRoot = function(pt) {
     var cdi = pt.data.data;
     return cdi.pid === '';
+};
+
+function getLabelStr(label) {
+    return has(label) ? label : '~';
+}
+
+exports.getDirectoryLabel = function(d) {
+    var labelStr = getLabelStr(d.data.label);
+    return has(d.parent) ? exports.getDirectoryLabel(d.parent) + ' | ' + labelStr : labelStr;
+};
+
+exports.getMaxDepth = function(trace) {
+    return trace.maxdepth >= 0 ? trace.maxdepth : Infinity;
+};
+
+exports.isOnTop = function(pt, trace) { // it is only used in treemap.
+    return exports.isLeaf(pt) || pt.depth === trace._maxDepth - 1;
 };
 
 exports.findEntryWithLevel = function(hierarchy, level) {
@@ -59,33 +80,42 @@ exports.findEntryWithChild = function(hierarchy, childId) {
 exports.setSliceCursor = function(sliceTop, gd, opts) {
     var pt = sliceTop.datum();
     var isTransitioning = (opts || {}).isTransitioning;
-    setCursor(sliceTop, (isTransitioning || exports.isLeaf(pt) || exports.isHierachyRoot(pt)) ? null : 'pointer');
+    setCursor(sliceTop, (
+        isTransitioning ||
+        exports.isLeaf(pt) ||
+        exports.isHierarchyRoot(pt)
+    ) ? null : 'pointer');
 };
 
-exports.determineOutsideTextFont = function(trace, pt, layoutFont) {
-    var cdi = pt.data.data;
-    var ptNumber = cdi.i;
+exports.getInsideTextFontKey = function(keyStr, trace, pt, layoutFont) {
+    var ptNumber = pt.data.data.i;
 
-    var color = Lib.castOption(trace, ptNumber, 'outsidetextfont.color') ||
-        Lib.castOption(trace, ptNumber, 'textfont.color') ||
-        layoutFont.color;
+    return (
+        Lib.castOption(trace, ptNumber, 'insidetextfont.' + keyStr) ||
+        Lib.castOption(trace, ptNumber, 'textfont.' + keyStr) ||
+        layoutFont.size
+    );
+};
 
-    var family = Lib.castOption(trace, ptNumber, 'outsidetextfont.family') ||
-        Lib.castOption(trace, ptNumber, 'textfont.family') ||
-        layoutFont.family;
+exports.getOutsideTextFontKey = function(keyStr, trace, pt, layoutFont) {
+    var ptNumber = pt.data.data.i;
 
-    var size = Lib.castOption(trace, ptNumber, 'outsidetextfont.size') ||
-        Lib.castOption(trace, ptNumber, 'textfont.size') ||
-        layoutFont.size;
+    return (
+        Lib.castOption(trace, ptNumber, 'outsidetextfont.' + keyStr) ||
+        Lib.castOption(trace, ptNumber, 'textfont.' + keyStr) ||
+        layoutFont.size
+    );
+};
 
+function determineOutsideTextFont(trace, pt, layoutFont) {
     return {
-        color: color,
-        family: family,
-        size: size
+        color: exports.getOutsideTextFontKey('color', trace, pt, layoutFont),
+        family: exports.getOutsideTextFontKey('family', trace, pt, layoutFont),
+        size: exports.getOutsideTextFontKey('size', trace, pt, layoutFont)
     };
-};
+}
 
-exports.determineInsideTextFont = function(trace, pt, layoutFont) {
+function determineInsideTextFont(trace, pt, layoutFont, cont) {
     var cdi = pt.data.data;
     var ptNumber = cdi.i;
 
@@ -98,17 +128,25 @@ exports.determineInsideTextFont = function(trace, pt, layoutFont) {
         customColor = Lib.castOption(trace._input, ptNumber, 'textfont.color');
     }
 
-    var family = Lib.castOption(trace, ptNumber, 'insidetextfont.family') ||
-        Lib.castOption(trace, ptNumber, 'textfont.family') ||
-        layoutFont.family;
-
-    var size = Lib.castOption(trace, ptNumber, 'insidetextfont.size') ||
-        Lib.castOption(trace, ptNumber, 'textfont.size') ||
-        layoutFont.size;
-
     return {
         color: customColor || Color.contrast(cdi.color),
-        family: family,
-        size: size
+        family: exports.getInsideTextFontKey('family', cont || trace, pt, layoutFont),
+        size: exports.getInsideTextFontKey('size', cont || trace, pt, layoutFont)
     };
+}
+
+exports.isOutsideText = function(trace, pt) {
+    return !trace._hasColorscale && exports.isHierarchyRoot(pt);
+};
+
+exports.determineTextFont = function(trace, pt, layoutFont, cont) {
+    return exports.isOutsideText(trace, pt) ?
+        determineOutsideTextFont(trace, pt, layoutFont) :
+        determineInsideTextFont(trace, pt, layoutFont, cont);
+};
+
+exports.hasTransition = function(transitionOpts) {
+    // We could optimize hasTransition per trace,
+    // as sunburst & treemap have no cross-trace logic!
+    return !!(transitionOpts && transitionOpts.duration > 0);
 };
