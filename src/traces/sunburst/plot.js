@@ -11,16 +11,16 @@
 var d3 = require('d3');
 var d3Hierarchy = require('d3-hierarchy');
 
+var helpers = require('./helpers');
+var constants = require('./constants');
+var attachFxHandlers = require('./attach_fx_handlers');
+
 var Drawing = require('../../components/drawing');
 var Lib = require('../../lib');
 var svgTextUtils = require('../../lib/svg_text_utils');
+var styleOne = require('./style').styleOne;
 var formatSliceLabel = require('../sunburst/format_slice_label');
 var transformInsideText = require('../pie/plot').transformInsideText;
-var styleOne = require('./style').styleOne;
-
-var helpers = require('./helpers');
-
-var attachFxHandlers = require('./attach_fx_handlers');
 
 module.exports = function(gd, cdmodule, transitionOpts, makeOnCompleteCallback) {
     var fullLayout = gd._fullLayout;
@@ -30,7 +30,7 @@ module.exports = function(gd, cdmodule, transitionOpts, makeOnCompleteCallback) 
     // If transition config is provided, then it is only a partial replot and traces not
     // updated are removed.
     var isFullReplot = !transitionOpts;
-    var hasTransition = transitionOpts && transitionOpts.duration > 0;
+    var hasTransition = helpers.hasTransition(transitionOpts);
 
     join = layer.selectAll('g.trace.sunburst')
         .data(cdmodule, function(cd) { return cd[0].trace.uid; });
@@ -77,9 +77,7 @@ module.exports = function(gd, cdmodule, transitionOpts, makeOnCompleteCallback) 
 
 function plotOne(gd, cd, element, transitionOpts) {
     var fullLayout = gd._fullLayout;
-    // We could optimize hasTransition per trace,
-    // as sunburst has no cross-trace logic!
-    var hasTransition = transitionOpts && transitionOpts.duration > 0;
+    var hasTransition = helpers.hasTransition(transitionOpts);
 
     var gTrace = d3.select(element);
     var slices = gTrace.selectAll('g.slice');
@@ -88,7 +86,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     var trace = cd0.trace;
     var hierarchy = cd0.hierarchy;
     var entry = helpers.findEntryWithLevel(hierarchy, trace.level);
-    var maxDepth = trace.maxdepth >= 0 ? trace.maxdepth : Infinity;
+    var maxDepth = helpers.getMaxDepth(trace);
 
     var gs = fullLayout._size;
     var domain = trace.domain;
@@ -127,12 +125,12 @@ function plotOne(gd, cd, element, transitionOpts) {
     // N.B. slice data isn't the calcdata,
     // grab corresponding calcdata item in sliceData[i].data.data
     var sliceData = partition(entry).descendants();
+
     var maxHeight = entry.height + 1;
     var yOffset = 0;
     var cutoff = maxDepth;
-
     // N.B. handle multiple-root special case
-    if(cd0.hasMultipleRoots && helpers.isHierachyRoot(entry)) {
+    if(cd0.hasMultipleRoots && helpers.isHierarchyRoot(entry)) {
         sliceData = sliceData.slice(1);
         maxHeight -= 1;
         yOffset = 1;
@@ -194,7 +192,7 @@ function plotOne(gd, cd, element, transitionOpts) {
     if(hasTransition) {
         updateSlices = updateSlices.transition().each('end', function() {
             // N.B. gd._transitioning is (still) *true* by the time
-            // transition updates get hare
+            // transition updates get here
             var sliceTop = d3.select(this);
             helpers.setSliceCursor(sliceTop, gd, {isTransitioning: false});
         });
@@ -226,7 +224,7 @@ function plotOne(gd, cd, element, transitionOpts) {
         }
 
         sliceTop
-            .call(attachFxHandlers, gd, cd)
+            .call(attachFxHandlers, entry, gd, cd, styleOne, constants)
             .call(helpers.setSliceCursor, gd, {isTransitioning: gd._transitioning});
 
         slicePath.call(styleOne, pt, trace);
@@ -238,17 +236,15 @@ function plotOne(gd, cd, element, transitionOpts) {
             s.attr('data-notex', 1);
         });
 
-        sliceText.text(formatSliceLabel(pt, trace, fullLayout))
+        sliceText.text(formatSliceLabel(pt, entry, trace, fullLayout, {}))
             .classed('slicetext', true)
             .attr('text-anchor', 'middle')
-            .call(Drawing.font, helpers.isHierachyRoot(pt) ?
-              helpers.determineOutsideTextFont(trace, pt, fullLayout.font) :
-              helpers.determineInsideTextFont(trace, pt, fullLayout.font))
+            .call(Drawing.font, helpers.determineTextFont(trace, pt, fullLayout.font))
             .call(svgTextUtils.convertToTspans, gd);
 
         // position the text relative to the slice
         var textBB = Drawing.bBox(sliceText.node());
-        pt.transform = transformInsideText(textBB, pt, cd0);
+        pt.transform = transformInsideText(textBB, pt, cd0, styleOne);
         pt.translateX = transTextX(pt);
         pt.translateY = transTextY(pt);
 
