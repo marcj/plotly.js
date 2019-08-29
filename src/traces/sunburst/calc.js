@@ -12,17 +12,19 @@ var d3Hierarchy = require('d3-hierarchy');
 var isNumeric = require('fast-isnumeric');
 
 var Lib = require('../../lib');
-var hasColorscale = require('../../components/colorscale/helpers').hasColorscale;
-var colorscaleCalc = require('../../components/colorscale/calc');
 var makeColorScaleFn = require('../../components/colorscale').makeColorScaleFuncFromTrace;
 var makePullColorFn = require('../pie/calc').makePullColorFn;
 var generateExtendedColors = require('../pie/calc').generateExtendedColors;
 var countDescendants = require('./count_descendants');
 
+var Colorscale = require('../../components/colorscale');
+var hasColorscale = Colorscale.hasColorscale;
+var colorscaleCalc = Colorscale.calc;
+
 var sunburstExtendedColorWays = {};
 var treemapExtendedColorWays = {};
 
-exports._runCalc = function(desiredType, gd, trace, opts) {
+exports._runCalc = function(desiredType, gd, trace) {
     var fullLayout = gd._fullLayout;
     var ids = trace.ids;
     var hasIds = Lib.isArrayOrTypedArray(ids);
@@ -176,10 +178,8 @@ exports._runCalc = function(desiredType, gd, trace, opts) {
 
     if(failed) return;
 
-    if(opts.sort) {
-        // TODO add way to sort by height also?
-        hierarchy.sort(function(a, b) { return b.value - a.value; });
-    }
+    // TODO add way to sort by height also?
+    hierarchy.sort(function(a, b) { return b.value - a.value; });
 
     var pullColor;
     var scaleColor;
