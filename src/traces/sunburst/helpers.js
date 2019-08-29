@@ -12,6 +12,24 @@ var Lib = require('../../lib');
 var Color = require('../../components/color');
 var setCursor = require('../../lib/setcursor');
 
+exports.isLeaf = function(pt) {
+    return !pt.children;
+};
+
+exports.isEntry = function(pt) {
+    return !pt.parent;
+};
+
+exports.getPtId = function(pt) {
+    var cdi = pt.data.data;
+    return cdi.id;
+};
+
+exports.isHierachyRoot = function(pt) {
+    var cdi = pt.data.data;
+    return cdi.pid === '';
+};
+
 exports.findEntryWithLevel = function(hierarchy, level) {
     var out;
     if(level) {
@@ -36,24 +54,6 @@ exports.findEntryWithChild = function(hierarchy, childId) {
         }
     });
     return out || hierarchy;
-};
-
-exports.isHierachyRoot = function(pt) {
-    var cdi = pt.data.data;
-    return cdi.pid === '';
-};
-
-exports.isEntry = function(pt) {
-    return !pt.parent;
-};
-
-exports.isLeaf = function(pt) {
-    return !pt.children;
-};
-
-exports.getPtId = function(pt) {
-    var cdi = pt.data.data;
-    return cdi.id;
 };
 
 exports.setSliceCursor = function(sliceTop, gd, opts) {
