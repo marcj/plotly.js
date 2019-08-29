@@ -168,7 +168,7 @@ exports.calc = function(gd, trace) {
                 break;
         }
     } else {
-        hierarchy.count();
+        countDescendants(hierarchy, trace);
     }
 
     if(failed) return;
