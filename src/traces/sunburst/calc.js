@@ -12,21 +12,24 @@ var d3Hierarchy = require('d3-hierarchy');
 var isNumeric = require('fast-isnumeric');
 
 var Lib = require('../../lib');
+var hasColorscale = require('../../components/colorscale/helpers').hasColorscale;
+var colorscaleCalc = require('../../components/colorscale/calc');
+var makeColorScaleFn = require('../../components/colorscale').makeColorScaleFuncFromTrace;
 var makePullColorFn = require('../pie/calc').makePullColorFn;
 var generateExtendedColors = require('../pie/calc').generateExtendedColors;
-
-var isArrayOrTypedArray = Lib.isArrayOrTypedArray;
+var countDescendants = require('./count_descendants');
 
 var sunburstExtendedColorWays = {};
+var treemapExtendedColorWays = {};
 
-exports.calc = function(gd, trace) {
+exports._runCalc = function(desiredType, gd, trace, opts) {
     var fullLayout = gd._fullLayout;
     var ids = trace.ids;
-    var hasIds = isArrayOrTypedArray(ids);
+    var hasIds = Lib.isArrayOrTypedArray(ids);
     var labels = trace.labels;
     var parents = trace.parents;
-    var vals = trace.values;
-    var hasVals = isArrayOrTypedArray(vals);
+    var values = trace.values;
+    var hasValues = Lib.isArrayOrTypedArray(values);
     var cd = [];
 
     var parent2children = {};
@@ -43,7 +46,7 @@ exports.calc = function(gd, trace) {
     };
 
     var isValidVal = function(i) {
-        return !hasVals || (isNumeric(vals[i]) && vals[i] >= 0);
+        return !hasValues || (isNumeric(values[i]) && values[i] >= 0);
     };
 
     var len;
@@ -67,7 +70,7 @@ exports.calc = function(gd, trace) {
         getId = function(i) { return String(labels[i]); };
     }
 
-    if(hasVals) len = Math.min(len, vals.length);
+    if(hasValues) len = Math.min(len, values.length);
 
     for(var i = 0; i < len; i++) {
         if(isValid(i)) {
@@ -81,7 +84,7 @@ exports.calc = function(gd, trace) {
                 label: isValidKey(labels[i]) ? String(labels[i]) : ''
             };
 
-            if(hasVals) cdi.v = +vals[i];
+            if(hasValues) cdi.v = +values[i];
             cd.push(cdi);
             addToLookup(pid, id);
         }
@@ -107,7 +110,7 @@ exports.calc = function(gd, trace) {
                 label: k
             });
         } else {
-            return Lib.warn('Multiple implied roots, cannot build sunburst hierarchy.');
+            return Lib.warn('Multiple implied roots, cannot build ' + desiredType + ' hierarchy.');
         }
     } else if(parent2children[''].length > 1) {
         var dummyId = Lib.randstr();
@@ -135,13 +138,13 @@ exports.calc = function(gd, trace) {
             .id(function(d) { return d.id; })
             .parentId(function(d) { return d.pid; })(cd);
     } catch(e) {
-        return Lib.warn('Failed to build sunburst hierarchy. Error: ' + e.message);
+        return Lib.warn('Failed to build ' + desiredType + ' hierarchy. Error: ' + e.message);
     }
 
     var hierarchy = d3Hierarchy.hierarchy(root);
     var failed = false;
 
-    if(hasVals) {
+    if(hasValues) {
         switch(trace.branchvalues) {
             case 'remainder':
                 hierarchy.sum(function(d) { return d.data.v; });
@@ -173,19 +176,39 @@ exports.calc = function(gd, trace) {
 
     if(failed) return;
 
-    // TODO add way to sort by height also?
-    hierarchy.sort(function(a, b) { return b.value - a.value; });
+    if(opts.sort) {
+        // TODO add way to sort by height also?
+        hierarchy.sort(function(a, b) { return b.value - a.value; });
+    }
 
+    var pullColor;
+    var scaleColor;
     var colors = trace.marker.colors || [];
-    var pullColor = makePullColorFn(fullLayout._sunburstcolormap);
+    trace._hasColorscale = hasColorscale(trace, 'marker');
+    if(trace._hasColorscale) {
+        if(!colors.length) {
+            colors = hasValues ? trace.values : trace._values;
+        }
+
+        colorscaleCalc(gd, trace, {
+            vals: colors,
+            containerStr: 'marker',
+            cLetter: 'c'
+        });
+
+        scaleColor = makeColorScaleFn(trace.marker);
+    } else {
+        pullColor = makePullColorFn(fullLayout['_' + desiredType + 'colormap']);
+    }
 
     // TODO keep track of 'root-children' (i.e. branch) for hover info etc.
 
     hierarchy.each(function(d) {
         var cdi = d.data.data;
-        var id = cdi.id;
         // N.B. this mutates items in `cd`
-        cdi.color = pullColor(colors[cdi.i], id);
+        cdi.color = trace._hasColorscale ?
+            scaleColor(colors[cdi.i]) :
+            pullColor(colors[cdi.i], cdi.id);
     });
 
     cd[0].hierarchy = hierarchy;
@@ -200,14 +223,16 @@ exports.calc = function(gd, trace) {
  * This is done after sorting, so we pick defaults
  * in the order slices will be displayed
  */
-exports.crossTraceCalc = function(gd) {
+exports._runCrossTraceCalc = function(desiredType, gd) {
     var fullLayout = gd._fullLayout;
     var calcdata = gd.calcdata;
-    var colorWay = fullLayout.sunburstcolorway;
-    var colorMap = fullLayout._sunburstcolormap;
+    var colorWay = fullLayout[desiredType + 'colorway'];
+    var colorMap = fullLayout['_' + desiredType + 'colormap'];
 
-    if(fullLayout.extendsunburstcolors) {
-        colorWay = generateExtendedColors(colorWay, sunburstExtendedColorWays);
+    if(fullLayout['extend' + desiredType + 'colors']) {
+        colorWay = generateExtendedColors(colorWay,
+            desiredType === 'treemap' ? treemapExtendedColorWays : sunburstExtendedColorWays
+        );
     }
     var dfltColorCount = 0;
 
@@ -238,8 +263,18 @@ exports.crossTraceCalc = function(gd) {
     for(var i = 0; i < calcdata.length; i++) {
         var cd = calcdata[i];
         var cd0 = cd[0];
-        if(cd0.trace.type === 'sunburst' && cd0.hierarchy) {
+        if(cd0.trace.type === desiredType && cd0.hierarchy) {
             cd0.hierarchy.each(pickColor);
         }
     }
+};
+
+exports.calc = function(gd, trace) {
+    return exports._runCalc('sunburst', gd, trace, {
+        sort: true
+    });
+};
+
+exports.crossTraceCalc = function(gd) {
+    return exports._runCrossTraceCalc('sunburst', gd);
 };
