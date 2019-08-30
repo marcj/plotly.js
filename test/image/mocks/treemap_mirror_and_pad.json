@@ -2,114 +2,31 @@
     "data": [
         {
             "type": "treemap",
-            "textinfo": "label+value+percent parent",
+            "textinfo": "label",
             "textfont": {
-                "size": 20
+                "size": 10
             },
             "directory": {
                 "visible": false
             },
             "tiling": {
-                "aspectratio": 1,
-                "pad": 4
-            },
-			"marker": {
-				"line": {
-                    "color": "Black"
-				},
-				"colorscale": "Reds",
-				"showscale": false
-            },
-            "sort": true,
-            "labels": [
-                "Alpha",
-                "Bravo",
-                "Charlie",
-                "Delta",
-                "Echo",
-                "Foxtrot",
-                "Golf",
-                "Hotel",
-                "India",
-                "Juliet",
-                "Kilo",
-                "Lima",
-                "Mike",
-                "November",
-                "Oscar",
-                "Papa",
-                "Quebec",
-                "Romeo",
-                "Sierra",
-                "Tango",
-                "Uniform",
-                "Victor",
-                "Whiskey",
-                "X ray",
-                "Yankee",
-                "Zulu"
-            ],
-            "parents": [
-                "",
-                "Alpha",
-                "Alpha",
-                "Charlie",
-                "Charlie",
-                "Charlie",
-                "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform"
-            ],
-            "domain": {
-                "x": [
-                    0.02,
-                    0.48
-                ],
-                "y": [
-                    0.02,
-                    0.48
-                ]
-            }
-        },
-        {
-            "type": "treemap",
-            "textinfo": "label+value+percent parent",
-            "textfont": {
-                "size": 20
-            },
-            "directory": {
-                "visible": false
-            },
-            "tiling": {
-                "aspectratio": 1,
+                "packing": "squarify",
+                "mirror": {
+                    "xy": false,
+                    "x": false,
+                    "y": false
+                },
                 "pad": 0
             },
-			"marker": {
-				"line": {
-                    "color": "Black"
-				},
-				"colorscale": "Reds",
-				"showscale": false
+            "marker": {
+                "opacity": 0.25,
+                "pad": {
+                    "top": 16,
+                    "left": 8,
+                    "right": 4,
+                    "bottom": 2
+                }
             },
-            "sort": true,
             "labels": [
                 "Alpha",
                 "Bravo",
@@ -140,32 +57,125 @@
             ],
             "parents": [
                 "",
+                "",
+                "",
+                "Bravo",
+                "Bravo",
+                "Bravo",
+                "Echo",
+                "Echo",
+                "Echo",
+                "Hotel",
+                "Hotel",
+                "Hotel",
+                "Kilo",
+                "Kilo",
+                "Kilo",
+                "November",
+                "November",
+                "November",
+                "Quebec",
+                "Quebec",
+                "Quebec",
+                "Tango",
+                "Tango",
+                "Tango",
+                "Whiskey",
+                "Whiskey"
+            ],
+            "domain": {
+                "x": [
+                    0.02,
+                    0.48
+                ],
+                "y": [
+                    0.02,
+                    0.48
+                ]
+            }
+        },
+        {
+            "type": "treemap",
+            "textinfo": "label",
+            "textfont": {
+                "size": 10
+            },
+            "directory": {
+                "visible": false
+            },
+            "tiling": {
+                "packing": "squarify",
+                "mirror": {
+                    "xy": false,
+                    "x": false,
+                    "y": true
+                },
+                "pad": 0
+            },
+            "marker": {
+                "opacity": 0.25,
+                "pad": {
+                    "top": 16,
+                    "left": 8,
+                    "right": 4,
+                    "bottom": 2
+                }
+            },
+            "labels": [
                 "Alpha",
-                "Alpha",
+                "Bravo",
                 "Charlie",
-                "Charlie",
-                "Charlie",
+                "Delta",
+                "Echo",
                 "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
+                "Golf",
+                "Hotel",
+                "India",
                 "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
+                "Kilo",
+                "Lima",
+                "Mike",
+                "November",
                 "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
+                "Papa",
+                "Quebec",
+                "Romeo",
+                "Sierra",
+                "Tango",
                 "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform"
+                "Victor",
+                "Whiskey",
+                "X ray",
+                "Yankee",
+                "Zulu"
+            ],
+            "parents": [
+                "",
+                "",
+                "",
+                "Bravo",
+                "Bravo",
+                "Bravo",
+                "Echo",
+                "Echo",
+                "Echo",
+                "Hotel",
+                "Hotel",
+                "Hotel",
+                "Kilo",
+                "Kilo",
+                "Kilo",
+                "November",
+                "November",
+                "November",
+                "Quebec",
+                "Quebec",
+                "Quebec",
+                "Tango",
+                "Tango",
+                "Tango",
+                "Whiskey",
+                "Whiskey"
             ],
             "domain": {
                 "x": [
@@ -180,25 +190,126 @@
         },
         {
             "type": "treemap",
-            "textinfo": "label+value+percent parent",
+            "textinfo": "label",
             "textfont": {
-                "size": 20
+                "size": 10
             },
             "directory": {
                 "visible": false
             },
             "tiling": {
+                "packing": "squarify",
+                "mirror": {
+                    "xy": false,
+                    "x": true,
+                    "y": false
+                },
+                "pad": 0
+            },
+            "marker": {
+                "opacity": 0.25,
+                "pad": {
+                    "top": 16,
+                    "left": 8,
+                    "right": 4,
+                    "bottom": 2
+                }
+            },
+            "labels": [
+                "Alpha",
+                "Bravo",
+                "Charlie",
+                "Delta",
+                "Echo",
+                "Foxtrot",
+                "Golf",
+                "Hotel",
+                "India",
+                "Juliet",
+                "Kilo",
+                "Lima",
+                "Mike",
+                "November",
+                "Oscar",
+                "Papa",
+                "Quebec",
+                "Romeo",
+                "Sierra",
+                "Tango",
+                "Uniform",
+                "Victor",
+                "Whiskey",
+                "X ray",
+                "Yankee",
+                "Zulu"
+            ],
+            "parents": [
+                "",
+                "",
+                "",
+                "Bravo",
+                "Bravo",
+                "Bravo",
+                "Echo",
+                "Echo",
+                "Echo",
+                "Hotel",
+                "Hotel",
+                "Hotel",
+                "Kilo",
+                "Kilo",
+                "Kilo",
+                "November",
+                "November",
+                "November",
+                "Quebec",
+                "Quebec",
+                "Quebec",
+                "Tango",
+                "Tango",
+                "Tango",
+                "Whiskey",
+                "Whiskey"
+            ],
+            "domain": {
+                "x": [
+                    0.52,
+                    0.98
+                ],
+                "y": [
+                    0.02,
+                    0.48
+                ]
+            }
+        },
+        {
+            "type": "treemap",
+            "textinfo": "label",
+            "textfont": {
+                "size": 10
+            },
+            "directory": {
+                "visible": false
+            },
+            "tiling": {
+                "packing": "squarify",
+                "mirror": {
+                    "xy": true,
+                    "x": false,
+                    "y": false
+                },
                 "aspectratio": 0.5,
-                "pad": 4
+                "pad": 0
             },
-			"marker": {
-				"line": {
-                    "color": "Black"
-				},
-				"colorscale": "Reds",
-				"showscale": false
+            "marker": {
+                "opacity": 0.25,
+                "pad": {
+                    "top": 16,
+                    "left": 8,
+                    "right": 4,
+                    "bottom": 2
+                }
             },
-            "sort": true,
             "labels": [
                 "Alpha",
                 "Bravo",
@@ -229,121 +340,31 @@
             ],
             "parents": [
                 "",
-                "Alpha",
-                "Alpha",
-                "Charlie",
-                "Charlie",
-                "Charlie",
-                "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform"
-            ],
-            "domain": {
-                "x": [
-                    0.52,
-                    0.98
-                ],
-                "y": [
-                    0.02,
-                    0.48
-                ]
-            }
-        },
-        {
-            "type": "treemap",
-            "textinfo": "label+value+percent parent",
-            "textfont": {
-                "size": 20
-            },
-            "directory": {
-                "visible": false
-            },
-            "tiling": {
-                "aspectratio": 2,
-                "pad": 4
-            },
-			"marker": {
-				"line": {
-                    "color": "Black"
-				},
-				"colorscale": "Reds",
-				"showscale": false
-            },
-            "sort": true,
-            "labels": [
-                "Alpha",
-                "Bravo",
-                "Charlie",
-                "Delta",
-                "Echo",
-                "Foxtrot",
-                "Golf",
-                "Hotel",
-                "India",
-                "Juliet",
-                "Kilo",
-                "Lima",
-                "Mike",
-                "November",
-                "Oscar",
-                "Papa",
-                "Quebec",
-                "Romeo",
-                "Sierra",
-                "Tango",
-                "Uniform",
-                "Victor",
-                "Whiskey",
-                "X ray",
-                "Yankee",
-                "Zulu"
-            ],
-            "parents": [
                 "",
-                "Alpha",
-                "Alpha",
-                "Charlie",
-                "Charlie",
-                "Charlie",
-                "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
-                "Foxtrot",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Juliet",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Oscar",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform",
-                "Uniform"
+                "",
+                "Bravo",
+                "Bravo",
+                "Bravo",
+                "Echo",
+                "Echo",
+                "Echo",
+                "Hotel",
+                "Hotel",
+                "Hotel",
+                "Kilo",
+                "Kilo",
+                "Kilo",
+                "November",
+                "November",
+                "November",
+                "Quebec",
+                "Quebec",
+                "Quebec",
+                "Tango",
+                "Tango",
+                "Tango",
+                "Whiskey",
+                "Whiskey"
             ],
             "domain": {
                 "x": [
@@ -356,15 +377,20 @@
                 ]
             }
         }
-
     ],
     "layout": {
-        "width": 750,
-        "height": 1500,
+        "width": 1000,
+        "height": 1000,
+        "shapes": [
+            { "type": "rect", "layer": "below", "x0": 0.02, "x1": 0.48, "y0": 0.02, "y1": 0.48 },
+            { "type": "rect", "layer": "below", "x0": 0.02, "x1": 0.48, "y0": 0.52, "y1": 0.98 },
+            { "type": "rect", "layer": "below", "x0": 0.52, "x1": 0.98, "y0": 0.02, "y1": 0.48 },
+            { "type": "rect", "layer": "below", "x0": 0.52, "x1": 0.98, "y0": 0.52, "y1": 0.98 }
+        ],
         "annotations": [
             {
                 "showarrow": false,
-                "text": "aspectratio 1",
+                "text": "base",
                 "font": {
                     "size": 16
                 },
@@ -375,7 +401,7 @@
             },
             {
                 "showarrow": false,
-                "text": "aspectratio 1 - no offset",
+                "text": "flip y axis",
                 "font": {
                     "size": 16
                 },
@@ -386,7 +412,7 @@
             },
             {
                 "showarrow": false,
-                "text": "aspectratio 0.5 - more horizontal tiles",
+                "text": "flip x axis",
                 "font": {
                     "size": 16
                 },
@@ -397,7 +423,7 @@
             },
             {
                 "showarrow": false,
-                "text": "aspectratio 2 - more vertical tiles",
+                "text": "swap x axis with y axis",
                 "font": {
                     "size": 16
                 },

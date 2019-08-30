@@ -11,8 +11,6 @@
 var d3Hierarchy = require('d3-hierarchy');
 
 module.exports = function partition(entry, size, opts) {
-    var aspectratio = opts.aspectratio;
-
     var flipX = opts.mirror.x;
     var flipY = opts.mirror.y;
     var swapXY = opts.mirror.xy;
@@ -41,14 +39,13 @@ module.exports = function partition(entry, size, opts) {
         .paddingInner(opts.offset)
         .paddingLeft(left)
         .paddingRight(right)
-        .paddingTop(top / aspectratio)
-        .paddingBottom(bottom / aspectratio)
+        .paddingTop(top)
+        .paddingBottom(bottom)
         .size([
             size[swapXY ? 1 : 0],
-            size[swapXY ? 0 : 1] / aspectratio]
+            size[swapXY ? 0 : 1]]
         )(entry);
 
-    scaleTree(result, 1, aspectratio);
     if(swapXY || flipX || flipY) {
         flipTree(result, size, {
             swapXY: swapXY,
@@ -79,20 +76,6 @@ function getTilingMethod(key) {
     }
 
     return method;
-}
-
-function scaleTree(node, scaleX, scaleY) {
-    node.x0 *= scaleX;
-    node.x1 *= scaleX;
-    node.y0 *= scaleY;
-    node.y1 *= scaleY;
-
-    var children = node['child' + 'ren'];
-    if(children) {
-        for(var i = 0; i < children.length; i++) {
-            scaleTree(children[i], scaleX, scaleY);
-        }
-    }
 }
 
 function flipTree(node, size, opts) {

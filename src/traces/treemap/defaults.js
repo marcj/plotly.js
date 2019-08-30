@@ -11,11 +11,13 @@
 var Lib = require('../../lib');
 var attributes = require('./attributes');
 var Color = require('../../components/color');
-var hasColorscale = require('../../components/colorscale/helpers').hasColorscale;
-var colorscaleDefaults = require('../../components/colorscale/defaults');
 var handleDomainDefaults = require('../../plots/domain').defaults;
 var handleText = require('../bar/defaults').handleText;
 var TEXTPAD = require('../bar/constants').TEXTPAD;
+
+var Colorscale = require('../../components/colorscale');
+var hasColorscale = Colorscale.hasColorscale;
+var colorscaleDefaults = Colorscale.handleDefaults;
 
 module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout) {
     function coerce(attr, dflt) {
@@ -39,13 +41,11 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
 
     coerce('level');
     coerce('maxdepth');
-    coerce('sort');
 
     coerce('tiling.packing');
     coerce('tiling.mirror.x');
     coerce('tiling.mirror.y');
     coerce('tiling.mirror.xy');
-    coerce('tiling.aspectratio');
     var tilingPad = coerce('tiling.pad');
 
     var text = coerce('text');

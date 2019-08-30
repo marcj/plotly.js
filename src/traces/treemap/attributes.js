@@ -29,8 +29,6 @@ module.exports = {
     level: sunburstAttrs.level,
     maxdepth: sunburstAttrs.maxdepth,
 
-    sort: pieAttrs.sort,
-
     tiling: {
         packing: {
             valType: 'enumerated',
@@ -85,17 +83,6 @@ module.exports = {
             editType: 'plot'
         },
 
-        aspectratio: {
-            valType: 'number',
-            role: 'info',
-            min: 0,
-            dflt: 1,
-            editType: 'plot',
-            description: [
-                'Sets the preferred ratio between height and width of individual tiles.'
-            ].join(' ')
-        },
-
         pad: {
             valType: 'number',
             role: 'style',
@@ -103,7 +90,7 @@ module.exports = {
             dflt: 1,
             editType: 'plot',
             description: [
-                'Sets the inner padding i.e in pixels when using `aspectratio` 1.'
+                'Sets the inner padding (in px).'
             ].join(' ')
         },
 

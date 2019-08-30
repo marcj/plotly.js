@@ -48,7 +48,6 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     var eachWidth = opts.width / (entry.height + 1);
 
     var sliceData = partition(entry, [width, height], {
-        aspectratio: 1,
         packing: 'dice',
         mirror: {
             x: rightToLeft,

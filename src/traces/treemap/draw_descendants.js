@@ -47,7 +47,6 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     // N.B. slice data isn't the calcdata,
     // grab corresponding calcdata item in sliceData[i].data.data
     var sliceData = partition(entry, [width, height], {
-        aspectratio: trace.tiling.aspectratio,
         packing: trace.tiling.packing,
         mirror: trace.tiling.mirror,
         offset: trace.tiling.pad,

@@ -8,14 +8,14 @@
 
 'use strict';
 
-var base = require('../../plots/area/base');
+var plots = require('../../plots/plots');
 
 exports.name = 'treemap';
 
 exports.plot = function(gd, traces, transitionOpts, makeOnCompleteCallback) {
-    base._runPlot(exports.name, gd, traces, transitionOpts, makeOnCompleteCallback);
+    plots.plotBasePlot(exports.name, gd, traces, transitionOpts, makeOnCompleteCallback);
 };
 
 exports.clean = function(newFullData, newFullLayout, oldFullData, oldFullLayout) {
-    base._runClean(exports.name, newFullData, newFullLayout, oldFullData, oldFullLayout);
+    plots.cleanBasePlot(exports.name, newFullData, newFullLayout, oldFullData, oldFullLayout);
 };
