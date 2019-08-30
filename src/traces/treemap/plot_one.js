@@ -83,8 +83,11 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
     var cx = cd0.cx = mvX + gs.l + gs.w * domainMidX;
     var cy = cd0.cy = mvY + gs.t + gs.h * (1 - domainMidY);
 
-    var sliceViewX = function(x) { return x + cx - vpw / 2; };
-    var sliceViewY = function(y) { return y + cy - vph / 2; };
+    var cenX = cx - vpw / 2;
+    var cenY = cy - vph / 2;
+
+    var viewMapX = function(x) { return cenX + x; };
+    var viewMapY = function(y) { return cenY + y; };
 
     var dirW = vpw;
     var dirH = trace.directory.height;
@@ -92,21 +95,22 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
 
     var dirDifX = dirRight ? -dirHalfH : dirHalfH;
     var dirDifY = dirTop ? -dirH : vph;
-    var dirY0 = sliceViewY(0) + dirDifY;
-    var dirX0 = sliceViewX(0);
+    var dirY0 = viewMapY(0) + dirDifY;
+    var dirX0 = viewMapX(0);
 
-    // TODO: figure out why we get NaN values there!
-    var limitDirX0 = function(x) { return isNaN(x) ? 0 : Math.max(x, 0); };
-    var limitDirY0 = function(y) { return isNaN(y) ? 0 : Math.max(y, 0); };
-    var limitDirX1 = function(x) { return isNaN(x) ? dirW : Math.min(x, dirW); };
-    var limitDirY1 = function(y) { return isNaN(y) ? dirH : Math.min(y, dirH); };
+    var viewDirX = function(x) { return dirX0 + x; };
+    var viewDirY = function(y) { return dirY0 + y; };
+
+    function pos(x, y) {
+        return x + ',' + y;
+    }
 
     // directory path generation fn
     var pathAncestor = function(d) {
-        var _x0 = limitDirX0(Math.min(d.x0, d.x0 - dirDifX)) + dirX0;
-        var _x1 = limitDirX1(Math.max(d.x1, d.x1 - dirDifX)) + dirX0;
-        var _y0 = limitDirY0(d.y0) + dirY0;
-        var _y1 = limitDirY1(d.y1) + dirY0;
+        var _x0 = viewDirX(Math.max(Math.min(d.x0, d.x0 - dirDifX), 0));
+        var _x1 = viewDirX(Math.min(Math.max(d.x1, d.x1 - dirDifX), dirW));
+        var _y0 = viewDirY(d.y0);
+        var _y1 = viewDirY(d.y1);
 
         var _yMid = _y0 + dirHalfH;
         var _xMid;
@@ -117,28 +121,28 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         }
 
         return (
-           'M' + _x0 + ',' + _y0 +
-           'L' + _x1 + ',' + _y0 +
-           (dirRight ? 'L' + _xMid + ',' + _yMid : '') +
-           'L' + _x1 + ',' + _y1 +
-           'L' + _x0 + ',' + _y1 +
-           (dirRight ? '' : 'L' + _xMid + ',' + _yMid) +
+           'M' + pos(_x0, _y0) +
+           'L' + pos(_x1, _y0) +
+           (dirRight ? 'L' + pos(_xMid, _yMid) : '') +
+           'L' + pos(_x1, _y1) +
+           'L' + pos(_x0, _y1) +
+           (dirRight ? '' : 'L' + pos(_xMid, _yMid)) +
            'Z'
         );
     };
 
     // slice path generation fn
     var pathDescendant = function(d) {
-        var _x0 = sliceViewX(d.x0);
-        var _x1 = sliceViewX(d.x1);
-        var _y0 = sliceViewY(d.y0);
-        var _y1 = sliceViewY(d.y1);
+        var _x0 = viewMapX(d.x0);
+        var _x1 = viewMapX(d.x1);
+        var _y0 = viewMapY(d.y0);
+        var _y1 = viewMapY(d.y1);
 
         return (
-           'M' + _x0 + ',' + _y0 +
-           'L' + _x1 + ',' + _y0 +
-           'L' + _x1 + ',' + _y1 +
-           'L' + _x0 + ',' + _y1 + 'Z'
+           'M' + pos(_x0, _y0) +
+           'L' + pos(_x1, _y0) +
+           'L' + pos(_x1, _y1) +
+           'L' + pos(_x0, _y1) + 'Z'
         );
     };
 
@@ -297,13 +301,16 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             else if(offsetDir === 'right') transform.targetX += deltaX - TEXTPAD;
         }
 
+        transform.targetX = viewMapX(transform.targetX);
+        transform.targetY = viewMapY(transform.targetY);
+
         return {
             scale: transform.scale,
             rotate: transform.rotate,
             textX: transform.textX,
             textY: transform.textY,
-            targetX: sliceViewX(transform.targetX),
-            targetY: sliceViewY(transform.targetY)
+            targetX: transform.targetX,
+            targetY: transform.targetY
         };
     };
 
@@ -381,7 +388,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
                 origin.x1,
                 origin.y0,
                 origin.y1,
-                pt.textBB, { isFront: helpers.isOnTop(pt, trace) }
+                pt.textBB,
+                {
+                    isFront: helpers.isOnTop(pt, trace)
+                }
             )
         });
 
@@ -467,8 +477,8 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
         width: vpw,
         height: vph,
 
-        sliceViewX: sliceViewX,
-        sliceViewY: sliceViewY,
+        viewX: viewMapX,
+        viewY: viewMapY,
 
         rightToLeft: trace.textposition.indexOf('right') !== -1,
         pathSlice: pathDescendant,
@@ -519,14 +529,10 @@ module.exports = function plotOne(gd, cd, element, transitionOpts) {
             width: dirW,
             height: dirH,
 
-            dirX0: dirX0,
-            dirY0: dirY0,
             dirDifY: dirDifY,
 
-            limitDirX0: limitDirX0,
-            limitDirX1: limitDirX1,
-            limitDirY0: limitDirY0,
-            limitDirY1: limitDirY1,
+            viewX: viewDirX,
+            viewY: viewDirY,
 
             rightToLeft: dirRight,
             pathSlice: pathAncestor,

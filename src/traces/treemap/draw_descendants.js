@@ -20,7 +20,6 @@ var svgTextUtils = require('../../lib/svg_text_utils');
 
 var partition = require('./partition');
 var styleOne = require('./style').styleOne;
-var strTransform = require('./str_transform');
 var formatSliceLabel = require('../sunburst/format_slice_label');
 
 var isUp = false; // for Descendants
@@ -29,8 +28,8 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     var width = opts.width;
     var height = opts.height;
 
-    var sliceViewX = opts.sliceViewX;
-    var sliceViewY = opts.sliceViewY;
+    var viewX = opts.viewX;
+    var viewY = opts.viewY;
 
     var pathSlice = opts.pathSlice;
     var toMoveInsideSlice = opts.toMoveInsideSlice;
@@ -81,17 +80,13 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
     var hasLeft = trace.textposition.indexOf('left') !== -1;
 
     updateSlices.each(function(pt) {
+        var inFront = helpers.isOnTop(pt, trace);
+
         pt._hoverPos = [
-            sliceViewX(rightToLeft ?
-                pt.x0 + trace.marker.pad.left :
-                pt.x1 - trace.marker.pad.right
-            ),
-            sliceViewY(helpers.isOnTop(pt, trace) ?
-                (pt.y0 + pt.y1) / 2 :
-                hasBottom ?
-                    pt.y1 - trace.marker.pad.bottom / 2 :
-                    pt.y0 + trace.marker.pad.top / 2
-            )
+            viewX(pt.x1 - trace.marker.pad.right),
+            hasBottom ?
+                viewY(inFront ? (pt.y0 + pt.y1) / 2 : pt.y1 - trace.marker.pad.bottom / 2) :
+                viewY(inFront ? (pt.y0 + pt.y1) / 2 : pt.y0 + trace.marker.pad.top / 2)
         ];
 
         var sliceTop = d3.select(this);
@@ -163,10 +158,10 @@ module.exports = function drawDescendants(gd, cd, entry, slices, opts) {
         if(hasTransition) {
             sliceText.transition().attrTween('transform', function(pt2) {
                 var interp = makeUpdateTextInterpolar(pt2, isUp, [width, height]);
-                return function(t) { return strTransform(interp(t)); };
+                return function(t) { return helpers.strTransform(interp(t)); };
             });
         } else {
-            sliceText.attr('transform', strTransform(pt));
+            sliceText.attr('transform', helpers.strTransform(pt));
         }
     });
 };

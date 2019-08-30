@@ -20,7 +20,6 @@ var svgTextUtils = require('../../lib/svg_text_utils');
 
 var partition = require('./partition');
 var styleOne = require('./style').styleOne;
-var strTransform = require('./str_transform');
 
 var isUp = true; // for Ancestors
 
@@ -28,14 +27,10 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     var width = opts.width;
     var height = opts.height;
 
-    var dirX0 = opts.dirX0;
-    var dirY0 = opts.dirY0;
     var dirDifY = opts.dirDifY;
 
-    var limitDirX0 = opts.limitDirX0;
-    var limitDirY0 = opts.limitDirY0;
-    var limitDirX1 = opts.limitDirX1;
-    var limitDirY1 = opts.limitDirY1;
+    var viewX = opts.viewX;
+    var viewY = opts.viewY;
 
     var pathSlice = opts.pathSlice;
     var toMoveInsideSlice = opts.toMoveInsideSlice;
@@ -69,7 +64,12 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
         }
     }).descendants();
 
-    slices = slices.data(sliceData, function(pt) { return helpers.getPtId(pt); });
+    slices = slices.data(sliceData, function(pt) {
+        if(isNaN(pt.x0)) pt.x0 = 0;
+        if(isNaN(pt.x1)) pt.x1 = width;
+
+        return helpers.getPtId(pt);
+    });
 
     slices.enter().append('g')
         .classed('directory', true);
@@ -81,9 +81,10 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
     var updateSlices = slices;
 
     updateSlices.each(function(pt) {
-        pt._hoverPos = [(rightToLeft ? limitDirX1(pt.x1 - eachWidth) :
-            limitDirX0(pt.x0)) + dirX0 + eachWidth / 2,
-            limitDirY0(pt.y0) + dirY0 + height / 2
+        pt._hoverPos = [(rightToLeft ?
+            viewX(pt.x1 - eachWidth) :
+            viewX(pt.x0)) + eachWidth / 2,
+            viewY(pt.y0) + height / 2
         ];
 
         var sliceTop = d3.select(this);
@@ -124,10 +125,10 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
 
         pt.textBB = Drawing.bBox(sliceText.node());
         pt.transform = toMoveInsideSlice(
-            limitDirX0(pt.x0),
-            limitDirX1(pt.x1),
-            limitDirY0(pt.y0) + dirDifY,
-            limitDirY1(pt.y1) + dirDifY,
+            pt.x0,
+            pt.x1,
+            pt.y0 + dirDifY,
+            pt.y1 + dirDifY,
             pt.textBB,
             {
                 isFront: isFront,
@@ -146,10 +147,10 @@ module.exports = function drawAncestors(gd, cd, entry, slices, opts) {
         if(hasTransition) {
             sliceText.transition().attrTween('transform', function(pt2) {
                 var interp = makeUpdateTextInterpolar(pt2, isUp, [width, height]);
-                return function(t) { return strTransform(interp(t)); };
+                return function(t) { return helpers.strTransform(interp(t)); };
             });
         } else {
-            sliceText.attr('transform', strTransform(pt));
+            sliceText.attr('transform', helpers.strTransform(pt));
         }
     });
 };

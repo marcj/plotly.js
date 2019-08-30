@@ -11,6 +11,18 @@
 var Lib = require('../../lib');
 var Color = require('../../components/color');
 var setCursor = require('../../lib/setcursor');
+var getTransform = require('../bar/plot').getTransform;
+
+exports.strTransform = function(d) {
+    return getTransform({
+        textX: d.transform.textX,
+        textY: d.transform.textY,
+        targetX: d.transform.targetX,
+        targetY: d.transform.targetY,
+        scale: d.transform.scale,
+        rotate: d.transform.rotate
+    });
+};
 
 function has(v) {
     return v || v === 0;
