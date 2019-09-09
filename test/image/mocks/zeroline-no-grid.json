@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "x": [1, 2, 3],
+      "y": [4, 5, 6]
+    },
+    {
+      "x": [20, 30, 40],
+      "y": [50, 60, 70]
+    }
+  ],
+  "layout": {
+    "xaxis": {
+      "mirror": true,
+      "showline": true,
+      "zeroline": true,
+      "rangemode": "tozero",
+      "nticks": 1
+    },
+    "yaxis": {
+      "rangemode": "tozero",
+      "showline": false,
+      "zeroline": false
+    }
+  }
+}
