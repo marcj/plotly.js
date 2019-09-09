@@ -1720,6 +1720,8 @@ axes.drawOne = function(gd, ax, opts) {
     var gridVals = ax._gridVals = valsClipped;
     var dividerVals = getDividerVals(ax, vals);
 
+    console.log(ax._vals, tickVals, gridVals)
+
     if(!fullLayout._hasOnlyLargeSploms) {
         var subplotsWithAx = ax._subplotsWith;
 
