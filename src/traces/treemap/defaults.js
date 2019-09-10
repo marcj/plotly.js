@@ -85,11 +85,10 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     if(withColorscale) {
         colorscaleDefaults(traceIn, traceOut, layout, coerce, {prefix: 'marker.', cLetter: 'c'});
     }
-    var markerOpacity = coerce('marker.opacity', withColorscale ? 1 : 0.5);
+    coerce('marker.opacity');
 
     traceOut._hovered = {
         marker: {
-            opacity: (1 + markerOpacity) / 2,
             line: {
                 width: Math.max(tilingPad, 2),
                 color: Color.contrast(layout.paper_bgcolor)

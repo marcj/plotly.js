@@ -483,6 +483,11 @@ function makeEventData(pt, trace) {
         // TODO more things like 'children', 'siblings', 'hierarchy?
     };
 
+    if('percentParent' in pt) out.percentParent = pt.percentParent;
+    if('percentVisible' in pt) out.percentVisible = pt.percentVisible;
+    if('percentRoot' in pt) out.percentRoot = pt.percentRoot;
+    if('currentPath' in pt) out.currentPath = pt.currentPath;
+
     appendArrayPointValue(out, trace, cdi.i);
 
     return out;
@@ -554,42 +559,38 @@ exports.attachFxHandlers = function(sliceTop, entry, gd, cd, styleOne, constants
                 if(hasFlag('value')) thisText.push(hoverPt.valueLabel);
             }
 
-            if(hasFlag('path') && pt.parent) {
-                hoverPt.path = helpers.getPath(pt.parent.data);
-                thisText.push(hoverPt.path);
-            }
-
-            var ref1 = {};
-            if(hasFlag('percent parent') && pt.parent) {
-                ref1 = pt.parent.data.data;
-                hoverPt.percentParent = hasV ? cdi.v / ref1.v : cdi.value / ref1.value;
-                hoverPt.percentParentLabel = formatPercent(hoverPt.percentParent, separators) +
-                    ' of ' + helpers.getLabelString(ref1.label);
-
-                thisText.push(hoverPt.percentParentLabel);
-            }
-
-            var ref2 = {};
-            if(hasFlag('percent visible') && pt.parent) {
-                ref2 = entry.data.data;
-                hoverPt.percentVisible = hasV ? cdi.v / ref2.v : cdi.value / ref2.value;
-                hoverPt.percentVisibleLabel = formatPercent(hoverPt.percentVisible, separators) +
-                    ' of ' + helpers.getLabelString(ref2.label);
-
-                if(ref1.label !== ref2.label) { // no need to add redundant info
-                    thisText.push(hoverPt.percentVisibleLabel);
+            if(pt.parent) {
+                pt.currentPath = helpers.getPath(pt.parent.data);
+                if(hasFlag('currentPath')) {
+                    thisText.push(pt.directory);
                 }
-            }
 
-            var ref3 = {};
-            if(hasFlag('percent root') && pt.parent) {
+                var ref1 = {};
+                ref1 = pt.parent.data.data;
+                pt.percentParent = hasV ? cdi.v / ref1.v : cdi.value / ref1.value;
+                if(hasFlag('percent parent')) {
+                    hoverPt.percentParentLabel = helpers.getLabelString(ref1.label);
+                    thisText.push(formatPercent(pt.percentParent, separators) + ' of ' + hoverPt.percentParentLabel);
+                }
+
+                var ref2 = {};
+                ref2 = entry.data.data;
+                pt.percentVisible = hasV ? cdi.v / ref2.v : cdi.value / ref2.value;
+                if(hasFlag('percent visible')) {
+                    if(ref1.label !== ref2.label) { // no need to add redundant info
+                        hoverPt.percentVisibleLabel = helpers.getLabelString(ref2.label);
+                        thisText.push(formatPercent(pt.percentVisible, separators) + ' of ' + hoverPt.percentVisibleLabel);
+                    }
+                }
+
+                var ref3 = {};
                 ref3 = cd0;
-                hoverPt.percentRoot = hasV ? cdi.v / ref3.v : cdi.value / ref3.value;
-                hoverPt.percentRootLabel = formatPercent(hoverPt.percentRoot, separators) +
-                    ' of ' + helpers.getLabelString(ref3.label);
-
-                if(ref2.label !== ref3.label) { // no need to add redundant info
-                    thisText.push(hoverPt.percentRootLabel);
+                pt.percentRoot = hasV ? cdi.v / ref3.v : cdi.value / ref3.value;
+                if(hasFlag('percent root')) {
+                    hoverPt.percentRootLabel = helpers.getLabelString(ref3.label);
+                    if(ref2.label !== ref3.label) { // no need to add redundant info
+                        thisText.push(formatPercent(pt.percentRoot, separators) + ' of ' + hoverPt.percentRootLabel);
+                    }
                 }
             }
 
@@ -719,10 +720,15 @@ exports.attachFxHandlers = function(sliceTop, entry, gd, cd, styleOne, constants
         var id = helpers.getPtId(pt);
         var isEntry = helpers.isEntry(pt);
 
+        var passPathOr = function(v) {
+            var q = pt.data.data._pathTo;
+            return (q === undefined) ? v : q;
+        };
+
         if(isTreemap) {
             trace._clickedInfo = {
-                id: pt.data.data._pathTo || id,
-                zoomOut: pt.data.data._pathTo || isEntry
+                id: passPathOr(id),
+                zoomOut: passPathOr(isEntry)
             };
         }
 

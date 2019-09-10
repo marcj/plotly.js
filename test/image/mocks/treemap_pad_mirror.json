@@ -14,7 +14,6 @@
                 "pad": 0
             },
             "marker": {
-                "opacity": 0.25,
                 "pad": {
                     "top": 16,
                     "left": 8,
@@ -104,7 +103,6 @@
                 "pad": 0
             },
             "marker": {
-                "opacity": 0.25,
                 "pad": {
                     "top": 16,
                     "left": 8,
@@ -194,7 +192,6 @@
                 "pad": 0
             },
             "marker": {
-                "opacity": 0.25,
                 "pad": {
                     "top": 16,
                     "left": 8,
@@ -284,7 +281,6 @@
                 "pad": 0
             },
             "marker": {
-                "opacity": 0.25,
                 "pad": {
                     "top": 16,
                     "left": 8,

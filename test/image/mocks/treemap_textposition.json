@@ -98,9 +98,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0,
@@ -209,9 +206,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0.35,
@@ -321,9 +315,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0.7,
@@ -429,9 +420,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0,
@@ -537,9 +525,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0.35,
@@ -645,9 +630,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0.7,
@@ -756,9 +738,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0,
@@ -868,9 +847,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0.35,
@@ -979,9 +955,6 @@
                 "Uniform",
                 "Uniform"
             ],
-            "marker": {
-                "opacity": 0.5
-            },
             "domain": {
                 "x": [
                     0.7,

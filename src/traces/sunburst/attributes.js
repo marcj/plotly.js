@@ -15,7 +15,7 @@ var texttemplateAttrs = require('../../plots/template_attributes').texttemplateA
 var colorScaleAttrs = require('../../components/colorscale/attributes');
 var domainAttrs = require('../../plots/domain').attributes;
 var pieAttrs = require('../pie/attributes');
-
+var constants = require('./constants');
 var extendFlat = require('../../lib/extend').extendFlat;
 
 module.exports = {
@@ -167,16 +167,9 @@ module.exports = {
         ].join(' ')
     },
 
+    // TODO: incorporate `label` and `value` in the eventData
     texttemplate: texttemplateAttrs({editType: 'plot'}, {
-        keys: [
-            'label',
-            'text',
-            'value',
-            'color',
-            'percentParent',
-            'percentVisible',
-            'percentRoot'
-        ]
+        keys: constants.eventDataKeys.concat(['label', 'value'])
     }),
 
     hovertext: pieAttrs.hovertext,
@@ -186,7 +179,7 @@ module.exports = {
             'text',
             'value',
             'name',
-            'path',
+            'current path',
             'percent parent',
             'percent visible',
             'percent root'
@@ -200,25 +193,8 @@ module.exports = {
             'percent root'
         ].join('+')
     }),
-    hovertemplate: hovertemplateAttrs({
-        keys: [
-            'label',
-            'text',
-            'value',
-            'color',
-            'path',
-            'percentParent',
-            'percentVisible',
-            'percentRoot'
-        ],
-        dflt: [
-            'label',
-            'text',
-            'value',
-            'percentParent',
-            'percentVisible',
-            'percentRoot'
-        ].join('+')
+    hovertemplate: hovertemplateAttrs({}, {
+        keys: constants.eventDataKeys
     }),
 
     textfont: pieAttrs.textfont,

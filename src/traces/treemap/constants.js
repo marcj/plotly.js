@@ -10,5 +10,11 @@
 
 module.exports = {
     CLICK_TRANSITION_TIME: 750,
-    CLICK_TRANSITION_EASING: 'cubic'
+    CLICK_TRANSITION_EASING: 'cubic',
+    eventDataKeys: [
+        'percentParent',
+        'percentVisible',
+        'percentRoot',
+        'currentPath'
+    ]
 };

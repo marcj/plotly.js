@@ -8,11 +8,14 @@
 
 'use strict';
 
+var hovertemplateAttrs = require('../../plots/template_attributes').hovertemplateAttrs;
+var texttemplateAttrs = require('../../plots/template_attributes').texttemplateAttrs;
+
 var colorScaleAttrs = require('../../components/colorscale/attributes');
 var domainAttrs = require('../../plots/domain').attributes;
 var pieAttrs = require('../pie/attributes');
 var sunburstAttrs = require('../sunburst/attributes');
-
+var constants = require('./constants');
 var extendFlat = require('../../lib/extend').extendFlat;
 
 module.exports = {
@@ -154,6 +157,7 @@ module.exports = {
             role: 'style',
             min: 0,
             max: 1,
+            dflt: 1,
             description: [
                 'Sets the opacity for the sectors. With colorscale',
                 'it is defaulted to 1; otherwise it is defaulted to 0.5'
@@ -246,11 +250,16 @@ module.exports = {
 
     text: pieAttrs.text,
     textinfo: sunburstAttrs.textinfo,
-    texttemplate: sunburstAttrs.texttemplate,
+    // TODO: incorporate `label` and `value` in the eventData
+    texttemplate: texttemplateAttrs({editType: 'plot'}, {
+        keys: constants.eventDataKeys.concat(['label', 'value'])
+    }),
 
     hovertext: pieAttrs.hovertext,
     hoverinfo: sunburstAttrs.hoverinfo,
-    hovertemplate: sunburstAttrs.hovertemplate,
+    hovertemplate: hovertemplateAttrs({}, {
+        keys: constants.eventDataKeys
+    }),
 
     textfont: pieAttrs.textfont,
     insidetextfont: pieAttrs.insidetextfont,
@@ -291,21 +300,6 @@ module.exports = {
                     ].join(' ')
                 }),
                 editType: 'style'
-            },
-
-            opacity: {
-                valType: 'number',
-                editType: 'style',
-                role: 'style',
-                min: 0,
-                max: 1,
-                dflt: 'auto',
-                description: [
-                    'Sets the opacity for the sectors',
-                    'those that are hovered.',
-                    'It is defaulted to the average of one and half of',
-                    'trace.marker.opacity.'
-                ].join(' ')
             },
 
             editType: 'style'

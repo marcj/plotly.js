@@ -9,7 +9,7 @@
       "textinfo": "label+value+percent parent+percent visible",
       "domain": {"x": [0, 0.48]},
       "outsidetextfont": {"size": 20, "color": "#377eb8"},
-      "marker": {"opacity": 0.4, "line": {"width": 2}},
+      "marker": {"line": {"width": 2}},
       "pathbar": {"visible": false}
     },
     {
@@ -22,7 +22,7 @@
       "values": [65, 14, 12, 10, 2, 6, 6, 1, 4],
       "textinfo": "label+value+percent parent+percent visible",
       "outsidetextfont": {"size": 20, "color": "#377eb8"},
-      "marker": {"opacity": 0.4, "line": {"width": 2}},
+      "marker": {"line": {"width": 2}},
       "pathbar": {"visible": false}
     }
   ],

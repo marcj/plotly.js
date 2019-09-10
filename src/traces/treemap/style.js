@@ -36,11 +36,11 @@ function styleOne(s, pt, trace, hovered) {
     if(hovered) {
         lineColor = trace._hovered.marker.line.color;
         lineWidth = trace._hovered.marker.line.width;
-        opacity = trace._hovered.marker.opacity;
+        opacity = 1;
     } else {
         lineColor = Lib.castOption(trace, ptNumber, 'marker.line.color') || Color.defaultLine;
         lineWidth = Lib.castOption(trace, ptNumber, 'marker.line.width') || 0;
-        opacity = trace.marker.opacity;
+        opacity = (trace._hasColorscale && trace.marker.opacity === 1) ? 1 : trace.marker.opacity / (pt.height + 1);
     }
 
     s.style('stroke-width', lineWidth)

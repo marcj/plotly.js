@@ -175,7 +175,7 @@ exports.getLabelStr = function(label) {
     return has(label) ? label.split('<br>').join(' ') : '';
 };
 
-exports.getLabelString = function(label) {
+exports.getLabelString = function(label) { // used in hover to reference to the "root"
     var str = exports.getLabelStr(label);
     return str ? str : '"root"';
 };
